@@ -6,9 +6,12 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'connect-src': ["'self'", 'http:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
+          'connect-src': ["'self'", 'http:', 'https:'],
+          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com', 'strapi.io'],
           'media-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
+          'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
+          'style-src': ["'self'", "'unsafe-inline'"],
+          'frame-src': ["'self'", 'data:'],
           upgradeInsecureRequests: null,
         },
       },

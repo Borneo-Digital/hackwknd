@@ -372,6 +372,7 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
   collectionName: 'hackathons';
   info: {
+    description: '';
     displayName: 'Hackathon';
     pluralName: 'hackathons';
     singularName: 'hackathon';
@@ -384,6 +385,12 @@ export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     Date: Schema.Attribute.DateTime;
+    Description: Schema.Attribute.Text;
+    EventStatus: Schema.Attribute.Enumeration<
+      ['Upcoming', 'Ongoing', 'Completed']
+    >;
+    FAQ: Schema.Attribute.Component<'faq.faq', true>;
+    Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -391,7 +398,12 @@ export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     Location: Schema.Attribute.String;
+    Prizes: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
+    RegistrationEndDate: Schema.Attribute.Date;
+    RegistrationStartDate: Schema.Attribute.Date;
+    Schedule: Schema.Attribute.JSON;
+    slug: Schema.Attribute.String;
     Theme: Schema.Attribute.Text;
     Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;

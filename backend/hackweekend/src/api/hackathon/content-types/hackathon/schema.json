@@ -4,7 +4,8 @@
   "info": {
     "singularName": "hackathon",
     "pluralName": "hackathons",
-    "displayName": "Hackathon"
+    "displayName": "Hackathon",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -22,6 +23,49 @@
     },
     "Location": {
       "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "Schedule": {
+      "type": "json"
+    },
+    "Prizes": {
+      "type": "json"
+    },
+    "FAQ": {
+      "displayName": "FAQ",
+      "type": "component",
+      "repeatable": true,
+      "component": "faq.faq"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "EventStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Upcoming",
+        "Ongoing",
+        "Completed"
+      ]
+    },
+    "RegistrationStartDate": {
+      "type": "date"
+    },
+    "RegistrationEndDate": {
+      "type": "date"
     }
   }
 }

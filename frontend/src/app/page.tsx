@@ -3,7 +3,7 @@ import { LandingPageComponent } from "@/components/landing-page";
 async function getHackathons() {
   try {
     console.log('Fetching hackathons...');
-    const res = await fetch('http://localhost:1337/api/hackathons', { 
+    const res = await fetch('http://localhost:1337/api/hackathons?populate=*', { 
       cache: 'no-store'
     });
     
