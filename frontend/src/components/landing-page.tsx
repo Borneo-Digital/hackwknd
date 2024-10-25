@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2 } from "lucide-react"
 import Link from 'next/link'
 import { Hackathon } from '@/types/hackathon'
 import { MenuBar } from './MenuBar'
-
+import Image from 'next/image'
 interface LandingPageComponentProps {
-  hackathons: Hackathon[];
+  initialHackathons: Hackathon[];
 }
 
 const codeSnippets = [
@@ -37,11 +37,50 @@ function formatDate(dateString: string): string {
   }
 }
 
-export function LandingPageComponent({ hackathons }: LandingPageComponentProps) {
+function seededRandom(seed: number) {
+  let state = seed;
+  return function() {
+    state = (state * 1664525 + 1013904223) % 2**32;
+    return state / 2**32;
+  }
+}
+
+export function LandingPageComponent({ initialHackathons }: LandingPageComponentProps) {
+  const [hackathons, setHackathons] = useState(initialHackathons);
+  const [isLoading, setIsLoading] = useState(false);
   const [typedText, setTypedText] = useState('')
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0)
   const [codeText, setCodeText] = useState('')
   const fullText = 'Welcome to HackWeekend'
+
+  // Generate floating block positions using a seeded random number generator
+  const floatingBlockPositions = useMemo(() => {
+    const random = seededRandom(12345); // Use a fixed seed
+    return Array.from({ length: 5 }, () => ({
+      left: random() * 100,
+      top: random() * 100,
+    }));
+  }, []);
+  
+  useEffect(() => {
+    const fetchHackathons = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch('http://localhost:1337/api/hackathons?populate=*');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.json();
+        setHackathons(data.data);
+      } catch (error) {
+        console.error('Failed to fetch hackathons:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHackathons();
+  }, []);
 
   useEffect(() => {
     let i = 0
@@ -61,7 +100,7 @@ export function LandingPageComponent({ hackathons }: LandingPageComponentProps) 
   useEffect(() => {
     let i = 0
     const currentSnippet = codeSnippets[currentCodeIndex].code
-    
+
     const codeInterval = setInterval(() => {
       if (i < currentSnippet.length) {
         setCodeText(currentSnippet.slice(0, i + 1))
@@ -80,8 +119,8 @@ export function LandingPageComponent({ hackathons }: LandingPageComponentProps) 
 
   const menuItems = [
     { href: '#about', label: 'About' },
-    { href: '#events', label: 'Events' },
-    { href: '#register', label: 'Register' },
+    // { href: '#events', label: 'Events' },
+    // { href: '#register', label: 'Register' },
   ]
 
   return (
@@ -90,19 +129,17 @@ export function LandingPageComponent({ hackathons }: LandingPageComponentProps) 
       <MenuBar logo="HackWknd" menuItems={menuItems} />
 
       <main className="relative">
-        {/* Enhanced Hero Section */}
         <section className="min-h-screen relative overflow-hidden flex items-center">
-          {/* Animated background elements */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-r from-hack-primary/20 to-hack-secondary/20 blur-3xl" />
             {/* Floating code blocks */}
-            {Array.from({ length: 5 }).map((_, i) => (
+            {floatingBlockPositions.map((position, i) => (
               <div
                 key={i}
                 className="absolute bg-white/5 backdrop-blur-sm rounded-lg p-4 code-float"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${position.left}%`,
+                  top: `${position.top}%`,
                   animation: `float ${10 + i * 2}s infinite`,
                   animationDelay: `${i * -2}s`
                 }}
@@ -162,69 +199,73 @@ export function LandingPageComponent({ hackathons }: LandingPageComponentProps) 
         </section>
 
         {/* Features Section */}
-<section className="py-20 relative">
-  <div className="container mx-auto px-4">
-    <div className="max-w-2xl mx-auto text-center mb-12">
-      <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWknd?</h2>
-      <p className="text-gray-400">Experience the future of innovation through collaborative coding</p>
-    </div>
-    <div className="grid md:grid-cols-3 gap-8">
-      <FeatureCard 
-        icon={<Code className="w-6 h-6 text-hack-primary" />}
-        title="Build & Learn"
-        description="Code, create, and collaborate with fellow innovators in real-time"
-      />
-      <FeatureCard 
-        icon={<Users className="w-6 h-6 text-hack-secondary" />}
-        title="Connect"
-        description="Join a community of passionate developers and industry experts"
-      />
-      <FeatureCard 
-        icon={<Lightbulb className="w-6 h-6 text-hack-accent" />}
-        title="Innovate"
-        description="Transform your ideas into impactful solutions that matter"
-      />
-    </div>
-  </div>
-</section>
+        <section className="py-20 relative">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto text-center mb-12">
+              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWknd?</h2>
+              <p className="text-gray-400">Experience the future of innovation through collaborative coding</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              <FeatureCard
+                icon={<Code className="w-6 h-6 text-hack-primary" />}
+                title="Build & Learn"
+                description="Code, create, and collaborate with fellow innovators in real-time"
+              />
+              <FeatureCard
+                icon={<Users className="w-6 h-6 text-hack-secondary" />}
+                title="Connect"
+                description="Join a community of passionate developers and industry experts"
+              />
+              <FeatureCard
+                icon={<Lightbulb className="w-6 h-6 text-hack-accent" />}
+                title="Innovate"
+                description="Transform your ideas into impactful solutions that matter"
+              />
+            </div>
+          </div>
+        </section>
 
-{/* Hackathons Section */}
-<section id="events" className="py-20 relative">
-  <div className="container mx-auto px-4">
-    <div className="max-w-2xl mx-auto text-center mb-12">
-      <h2 className="text-4xl font-bold hack-gradient-text mb-4">Upcoming Hackathons</h2>
-      <p className="text-gray-400">Join our next innovation challenge</p>
-    </div>
-    <div className="grid md:grid-cols-2 gap-8">
-      {hackathons && hackathons.length > 0 ? (
-        hackathons.map((hackathon, index) => (
-          <HackathonCard
-            key={hackathon.id || index}
-            hackathon={hackathon}
-            delay={index * 300}
-          />
-        ))
-      ) : (
-        <div className="col-span-2">
-          <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800">
-            <CardHeader className="border-b border-gray-800">
-              <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <div className="w-3 h-3 rounded-full bg-green-500/80" />
-              </div>
-            </CardHeader>
-            <CardContent className="p-6 font-mono">
-              <div className="text-hack-primary mb-2">$ get hackathons</div>
-              <p className="text-gray-400">No hackathons available at the moment...</p>
-              <div className="animate-pulse inline-block mt-1">_</div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-    </div>
-  </div>
-</section>
+        {/* Hackathons Section */}
+        <section id="events" className="py-20 relative">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto text-center mb-12">
+              <h2 className="text-4xl font-bold hack-gradient-text mb-4">Upcoming Hackathons</h2>
+              <p className="text-gray-400">Join our next innovation challenge</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              {isLoading ? (
+                <div className="col-span-2 text-center">
+                  <p>Loading hackathons...</p>
+                </div>
+              ) : hackathons && hackathons.length > 0 ? (
+                hackathons.map((hackathon, index) => (
+                  <HackathonCard
+                    key={hackathon.id || index}
+                    hackathon={hackathon}
+                    delay={index * 300}
+                  />
+                ))
+              ) : (
+                <div className="col-span-2">
+                  <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800">
+                    <CardHeader className="border-b border-gray-800">
+                      <div className="flex gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                        <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6 font-mono">
+                      <div className="text-hack-primary mb-2">$ get hackathons</div>
+                      <p className="text-gray-400">No hackathons available at the moment...</p>
+                      <div className="animate-pulse inline-block mt-1">_</div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
 
         {/* CTA Section */}
         <section id="register" className="py-20 text-center">
@@ -244,8 +285,32 @@ export function LandingPageComponent({ hackathons }: LandingPageComponentProps) 
       </main>
 
       <footer className="border-t border-gray-800 py-8">
-        <div className="container mx-auto px-4 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} HackWeekend. All rights reserved.</p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <p className="text-gray-400">&copy; {new Date().getFullYear()} HackWeekend. All rights reserved.</p>
+            </div>
+            <div className="flex items-center space-x-8">
+              <div className="flex flex-col items-center">
+                <p className="text-sm text-gray-400 mb-2">An initiative by</p>
+                <Image
+                  src="/sdec-logo.png"
+                  alt="Initiative Logo"
+                  width={100}
+                  height={50}
+                />
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-sm text-gray-400 mb-2">A part of</p>
+                <Image
+                  src="/logo-sdie.png"
+                  alt="Part Of Logo"
+                  width={100}
+                  height={50}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
@@ -326,7 +391,7 @@ function HackathonCard({ hackathon, delay }: { hackathon: Hackathon; delay: numb
         <div className="space-y-2 text-gray-400">
           <div className="flex items-center">
             <Calendar className="w-4 h-4 mr-2 text-hack-primary" />
-            <span className="text-hack-secondary mr-2">date:</span> 
+            <span className="text-hack-secondary mr-2">date:</span>
             <span className="font-normal">{formattedDate}</span>
           </div>
           <div className="flex items-center">

@@ -9,20 +9,22 @@ async function getHackathons() {
     
     if (!res.ok) {
       console.error(`HTTP error! status: ${res.status}`);
-      return { data: [] };
+      return [];
     }
     
     const data = await res.json();
     console.log('Hackathons data received:', data);
-    return data;
+    return data.data;
   } catch (error) {
     console.error('Failed to fetch hackathons:', error);
-    return { data: [] };
+    return [];
   }
 }
 
 export default async function Home() {
   const hackathons = await getHackathons();
-  console.log('Hackathons passed to LandingPageComponent:', hackathons);
-  return <LandingPageComponent hackathons={hackathons.data} />;
+  
+  return (
+    <LandingPageComponent initialHackathons={hackathons} />
+  );
 }
