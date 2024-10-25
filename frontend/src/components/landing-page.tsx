@@ -146,7 +146,10 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
                   left: `${position.left}%`,
                   top: `${position.top}%`,
                   animation: `float ${10 + i * 2}s infinite`,
-                  animationDelay: `${i * -2}s`
+                  animationDelay: `${i * -2}s`,
+                  // Ensure the elements don't overlap with the header or terminal
+                  transform: `translate(${position.left > 50 ? '-100%' : '0'}, ${position.top < 20 ? '100%' : '0'})`,
+                  zIndex: 1, // Ensure they're above the background but below the content
                 }}
               >
                 <Code2 className="w-6 h-6 text-hack-primary/50" />
