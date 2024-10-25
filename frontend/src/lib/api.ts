@@ -2,7 +2,8 @@ import { Hackathon } from '@/types/hackathon'
 
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const res = await fetch(`${apiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
       cache: 'no-store'
     })
 

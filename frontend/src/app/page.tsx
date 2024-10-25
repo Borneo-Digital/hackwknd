@@ -3,7 +3,7 @@ import { LandingPageComponent } from "@/components/landing-page";
 async function getHackathons() {
   try {
     console.log('Fetching hackathons...');
-    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
     const res = await fetch(`${apiUrl}/api/hackathons?populate=*`, { 
       cache: 'no-store'
     });
