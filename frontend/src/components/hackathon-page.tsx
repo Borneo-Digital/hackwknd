@@ -172,7 +172,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                             <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800 overflow-hidden">
                                 <CardContent className="p-0">
                                     <Image
-                                        src={`process.env.NEXT_PUBLIC_STRAPI_API_URL${hackathonImage.url}`}
+                                        src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}{hackathonImage.url}`}
                                         alt={Title}
                                         width={hackathonImage.width}
                                         height={hackathonImage.height}
