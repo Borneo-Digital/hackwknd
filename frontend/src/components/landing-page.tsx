@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2 } from "lucide-react"
@@ -26,6 +26,8 @@ const codeSnippets = [
     code: 'fn build_future() -> Innovation {\n    let ideas = generate_ideas();\n    ideas.transform()\n        .innovate()\n}'
   }
 ]
+
+
 
 function formatDate(dateString: string): string {
   try {
@@ -61,6 +63,12 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
       top: random() * 100,
     }));
   }, []);
+
+  const hackathonsSectionRef = useRef<HTMLElement>(null);
+
+  const scrollToHackathons = () => {
+    hackathonsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const fetchHackathons = async () => {
@@ -118,19 +126,14 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
     return () => clearInterval(codeInterval)
   }, [currentCodeIndex])
 
-  const menuItems = [
-    { href: '#about', label: 'About' },
-    // { href: '#events', label: 'Events' },
-    // { href: '#register', label: 'Register' },
-  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar
-        logo="HackWeekend"
+      <MenuBar 
+        logo="HackWeekend" 
         logoSrc="/icon-hackwknd.svg"
-        menuItems={menuItems}
+        onRegisterClick={scrollToHackathons}
       />
 
       <main className="relative">
@@ -234,7 +237,7 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
         </section>
 
         {/* Hackathons Section */}
-        <section id="events" className="py-20 relative">
+        <section id="events" ref={hackathonsSectionRef} className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
               <h2 className="text-4xl font-bold hack-gradient-text mb-4">Upcoming Hackathons</h2>

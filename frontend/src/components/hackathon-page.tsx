@@ -40,12 +40,16 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
         }
     }
 
-    const menuItems = [
-        { href: '#about', label: 'About' },
-        // { href: '#schedule', label: 'Schedule' },
-        // { href: '#prizes', label: 'Prizes' },
-        // { href: '#faq', label: 'FAQ' },
-    ]
+    const handleRegisterClick = () => {
+        // You can implement the registration logic here
+        // For now, let's just scroll to the registration section if it exists
+        const registrationSection = document.getElementById('registration');
+        if (registrationSection) {
+            registrationSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            console.log('Registration section not found');
+        }
+    };
 
     interface FormattedSection {
         title?: string;
@@ -144,7 +148,11 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
             <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-            <MenuBar logo="HackWknd" menuItems={menuItems} />
+            <MenuBar 
+                logo="HackWknd" 
+                logoSrc="/icon-hackwknd.svg"
+                onRegisterClick={handleRegisterClick}
+            />
 
             <header className="relative pt-24 pb-12 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-hack-primary/20 to-hack-secondary/20 blur-3xl" />
