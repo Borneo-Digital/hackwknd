@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-
+import Image from 'next/image'
 
 interface MenuItemProps {
   href: string;
@@ -28,10 +28,11 @@ const MenuItem: React.FC<MenuItemProps> = ({ href, label, isScrolled }) => (
 
 interface MenuBarProps {
   logo: string;
+  logoSrc?: string;
   menuItems: { href: string; label: string }[];
 }
 
-export const MenuBar: React.FC<MenuBarProps> = ({ logo, menuItems }) => {
+export const MenuBar: React.FC<MenuBarProps> = ({ logo, logoSrc, menuItems }) => {
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -53,9 +54,18 @@ export const MenuBar: React.FC<MenuBarProps> = ({ logo, menuItems }) => {
     `}>
       <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="group">
+        <Link href="/" className="group flex items-center">
+          {logoSrc && (
+            <Image
+              src={logoSrc}
+              alt="HackWknd Logo"
+              width={32}
+              height={32}
+              className="mr-2"
+            />
+          )}
           <h1 className={`
-            text-2xl font-bold transition-colors duration-300 flex items-center
+            text-2xl font-bold transition-colors duration-300
             ${isScrolled ? 'text-gray-800' : 'text-white'}
           `}>
             <span className="hack-gradient-text">{logo}</span>

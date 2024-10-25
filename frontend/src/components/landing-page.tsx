@@ -39,9 +39,9 @@ function formatDate(dateString: string): string {
 
 function seededRandom(seed: number) {
   let state = seed;
-  return function() {
-    state = (state * 1664525 + 1013904223) % 2**32;
-    return state / 2**32;
+  return function () {
+    state = (state * 1664525 + 1013904223) % 2 ** 32;
+    return state / 2 ** 32;
   }
 }
 
@@ -61,7 +61,7 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
       top: random() * 100,
     }));
   }, []);
-  
+
   useEffect(() => {
     const fetchHackathons = async () => {
       setIsLoading(true);
@@ -127,7 +127,11 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar logo="HackWknd" menuItems={menuItems} />
+      <MenuBar
+        logo="HackWeekend"
+        logoSrc="/icon-hackwknd.svg"
+        menuItems={menuItems}
+      />
 
       <main className="relative">
         <section className="min-h-screen relative overflow-hidden flex items-center">
@@ -285,32 +289,44 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
         </section>
       </main>
 
-      <footer className="border-t border-gray-800 py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <p className="text-gray-400">&copy; {new Date().getFullYear()} HackWeekend. All rights reserved.</p>
-            </div>
-            <div className="flex items-center space-x-8">
-              <div className="flex flex-col items-center">
-                <p className="text-sm text-gray-400 mb-2">An initiative by</p>
+      <footer className="border-t border-gray-800">
+        {/* Organizer Section */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="flex flex-col items-center">
+              <span className="text-hack-primary font-semibold mb-6">An initiative by</span>
+              <div className="relative w-full max-w-xs p-4">
                 <Image
-                  src="/sdec-logo.png"
-                  alt="Initiative Logo"
-                  width={100}
-                  height={50}
-                />
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="text-sm text-gray-400 mb-2">A part of</p>
-                <Image
-                  src="/logo-sdie.png"
-                  alt="Part Of Logo"
-                  width={100}
-                  height={50}
+                  src="/SDEC-white.png"
+                  alt="SDEC Logo"
+                  width={250}
+                  height={100}
+                  className="object-contain"
                 />
               </div>
             </div>
+
+            <div className="flex flex-col items-center">
+              <span className="text-hack-secondary font-semibold mb-6">A part of</span>
+              <div className="relative w-full max-w-xs p-4 flex justify-center">
+                <Image
+                  src="/sarawak-digital-white.png"
+                  alt="Sarawak Digital Logo"
+                  width={180}
+                  height={180}
+                  className="object-contain max-h-24"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Copyright Section */}
+        <div className="border-t border-gray-800">
+          <div className="container mx-auto px-4 py-6">
+            <p className="text-gray-400 text-center text-sm">
+              &copy; {new Date().getFullYear()} HackWeekend. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
