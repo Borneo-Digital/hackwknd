@@ -42,9 +42,9 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
 
     const menuItems = [
         { href: '#about', label: 'About' },
-        { href: '#schedule', label: 'Schedule' },
-        { href: '#prizes', label: 'Prizes' },
-        { href: '#faq', label: 'FAQ' },
+        // { href: '#schedule', label: 'Schedule' },
+        // { href: '#prizes', label: 'Prizes' },
+        // { href: '#faq', label: 'FAQ' },
     ]
 
     interface FormattedSection {
