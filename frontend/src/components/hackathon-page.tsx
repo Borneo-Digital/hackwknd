@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Calendar, MapPin, Clock, Users, ArrowRight, Trophy, Medal, Award, Brain, AccessibilityIcon } from "lucide-react"
 import { MenuBar } from './MenuBar'
+import { Footer } from './Footer'
 
 import Image from 'next/image'
 
@@ -393,6 +394,8 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                             </Card>
                         )}
                     </div>
+                    
+                    
 
                     {/* Sidebar */}
                     <div className="space-y-8">
@@ -439,9 +442,11 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                     </div>
                 </div>
             </main>
+            <Footer />
         </div>
     )
 }
+
 
 function getStatusColor(status: string) {
     switch (status.toLowerCase()) {

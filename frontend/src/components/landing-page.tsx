@@ -3,11 +3,12 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2 } from "lucide-react"
+import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2, } from "lucide-react"
 import Link from 'next/link'
 import { Hackathon } from '@/types/hackathon'
 import { MenuBar } from './MenuBar'
-import Image from 'next/image'
+// import Image from 'next/image'
+import { Footer } from './Footer'
 interface LandingPageComponentProps {
   initialHackathons: Hackathon[];
 }
@@ -66,9 +67,22 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
 
   const hackathonsSectionRef = useRef<HTMLElement>(null);
 
-  const scrollToHackathons = () => {
-    hackathonsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  // const scrollToHackathons = () => {
+  //   hackathonsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // };
+
+  // Create menu actions
+  // const menuActions = (
+  //   <>
+  //     <Button 
+  //       onClick={scrollToHackathons} 
+  //       className="hack-button group"
+  //     >
+  //       Register Now
+  //       <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+  //     </Button>
+  //   </>
+  // );
 
   useEffect(() => {
     const fetchHackathons = async () => {
@@ -133,7 +147,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
       <MenuBar 
         logo="HackWeekend" 
         logoSrc="/icon-hackwknd.svg"
-        onRegisterClick={scrollToHackathons}
       />
 
       <main className="relative">
@@ -295,52 +308,14 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
         </section>
       </main>
 
-      <footer className="border-t border-gray-800">
-        {/* Organizer Section */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="flex flex-col items-center">
-              <span className="text-hack-primary font-semibold mb-6">An initiative by</span>
-              <div className="relative w-full max-w-xs p-4">
-                <Image
-                  src="/SDEC-white.png"
-                  alt="SDEC Logo"
-                  width={250}
-                  height={100}
-                  className="object-contain"
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <span className="text-hack-secondary font-semibold mb-6">A part of</span>
-              <div className="relative w-full max-w-xs p-4 flex justify-center">
-                <Image
-                  src="/sarawak-digital-white.png"
-                  alt="Sarawak Digital Logo"
-                  width={180}
-                  height={180}
-                  className="object-contain max-h-24"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Copyright Section */}
-        <div className="border-t border-gray-800">
-          <div className="container mx-auto px-4 py-6">
-            <p className="text-gray-400 text-center text-sm">
-              &copy; {new Date().getFullYear()} HackWeekend. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
-}
+} 
 
-// Existing FeatureCard and HackathonCard components remain the same
+      
+
+
 
 interface FeatureCardProps {
   icon: React.ReactNode;
