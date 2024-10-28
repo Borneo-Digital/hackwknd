@@ -149,7 +149,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
         <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
             <div className="absolute inset-0 bg-grid bg-center opacity-10" />
             <MenuBar 
-                logo="HackWknd" 
+                logo="HackWeekend" 
                 logoSrc="/icon-hackwknd.svg"
                 onRegisterClick={handleRegisterClick}
             />
