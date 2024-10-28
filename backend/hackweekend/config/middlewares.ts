@@ -6,7 +6,7 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'connect-src': ["'self'", 'http:', 'https:'],
+          'connect-src': ["'self'", 'http:', 'https:', 'https://api.borneodigital.co'],
           'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com', 'strapi.io'],
           'media-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
           'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
@@ -15,6 +15,15 @@ module.exports = [
           upgradeInsecureRequests: null,
         },
       },
+    },
+  },
+  {
+    name: 'strapi::cors',
+    config: {
+      origin: ['http://localhost:3000', 'https://hackwknd.vercel.app'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+      keepHeaderOnError: true,
     },
   },
   'strapi::cors',
