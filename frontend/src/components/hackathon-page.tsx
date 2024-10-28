@@ -149,8 +149,8 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
             <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-            <MenuBar 
-                logo="HackWeekend" 
+            <MenuBar
+                logo="HackWeekend"
                 logoSrc="/icon-hackwknd.svg"
                 onRegisterClick={handleRegisterClick}
             />
@@ -181,7 +181,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                             <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800 overflow-hidden">
                                 <CardContent className="p-0">
                                     <Image
-                                        src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/{hackathonImage.url}`}
+                                        src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${hackathonImage.url}`}
                                         alt={Title}
                                         width={hackathonImage.width}
                                         height={hackathonImage.height}
@@ -296,77 +296,77 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                 </CardContent>
                             </Card>
                         )}
-{Prizes && Prizes.prizes && (
-            <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800">
-                <CardHeader>
-                    <CardTitle className="text-hack-primary">Prizes & Awards</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 font-mono">
-                    <div className="text-hack-primary mb-6">$ cat prizes.json</div>
+                        {Prizes && Prizes.prizes && (
+                            <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800">
+                                <CardHeader>
+                                    <CardTitle className="text-hack-primary">Prizes & Awards</CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-6 font-mono">
+                                    <div className="text-hack-primary mb-6">$ cat prizes.json</div>
 
-                    {/* Main Prizes */}
-                    <div className="space-y-6 mb-8">
-                        {(['first', 'second', 'third'] as const).map((place) => {
-                            const prize = Prizes.prizes[place];
-                            if (!prize) return null;
-                            return (
-                                <div
-                                    key={place}
-                                    className="relative bg-slate-800/50 rounded-lg p-6 border border-gray-800/50 hover:border-hack-primary/50 transition-colors"
-                                >
-                                    {/* Prize Header */}
-                                    <div className="flex items-start gap-4">
-                                        <div className={`
+                                    {/* Main Prizes */}
+                                    <div className="space-y-6 mb-8">
+                                        {(['first', 'second', 'third'] as const).map((place) => {
+                                            const prize = Prizes.prizes[place];
+                                            if (!prize) return null;
+                                            return (
+                                                <div
+                                                    key={place}
+                                                    className="relative bg-slate-800/50 rounded-lg p-6 border border-gray-800/50 hover:border-hack-primary/50 transition-colors"
+                                                >
+                                                    {/* Prize Header */}
+                                                    <div className="flex items-start gap-4">
+                                                        <div className={`
                                             p-3 rounded-lg 
                                             ${place === 'first' ? 'bg-yellow-500/10 text-yellow-500' :
-                                              place === 'second' ? 'bg-slate-300/10 text-slate-300' :
-                                              'bg-amber-600/10 text-amber-600'}
+                                                                place === 'second' ? 'bg-slate-300/10 text-slate-300' :
+                                                                    'bg-amber-600/10 text-amber-600'}
                                         `}>
-                                            {prize.icon && getPrizeIcon(prize.icon)}
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="text-xl font-bold text-white mb-1">{prize.rank}</h3>
-                                            <div className="text-2xl font-bold text-hack-primary">RM{prize.amount}</div>
-                                        </div>
+                                                            {prize.icon && getPrizeIcon(prize.icon)}
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <h3 className="text-xl font-bold text-white mb-1">{prize.rank}</h3>
+                                                            <div className="text-2xl font-bold text-hack-primary">RM{prize.amount}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Prize Description */}
+                                                    <div className="mt-4 pl-14">
+                                                        <div className="text-gray-400 mb-3">{prize.description}</div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
 
-                                    {/* Prize Description */}
-                                    <div className="mt-4 pl-14">
-                                        <div className="text-gray-400 mb-3">{prize.description}</div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Special Prizes */}
-                    {Prizes.prizes.special && (
-                        <div className="mt-8">
-                            <h3 className="text-hack-secondary text-lg font-bold mb-4">Special Categories</h3>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                {Object.entries(Prizes.prizes.special).map(([key, prize]) => (
-                                    <div
-                                        key={key}
-                                        className="bg-slate-800/30 rounded-lg p-4 border border-gray-800/50 hover:border-hack-secondary/50 transition-colors"
-                                    >
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="p-2 rounded-lg bg-hack-secondary/10 text-hack-secondary">
-                                                {prize.icon && getPrizeIcon(prize.icon)}
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-white">{prize.rank}</h4>
-                                                <div className="text-hack-secondary font-bold">RM{prize.amount}</div>
+                                    {/* Special Prizes */}
+                                    {Prizes.prizes.special && (
+                                        <div className="mt-8">
+                                            <h3 className="text-hack-secondary text-lg font-bold mb-4">Special Categories</h3>
+                                            <div className="grid md:grid-cols-2 gap-4">
+                                                {Object.entries(Prizes.prizes.special).map(([key, prize]) => (
+                                                    <div
+                                                        key={key}
+                                                        className="bg-slate-800/30 rounded-lg p-4 border border-gray-800/50 hover:border-hack-secondary/50 transition-colors"
+                                                    >
+                                                        <div className="flex items-center gap-3 mb-3">
+                                                            <div className="p-2 rounded-lg bg-hack-secondary/10 text-hack-secondary">
+                                                                {prize.icon && getPrizeIcon(prize.icon)}
+                                                            </div>
+                                                            <div>
+                                                                <h4 className="font-bold text-white">{prize.rank}</h4>
+                                                                <div className="text-hack-secondary font-bold">RM{prize.amount}</div>
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-sm text-gray-400">{prize.description}</p>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
-                                        <p className="text-sm text-gray-400">{prize.description}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
-        )}
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {FAQ && FAQ.length > 0 && (
                             <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800">
@@ -394,8 +394,8 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                             </Card>
                         )}
                     </div>
-                    
-                    
+
+
 
                     {/* Sidebar */}
                     <div className="space-y-8">
