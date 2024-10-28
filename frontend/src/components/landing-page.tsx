@@ -144,8 +144,8 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar 
-        logo="HackWeekend" 
+      <MenuBar
+        logo="HackWeekend"
         logoSrc="/icon-hackwknd.svg"
       />
 
@@ -177,10 +177,10 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left side - Main content */}
               <div className="text-center lg:text-left">
-                <h1 className="text-6xl md:text-7xl font-bold mb-6">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 break-words">
                   <span className="hack-gradient-text">{typedText}</span>
                 </h1>
-                <p className="text-xl mb-8 text-gray-300">
+                <p className="text-lg sm:text-xl mb-8 text-gray-300">
                   72 hours of innovation, collaboration, and problem-solving
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
@@ -188,9 +188,9 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
                     Register Now
                     <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                  <Button variant="outline" className="hack-button-secondary">
+                  {/* <Button variant="outline" className="hack-button-secondary">
                     Learn More
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
 
@@ -226,8 +226,8 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
-              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWknd?</h2>
-              <p className="text-gray-400">Experience the future of innovation through collaborative coding</p>
+              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWeekend?</h2>
+              <p className="text-gray-400">Experience the future of innovation through collaborative weekend</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard
@@ -311,9 +311,9 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
       <Footer />
     </div>
   )
-} 
+}
 
-      
+
 
 
 
