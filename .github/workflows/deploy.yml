@@ -1,29 +1,41 @@
-name: Deploy Strapi
+name: Strapi Deploy
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build-and-test:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v3
-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-
+      
       - name: Install dependencies
         run: npm ci
-
+      
+      - name: Type check
+        run: npx tsc --noEmit
+      
       - name: Build
         run: npm run build
 
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Only deploy on main branch
+    
+    steps:
       - name: Deploy to Digital Ocean
         uses: appleboy/ssh-action@master
         with:
