@@ -7,7 +7,7 @@ module.exports = [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'http:', 'https:', 'https://api.borneodigital.co'],
-          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com', 'strapi.io'],
+          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com', 'strapi.io', 'api.borneodigital.co'],
           'media-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
           'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
           'style-src': ["'self'", "'unsafe-inline'"],
@@ -26,7 +26,6 @@ module.exports = [
       keepHeaderOnError: true,
     },
   },
-  'strapi::cors',
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',

@@ -1,83 +1,61 @@
-# HackWeekend
+# 🚀 Getting started with Strapi
 
-HackWeekend is an open-source project for managing and showcasing hackathon events. It uses Next.js with Shadcn for the frontend and Strapi as the backend CMS.
+Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
 
-## Project Structure
+### `develop`
 
-The project is divided into two main parts:
+Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
 
-1. Frontend (Next.js application)
-2. Backend (Strapi CMS)
+```
+npm run develop
+# or
+yarn develop
+```
 
-## Frontend
+### `start`
 
-The frontend is built with Next.js 15.0.1 and uses Shadcn UI components. It's designed using V0 by Vercel.
+Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
 
-### Technologies Used
+```
+npm run start
+# or
+yarn start
+```
 
-- Next.js 15.0.1
-- React 19.0.0-rc
-- TypeScript
-- Tailwind CSS
-- Shadcn UI components
-- Lucide React for icons
+### `build`
 
-### Getting Started
+Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
 
-To run the frontend:
+```
+npm run build
+# or
+yarn build
+```
 
-1. Navigate to the `frontend` directory
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Run the development server:
-   ```
-   npm run dev
-   ```
+## ⚙️ Deployment
 
-The frontend will be available at `http://localhost:3000`.
+Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
 
-## Backend
+```
+yarn strapi deploy
+```
 
-The backend is powered by Strapi 5.1.1, a headless CMS that provides a flexible and customizable API.
+## 📚 Learn more
 
-### Technologies Used
+- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
+- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
+- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
+- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
+- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
 
-- Strapi 5.1.1
-- SQLite (better-sqlite3)
+Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
 
-### Getting Started
+## ✨ Community
 
-To run the backend:
+- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
+- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
+- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
 
-1. Navigate to the `backend/hackweekend` directory
-2. Install dependencies:
-   ```
-   npm install
-   ```
-3. Run the Strapi development server:
-   ```
-   npm run develop
-   ```
+---
 
-The Strapi admin panel will be available at `http://localhost:1337/admin`.
-
-## Development
-
-This project is built using V0 by Vercel, which provides a streamlined development experience. Make sure to follow the V0 guidelines when making changes to the project structure or configuration.
-
-## Contributing
-
-We welcome contributions to HackWeekend! Please read our contributing guidelines before submitting pull requests.
-
-## License
-
-[Add your chosen license here]
-
-## Acknowledgements
-
-- This project is built with [Next.js](https://nextjs.org/)
-- We use [Shadcn UI](https://ui.shadcn.com/) for our component library
-- The backend is powered by [Strapi](https://strapi.io/)
-- Development is streamlined with [V0 by Vercel](https://v0.dev/)
+<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
