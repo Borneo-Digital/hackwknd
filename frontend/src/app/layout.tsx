@@ -16,6 +16,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "HackWeekend",
   description: "Hack through the weekend and build something amazing",
+  icons: {
+    icon: '/icon-hackwknd.svg',
+  },
 };
 
 export default function RootLayout({

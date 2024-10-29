@@ -1,95 +1,82 @@
-'use client'
-
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
-
-
-interface MenuItemProps {
-  href: string;
-  label: string;
-  isScrolled: boolean;
-}
-
-const MenuItem: React.FC<MenuItemProps> = ({ href, label, isScrolled }) => (
-  <li>
-    <Link
-      href={href}
-      className={`
-        relative group font-medium
-        ${isScrolled ? 'text-gray-800 hover:text-hack-primary' : 'text-gray-100 hover:text-white'}
-        transition-colors duration-300
-      `}
-    >
-      {label}
-      <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-hack-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
-    </Link>
-  </li>
-)
+import { Button } from "@/components/ui/button"
 
 interface MenuBarProps {
   logo: string;
-  menuItems: { href: string; label: string }[];
+  logoSrc?: string;
+  showRegisterButton?: boolean;
+  onRegisterClick?: () => void;
+  registerButtonText?: string;
 }
 
-export const MenuBar: React.FC<MenuBarProps> = ({ logo, menuItems }) => {
-  const [isScrolled, setIsScrolled] = useState(false)
+export const MenuBar: React.FC<MenuBarProps> = ({ 
+  logo, 
+  logoSrc, 
+  showRegisterButton = false,
+  onRegisterClick,
+  registerButtonText = "Register Now"
+}) => {
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 20); // Change background after 20px scroll
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className={`
-      fixed top-0 left-0 right-0 z-50 transition-all duration-300
-      ${isScrolled 
-        ? 'bg-white/80 backdrop-blur-md border-b border-gray-200/20 py-4'
-        : 'bg-transparent py-6'
-      }
-    `}>
+    <header 
+      className={`
+        fixed top-0 left-0 right-0 z-50 py-4
+        transition-all duration-300 ease-in-out
+        ${isScrolled 
+          ? 'bg-slate-900/95 backdrop-blur-sm shadow-md' // Changed to dark background
+          : 'bg-transparent'
+        }
+      `}
+    >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link href="/" className="group">
-          <h1 className={`
-            text-2xl font-bold transition-colors duration-300 flex items-center
-            ${isScrolled ? 'text-gray-800' : 'text-white'}
-          `}>
+        <Link 
+          href="/" 
+          className={`
+            flex items-center hover:opacity-80 transition-opacity
+            ${isScrolled ? 'scale-90' : 'scale-100'}
+            transition-transform duration-300
+          `}
+        >
+          {logoSrc && (
+            <Image
+              src={logoSrc}
+              alt="HackWknd Logo"
+              width={32}
+              height={32}
+              className="mr-2 transition-all duration-300"
+            />
+          )}
+          <h1 className="text-2xl font-bold text-white"> {/* Always white text */}
             <span className="hack-gradient-text">{logo}</span>
           </h1>
         </Link>
 
-        {/* Navigation */}
-        <nav className="relative">
-          <ul className="flex items-center space-x-8">
-            {menuItems.map((item) => (
-              <MenuItem 
-                key={item.label} 
-                href={item.href} 
-                label={item.label}
-                isScrolled={isScrolled}
-              />
-            ))}
-            {/* CTA Button */}
-            <li>
-              <Link 
-                href="#register" 
-                className={`
-                  hack-button text-sm
-                  ${isScrolled 
-                    ? 'bg-hack-primary hover:bg-hack-primary/90' 
-                    : 'bg-white text-hack-primary hover:bg-white/90'
-                  }
-                `}
-              >
-                Register Now
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        {/* Optional Register Now button */}
+        {showRegisterButton && onRegisterClick && (
+          <Button 
+            onClick={onRegisterClick}
+            className={`
+              hack-button
+              transition-transform duration-300
+              ${isScrolled ? 'scale-90' : 'scale-100'}
+            `}
+          >
+            {registerButtonText}
+          </Button>
+        )}
       </div>
     </header>
   )

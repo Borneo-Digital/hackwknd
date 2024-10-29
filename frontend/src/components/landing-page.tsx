@@ -1,13 +1,14 @@
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2 } from "lucide-react"
+import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2, } from "lucide-react"
 import Link from 'next/link'
 import { Hackathon } from '@/types/hackathon'
 import { MenuBar } from './MenuBar'
-import Image from 'next/image'
+// import Image from 'next/image'
+import { Footer } from './Footer'
 interface LandingPageComponentProps {
   initialHackathons: Hackathon[];
 }
@@ -27,6 +28,8 @@ const codeSnippets = [
   }
 ]
 
+
+
 function formatDate(dateString: string): string {
   try {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -39,9 +42,9 @@ function formatDate(dateString: string): string {
 
 function seededRandom(seed: number) {
   let state = seed;
-  return function() {
-    state = (state * 1664525 + 1013904223) % 2**32;
-    return state / 2**32;
+  return function () {
+    state = (state * 1664525 + 1013904223) % 2 ** 32;
+    return state / 2 ** 32;
   }
 }
 
@@ -61,12 +64,32 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
       top: random() * 100,
     }));
   }, []);
-  
+
+  const hackathonsSectionRef = useRef<HTMLElement>(null);
+
+  // const scrollToHackathons = () => {
+  //   hackathonsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // };
+
+  // Create menu actions
+  // const menuActions = (
+  //   <>
+  //     <Button 
+  //       onClick={scrollToHackathons} 
+  //       className="hack-button group"
+  //     >
+  //       Register Now
+  //       <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+  //     </Button>
+  //   </>
+  // );
+
   useEffect(() => {
     const fetchHackathons = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch('http://localhost:1337/api/hackathons?populate=*');
+        const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+        const res = await fetch(`${apiUrl}/api/hackathons?populate=*`);
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -117,16 +140,14 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
     return () => clearInterval(codeInterval)
   }, [currentCodeIndex])
 
-  const menuItems = [
-    { href: '#about', label: 'About' },
-    // { href: '#events', label: 'Events' },
-    // { href: '#register', label: 'Register' },
-  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar logo="HackWknd" menuItems={menuItems} />
+      <MenuBar
+        logo="HackWeekend"
+        logoSrc="/icon-hackwknd.svg"
+      />
 
       <main className="relative">
         <section className="min-h-screen relative overflow-hidden flex items-center">
@@ -141,7 +162,10 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
                   left: `${position.left}%`,
                   top: `${position.top}%`,
                   animation: `float ${10 + i * 2}s infinite`,
-                  animationDelay: `${i * -2}s`
+                  animationDelay: `${i * -2}s`,
+                  // Ensure the elements don't overlap with the header or terminal
+                  transform: `translate(${position.left > 50 ? '-100%' : '0'}, ${position.top < 20 ? '100%' : '0'})`,
+                  zIndex: 1, // Ensure they're above the background but below the content
                 }}
               >
                 <Code2 className="w-6 h-6 text-hack-primary/50" />
@@ -153,10 +177,10 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left side - Main content */}
               <div className="text-center lg:text-left">
-                <h1 className="text-6xl md:text-7xl font-bold mb-6">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 break-words">
                   <span className="hack-gradient-text">{typedText}</span>
                 </h1>
-                <p className="text-xl mb-8 text-gray-300">
+                <p className="text-lg sm:text-xl mb-8 text-gray-300">
                   72 hours of innovation, collaboration, and problem-solving
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
@@ -164,9 +188,9 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
                     Register Now
                     <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                  <Button variant="outline" className="hack-button-secondary">
+                  {/* <Button variant="outline" className="hack-button-secondary">
                     Learn More
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
 
@@ -202,8 +226,8 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
-              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWknd?</h2>
-              <p className="text-gray-400">Experience the future of innovation through collaborative coding</p>
+              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWeekend?</h2>
+              <p className="text-gray-400">Experience the future of innovation through collaborative weekend</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard
@@ -226,7 +250,7 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
         </section>
 
         {/* Hackathons Section */}
-        <section id="events" className="py-20 relative">
+        <section id="events" ref={hackathonsSectionRef} className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
               <h2 className="text-4xl font-bold hack-gradient-text mb-4">Upcoming Hackathons</h2>
@@ -284,40 +308,14 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
         </section>
       </main>
 
-      <footer className="border-t border-gray-800 py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <p className="text-gray-400">&copy; {new Date().getFullYear()} HackWeekend. All rights reserved.</p>
-            </div>
-            <div className="flex items-center space-x-8">
-              <div className="flex flex-col items-center">
-                <p className="text-sm text-gray-400 mb-2">An initiative by</p>
-                <Image
-                  src="/sdec-logo.png"
-                  alt="Initiative Logo"
-                  width={100}
-                  height={50}
-                />
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="text-sm text-gray-400 mb-2">A part of</p>
-                <Image
-                  src="/logo-sdie.png"
-                  alt="Part Of Logo"
-                  width={100}
-                  height={50}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
 
-// Existing FeatureCard and HackathonCard components remain the same
+
+
+
 
 interface FeatureCardProps {
   icon: React.ReactNode;
