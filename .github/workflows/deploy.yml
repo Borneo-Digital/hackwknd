@@ -16,10 +16,10 @@ jobs:
     - name: SSH and Deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: 22  # Using default SSH port, remove if you need a custom port
         script: |
           cd /var/www/hackweekend
           git pull origin main
