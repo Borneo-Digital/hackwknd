@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2, } from "lucide-react"
+import { Calendar, Clock, MapPin, ArrowRight, Code, Users, Lightbulb, Terminal, Code2 } from "lucide-react"
 import Link from 'next/link'
 import { Hackathon } from '@/types/hackathon'
 import { MenuBar } from './MenuBar'
-// import Image from 'next/image'
 import { Footer } from './Footer'
+
 interface LandingPageComponentProps {
   initialHackathons: Hackathon[];
 }
@@ -28,9 +28,7 @@ const codeSnippets = [
   }
 ]
 
-
-
-function formatDate(dateString: string): string {
+const formatDate = (dateString: string): string => {
   try {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
@@ -40,7 +38,7 @@ function formatDate(dateString: string): string {
   }
 }
 
-function seededRandom(seed: number) {
+const seededRandom = (seed: number) => {
   let state = seed;
   return function () {
     state = (state * 1664525 + 1013904223) % 2 ** 32;
@@ -48,15 +46,104 @@ function seededRandom(seed: number) {
   }
 }
 
-export function LandingPageComponent({ initialHackathons }: LandingPageComponentProps) {
-  const [hackathons, setHackathons] = useState(initialHackathons);
+const FeatureCard: React.FC<{ icon: React.ReactNode, title: string, description: string }> = ({ icon, title, description }) => (
+  <div className="bg-slate-900 rounded-lg shadow-xl border border-gray-800 transform hover:scale-105 transition-all duration-300">
+    <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
+      <div className="flex gap-2">
+        <div className="w-3 h-3 rounded-full bg-red-500" />
+        <div className="w-3 h-3 rounded-full bg-yellow-500" />
+        <div className="w-3 h-3 rounded-full bg-green-500" />
+      </div>
+      <div className="flex-1 text-center">
+        {icon}
+      </div>
+    </div>
+    <div className="p-6 font-mono">
+      <h3 className="text-xl font-bold mb-2 text-white">{title}</h3>
+      <p className="text-gray-400 leading-relaxed">
+        <span className="text-hack-secondary">{'>'}</span> {description}
+      </p>
+    </div>
+  </div>
+);
+
+const HackathonCard: React.FC<{ hackathon: Hackathon, delay: number }> = ({ hackathon, delay }) => {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), delay)
+    return () => clearTimeout(timer)
+  }, [delay])
+
+  if (!hackathon || !hackathon.Date) return null;
+
+  const { Title, Theme, Date, Location, EventStatus } = hackathon;
+  const formattedDate = formatDate(Date);
+
+  return (
+    <Card className={`bg-slate-900/80 backdrop-blur-sm border-gray-800 transform transition-all duration-500 
+      ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <CardContent className="p-6 font-mono space-y-4">
+        <div className="flex items-start justify-between">
+          <div>
+            <h3 className="text-xl font-bold text-white hover:text-hack-primary transition-colors">
+              <Link href={`/hackathon/${hackathon.slug}`}>
+                {Title}
+              </Link>
+            </h3>
+          </div>
+          {EventStatus && (
+            <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(EventStatus)}`}>
+              {EventStatus}
+            </span>
+          )}
+        </div>
+        <div className="text-gray-400">
+          <span className="text-hack-secondary">theme</span> {Theme}
+        </div>
+        <div className="space-y-2 text-gray-400">
+          <div className="flex items-center">
+            <Calendar className="w-4 h-4 mr-2 text-hack-primary" />
+            <span className="text-hack-secondary mr-2">date:</span>
+            <span className="font-normal">{formattedDate}</span>
+          </div>
+          <div className="flex items-center">
+            <MapPin className="w-4 h-4 mr-2 text-hack-primary" />
+            <span className="text-hack-secondary mr-2">location:</span>
+            <span className="font-normal">{Location}</span>
+          </div>
+          <div className="flex items-center">
+            <Clock className="w-4 h-4 mr-2 text-hack-primary" />
+            <span className="text-hack-secondary mr-2">duration:</span>
+            <span className="font-normal">72 hours</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'upcoming':
+      return 'bg-blue-500/20 border border-blue-500/50 text-blue-400';
+    case 'ongoing':
+      return 'bg-green-500/20 border border-green-500/50 text-green-400';
+    case 'completed':
+      return 'bg-gray-500/20 border border-gray-500/50 text-gray-400';
+    default:
+      return 'bg-gray-500/20 border border-gray-500/50 text-gray-400';
+  }
+}
+
+const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons }) => {
+  const [hackathons, setHackathons] = useState<Hackathon[]>(initialHackathons);
   const [isLoading, setIsLoading] = useState(false);
   const [typedText, setTypedText] = useState('')
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0)
   const [codeText, setCodeText] = useState('')
   const fullText = 'Welcome to HackWeekend'
 
-  // Generate floating block positions using a seeded random number generator
   const floatingBlockPositions = useMemo(() => {
     const random = seededRandom(12345); // Use a fixed seed
     return Array.from({ length: 5 }, () => ({
@@ -66,23 +153,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
   }, []);
 
   const hackathonsSectionRef = useRef<HTMLElement>(null);
-
-  // const scrollToHackathons = () => {
-  //   hackathonsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  // };
-
-  // Create menu actions
-  // const menuActions = (
-  //   <>
-  //     <Button 
-  //       onClick={scrollToHackathons} 
-  //       className="hack-button group"
-  //     >
-  //       Register Now
-  //       <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-  //     </Button>
-  //   </>
-  // );
 
   useEffect(() => {
     const fetchHackathons = async () => {
@@ -119,7 +189,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
     return () => clearInterval(typingInterval)
   }, [])
 
-  // Code cycling animation
   useEffect(() => {
     let i = 0
     const currentSnippet = codeSnippets[currentCodeIndex].code
@@ -140,20 +209,15 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
     return () => clearInterval(codeInterval)
   }, [currentCodeIndex])
 
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar
-        logo="HackWeekend"
-        logoSrc="/icon-hackwknd.svg"
-      />
+      <MenuBar logo="HackWeekend" logoSrc="/icon-hackwknd.svg" />
 
       <main className="relative">
         <section className="min-h-screen relative overflow-hidden flex items-center">
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-r from-hack-primary/20 to-hack-secondary/20 blur-3xl" />
-            {/* Floating code blocks */}
             {floatingBlockPositions.map((position, i) => (
               <div
                 key={i}
@@ -163,9 +227,8 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
                   top: `${position.top}%`,
                   animation: `float ${10 + i * 2}s infinite`,
                   animationDelay: `${i * -2}s`,
-                  // Ensure the elements don't overlap with the header or terminal
                   transform: `translate(${position.left > 50 ? '-100%' : '0'}, ${position.top < 20 ? '100%' : '0'})`,
-                  zIndex: 1, // Ensure they're above the background but below the content
+                  zIndex: 1,
                 }}
               >
                 <Code2 className="w-6 h-6 text-hack-primary/50" />
@@ -175,7 +238,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
 
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left side - Main content */}
               <div className="text-center lg:text-left">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 break-words">
                   <span className="hack-gradient-text">{typedText}</span>
@@ -188,16 +250,11 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
                     Register Now
                     <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                  {/* <Button variant="outline" className="hack-button-secondary">
-                    Learn More
-                  </Button> */}
                 </div>
               </div>
 
-              {/* Right side - Animated terminal */}
               <div className="hidden lg:block">
                 <div className="bg-slate-900 rounded-lg shadow-xl border border-gray-800">
-                  {/* Terminal header */}
                   <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
                     <div className="flex gap-2">
                       <div className="w-3 h-3 rounded-full bg-red-500" />
@@ -208,7 +265,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
                       <Terminal className="w-4 h-4 text-gray-400 inline-block" />
                     </div>
                   </div>
-                  {/* Terminal content */}
                   <div className="p-4 font-mono text-sm">
                     <div className="text-gray-400">$ {codeSnippets[currentCodeIndex].language}</div>
                     <pre className="text-hack-primary mt-2">
@@ -222,7 +278,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
           </div>
         </section>
 
-        {/* Features Section */}
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
@@ -249,7 +304,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
           </div>
         </section>
 
-        {/* Hackathons Section */}
         <section id="events" ref={hackathonsSectionRef} className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
@@ -291,7 +345,6 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
           </div>
         </section>
 
-        {/* CTA Section */}
         <section id="register" className="py-20 text-center">
           <div className="container mx-auto px-4">
             <div className="hack-card p-12">
@@ -307,126 +360,9 @@ export function LandingPageComponent({ initialHackathons }: LandingPageComponent
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   )
 }
 
-
-
-
-
-interface FeatureCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-function FeatureCard({ icon, title, description }: FeatureCardProps) {
-  return (
-    <div className="bg-slate-900 rounded-lg shadow-xl border border-gray-800 transform hover:scale-105 transition-all duration-300">
-      {/* Terminal header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
-        <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500" />
-          <div className="w-3 h-3 rounded-full bg-green-500" />
-        </div>
-        <div className="flex-1 text-center">
-          {icon}
-        </div>
-      </div>
-      {/* Terminal content */}
-      <div className="p-6 font-mono">
-        {/* <div className="text-hack-primary mb-2">$ info {title.toLowerCase()}</div> */}
-        <h3 className="text-xl font-bold mb-2 text-white">{title}</h3>
-        <p className="text-gray-400 leading-relaxed">
-          <span className="text-hack-secondary">{'>'}</span> {description}
-        </p>
-      </div>
-    </div>
-  )
-}
-
-function HackathonCard({ hackathon, delay }: { hackathon: Hackathon; delay: number }) {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), delay)
-    return () => clearTimeout(timer)
-  }, [delay])
-
-  if (!hackathon || !hackathon.Date) return null;
-
-  const { Title, Theme, Date, Location, EventStatus } = hackathon;
-  const formattedDate = formatDate(Date);
-
-  return (
-    <Card className={`bg-slate-900/80 backdrop-blur-sm border-gray-800 transform transition-all duration-500 
-      ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      <CardContent className="p-6 font-mono space-y-4">
-        <div className="flex items-start justify-between">
-          <div>
-            {/* <div className="text-hack-primary mb-1">$ hackathon info</div> */}
-            <h3 className="text-xl font-bold text-white hover:text-hack-primary transition-colors">
-              <Link href={`/hackathon/${hackathon.slug}`}>
-                {Title}
-              </Link>
-            </h3>
-          </div>
-          {EventStatus && (
-            <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(EventStatus)}`}>
-              {EventStatus}
-            </span>
-          )}
-        </div>
-
-        <div className="text-gray-400">
-          <span className="text-hack-secondary">theme</span> {Theme}
-        </div>
-
-        <div className="space-y-2 text-gray-400">
-          <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2 text-hack-primary" />
-            <span className="text-hack-secondary mr-2">date:</span>
-            <span className="font-normal">{formattedDate}</span>
-          </div>
-          <div className="flex items-center">
-            <MapPin className="w-4 h-4 mr-2 text-hack-primary" />
-            <span className="text-hack-secondary mr-2">location:</span>
-            <span className="font-normal">{Location}</span>
-          </div>
-          <div className="flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-hack-primary" />
-            <span className="text-hack-secondary mr-2">duration:</span>
-            <span className="font-normal">72 hours</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-// And for the empty state:
-<Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800">
-  <CardContent className="p-6 font-mono">
-    <div className="text-hack-primary mb-2">$ get hackathons</div>
-    <p className="text-gray-400">No hackathons available at the moment...</p>
-    <div className="animate-pulse inline-block mt-1">_</div>
-  </CardContent>
-</Card>
-
-// Update the getStatusColor function for better contrast
-function getStatusColor(status: string) {
-  switch (status.toLowerCase()) {
-    case 'upcoming':
-      return 'bg-blue-500/20 border border-blue-500/50 text-blue-400';
-    case 'ongoing':
-      return 'bg-green-500/20 border border-green-500/50 text-green-400';
-    case 'completed':
-      return 'bg-gray-500/20 border border-gray-500/50 text-gray-400';
-    default:
-      return 'bg-gray-500/20 border border-gray-500/50 text-gray-400';
-  }
-}
+export default LandingPage;

@@ -1,4 +1,4 @@
-import { LandingPageComponent } from "@/components/landing-page";
+import  LandingPageComponent  from "@/components/landing-page";
 
 async function getHackathons() {
   try {
