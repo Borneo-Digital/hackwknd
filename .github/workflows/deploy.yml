@@ -24,6 +24,9 @@ jobs:
           # Navigate to project directory
           cd /var/www/hackweekend
           
+          # Create logs directory
+          mkdir -p logs
+          
           # Backup database
           timestamp=$(date +%Y%m%d_%H%M%S)
           mkdir -p /opt/strapi/database/backup
@@ -39,9 +42,11 @@ jobs:
           
           # Navigate to backend directory and install dependencies
           cd backend/hackweekend
-          npm ci
+          npm cache clean --force
+          rm -rf node_modules package-lock.json
+          npm install
           
-          # Create PM2 ecosystem file if it doesn't exist
+          # Create PM2 ecosystem file
           cat > ecosystem.config.js << 'EOL'
           module.exports = {
             apps: [{
@@ -56,7 +61,10 @@ jobs:
                 HOST: '0.0.0.0',
                 PORT: 1337,
                 PUBLIC_URL: 'https://api.borneodigital.co'
-              }
+              },
+              error_file: "/var/www/hackweekend/logs/strapi-error.log",
+              out_file: "/var/www/hackweekend/logs/strapi-out.log",
+              time: true
             }]
           }
           EOL
@@ -65,16 +73,18 @@ jobs:
           sudo chown -R $USER:$USER /opt/strapi/database
           sudo chmod 644 /opt/strapi/database/data.db
           
-          # Restart using PM2 ecosystem
-          pm2 restart ecosystem.config.js
+          # Stop current process and clear PM2 cache
+          pm2 delete strapi || true
+          pm2 flush
+          
+          # Start using PM2 ecosystem
+          pm2 start ecosystem.config.js
+          pm2 save
           
           # Verify deployment
-          sleep 5
+          sleep 10
           if ! pm2 show strapi | grep -q "online"; then
             echo "Deployment failed - Strapi is not running"
-            pm2 logs strapi --lines 50
+            cat /var/www/hackweekend/logs/strapi-error.log
             exit 1
           fi
-          
-          # Clean old backups (keep last 7 days)
-          find /opt/strapi/database/backup -name "data.db.*" -mtime +7 -delete
