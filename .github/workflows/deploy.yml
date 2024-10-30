@@ -19,11 +19,11 @@ jobs:
         host: ${{ secrets.DEPLOY_HOST }}
         username: ${{ secrets.DEPLOY_USER }}
         key: ${{ secrets.DEPLOY_KEY }}
-        port: 22  # Using default SSH port, remove if you need a custom port
+        port: 22
         script: |
           cd /var/www/hackweekend
           git pull origin main
           cd backend
-          npm install --only=production
-          npm run build
+          npm ci --omit=dev
+          NODE_ENV=production npm run build
           pm2 restart strapi
