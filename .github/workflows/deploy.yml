@@ -1,61 +1,29 @@
-name: Strapi Deploy
+name: Deploy to Production
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-      
-      - name: Deploy to Digital Ocean
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            # Navigate to project directory
-            cd /var/www/hackweekend/backend/hackweekend
-
-            # Backup database
-            timestamp=$(date +%Y%m%d_%H%M%S)
-            mkdir -p /opt/strapi/database/backup
-            cp /opt/strapi/database/data.db "/opt/strapi/database/backup/data.db.$timestamp"
-
-            # Pull latest changes
-            git pull origin main
-
-            # Install dependencies
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            nvm use 18
-            npm ci --production
-
-            # Build the application
-            NODE_ENV=production npm run build
-
-            # Update permissions if needed
-            sudo chown -R $USER:$USER /opt/strapi/database
-            sudo chmod 644 /opt/strapi/database/data.db
-
-            # Restart the application
-            pm2 restart strapi
-
-            # Verify deployment
-            sleep 5
-            if ! pm2 show strapi | grep -q "online"; then
-              echo "Deployment failed - Strapi is not running"
-              pm2 logs strapi --lines 50
-              exit 1
-            fi
+    - name: SSH and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /var/www/hackweekend
+          git pull origin main
+          cd backend
+          npm install --only=production
+          npm run build
+          pm2 restart strapi
