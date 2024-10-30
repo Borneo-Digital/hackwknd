@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Hackathon } from '@/types/hackathon'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,13 +8,27 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Calendar, MapPin, Clock, Users, ArrowRight, Trophy, Medal, Award, Brain, AccessibilityIcon } from "lucide-react"
 import { MenuBar } from './MenuBar'
 import { Footer } from './Footer'
-
 import Image from 'next/image'
 
 interface HackathonPageProps {
     hackathon: Hackathon
 }
 
+interface FormattedSection {
+    title?: string;
+    content: string[];
+    type: 'paragraph' | 'bulletPoints';
+}
+
+const formatDate = (dateString: string) => {
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Invalid Date';
+    }
+};
 
 export function HackathonPage({ hackathon }: HackathonPageProps) {
     const {
@@ -31,129 +45,13 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
         Image: hackathonImage
     } = hackathon
 
-    const formatDate = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        } catch (error) {
-            console.error('Error formatting date:', error);
-            return 'Invalid Date';
-        }
-    }
-
-    const handleRegisterClick = () => {
-        // You can implement the registration logic here
-        // For now, let's just scroll to the registration section if it exists
-        const registrationSection = document.getElementById('registration');
-        if (registrationSection) {
-            registrationSection.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            console.log('Registration section not found');
-        }
-    };
-
-    interface FormattedSection {
-        title?: string;
-        content: string[];
-        type: 'paragraph' | 'bulletPoints';
-    }
-
-    function formatHackathonDescription(description: string): FormattedSection[] {
-        // Helper function to detect if a line is a heading
-        const isHeading = (line: string) => line.endsWith(':');
-        // Helper function to detect if a line is a bullet point
-        const isBulletPoint = (line: string) => line.trim().startsWith('-');
-
-        const sections: FormattedSection[] = [];
-        let currentSection: FormattedSection | null = null;
-
-        // Split the description into lines and process each line
-        const lines = description.split('\n').filter(line => line.trim());
-
-        lines.forEach((line) => {
-            const trimmedLine = line.trim();
-
-            if (isHeading(trimmedLine)) {
-                // If we have a current section, push it to sections
-                if (currentSection) {
-                    sections.push(currentSection);
-                }
-                // Start a new section
-                currentSection = {
-                    title: trimmedLine.slice(0, -1), // Remove the colon
-                    content: [],
-                    type: 'paragraph'
-                };
-            } else if (isBulletPoint(trimmedLine)) {
-                // If we have bullet points but no section title, create a default section
-                if (!currentSection || currentSection.content.length > 0 && currentSection.type !== 'bulletPoints') {
-                    if (currentSection) sections.push(currentSection);
-                    currentSection = {
-                        content: [],
-                        type: 'bulletPoints'
-                    };
-                }
-                currentSection.type = 'bulletPoints';
-                currentSection.content.push(trimmedLine.slice(1).trim());
-            } else if (trimmedLine) {
-                // Regular paragraph text
-                if (!currentSection) {
-                    currentSection = {
-                        content: [],
-                        type: 'paragraph'
-                    };
-                }
-                if (currentSection.type === 'paragraph') {
-                    currentSection.content.push(trimmedLine);
-                } else {
-                    // If we hit regular text after bullet points, start a new section
-                    sections.push(currentSection);
-                    currentSection = {
-                        content: [trimmedLine],
-                        type: 'paragraph'
-                    };
-                }
-            }
-        });
-
-        // Don't forget to push the last section
-        if (currentSection) {
-            sections.push(currentSection);
-        }
-
-        return sections;
-    }
-
-    // Helper function to get the appropriate icon
-    function getPrizeIcon(iconName: string | undefined): React.ReactNode {
-        if (!iconName) return null;
-
-        switch (iconName) {
-            case 'trophy':
-                return <Trophy className="w-6 h-6" />;
-            case 'medal':
-                return <Medal className="w-6 h-6" />;
-            case 'award':
-                return <Award className="w-6 h-6" />;
-            case 'ai':
-                return <Brain className="w-6 h-6" />;
-            case 'accessibility':
-                return <AccessibilityIcon className="w-6 h-6" />;
-            case 'users':
-                return <Users className="w-6 h-6" />;
-            default:
-                return <Award className="w-6 h-6" />;
-        }
-    }
+    const formattedDate = useMemo(() => formatDate(hackathonDate), [hackathonDate]);
+    const formattedRegistrationEndDate = useMemo(() => formatDate(RegistrationEndDate), [RegistrationEndDate]);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
             <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-            <MenuBar
-                logo="HackWeekend"
-                logoSrc="/icon-hackwknd.svg"
-                onRegisterClick={handleRegisterClick}
-            />
+            <MenuBar logo="HackWeekend" logoSrc="/icon-hackwknd.svg" />
 
             <header className="relative pt-24 pb-12 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-hack-primary/20 to-hack-secondary/20 blur-3xl" />
@@ -166,7 +64,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                 {EventStatus}
                             </span>
                             <span className="text-gray-400">
-                                Registration ends: {formatDate(RegistrationEndDate)}
+                                Registration ends: {formattedRegistrationEndDate}
                             </span>
                         </div>
                     </div>
@@ -205,7 +103,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                             )}
                                             {section.type === 'paragraph' ? (
                                                 <div className="text-gray-300 leading-relaxed">
-                                                    {section.content.map((paragraph, pIndex) => (
+                                                    {section.content.map((paragraph: string, pIndex: number) => (
                                                         <p key={pIndex} className="mb-4 last:mb-0">
                                                             {paragraph}
                                                         </p>
@@ -213,7 +111,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                                 </div>
                                             ) : (
                                                 <ul className="space-y-2 text-gray-300">
-                                                    {section.content.map((bullet, bIndex) => (
+                                                    {section.content.map((bullet: string, bIndex: number) => (
                                                         <li key={bIndex} className="flex items-start">
                                                             <span className="text-hack-primary mr-2">•</span>
                                                             <span className="flex-1">{bullet}</span>
@@ -255,36 +153,11 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                                 <AccordionContent className="bg-slate-900/50">
                                                     <div className="space-y-4 p-4">
                                                         {day.events.map((event, eventIndex) => (
-                                                            <div
-                                                                key={eventIndex}
-                                                                className="relative pl-6 pb-4 last:pb-0"
-                                                            >
-                                                                {/* Timeline connector */}
-                                                                {eventIndex < day.events.length - 1 && (
-                                                                    <div className="absolute left-[11px] top-6 bottom-0 w-0.5 bg-gray-800" />
-                                                                )}
-
-                                                                {/* Event content */}
-                                                                <div className="relative">
-                                                                    {/* Time marker */}
-                                                                    <div className="absolute left-[-24px] top-1.5 w-3 h-3 rounded-full bg-hack-primary/20 border-2 border-hack-primary" />
-
-                                                                    {/* Event details */}
-                                                                    <div className="space-y-1">
-                                                                        <div className="flex items-center text-sm text-hack-secondary">
-                                                                            <Clock className="w-3 h-3 mr-1" />
-                                                                            {event.time}
-                                                                            {event.duration && (
-                                                                                <span className="ml-2 text-gray-500">
-                                                                                    ({Math.floor(parseInt(event.duration) / 60)}h {parseInt(event.duration) % 60}m)
-                                                                                </span>
-                                                                            )}
-                                                                        </div>
-                                                                        <h4 className="text-white font-medium">{event.event}</h4>
-                                                                        {event.description && (
-                                                                            <p className="text-sm text-gray-400">{event.description}</p>
-                                                                        )}
-                                                                    </div>
+                                                            <div key={eventIndex} className="flex items-start space-x-2">
+                                                                <Clock className="w-4 h-4 text-hack-primary" />
+                                                                <div>
+                                                                    <p className="text-sm text-gray-300">{event.time}</p>
+                                                                    <p className="text-sm text-gray-400">{event.event}</p>
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -296,15 +169,14 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                 </CardContent>
                             </Card>
                         )}
+
                         {Prizes && Prizes.prizes && (
                             <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800">
                                 <CardHeader>
-                                    <CardTitle className="text-hack-primary">Prizes & Awards</CardTitle>
+                                    <CardTitle className="text-hack-primary">Prizes</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-6 font-mono">
-                                    <div className="text-hack-primary mb-6">$ cat prizes.json</div>
-
-                                    {/* Main Prizes */}
+                                    <div className="text-hack-primary mb-4">$ cat prizes.json</div>
                                     <div className="space-y-6 mb-8">
                                         {(['first', 'second', 'third'] as const).map((place) => {
                                             const prize = Prizes.prizes[place];
@@ -314,14 +186,13 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                                     key={place}
                                                     className="relative bg-slate-800/50 rounded-lg p-6 border border-gray-800/50 hover:border-hack-primary/50 transition-colors"
                                                 >
-                                                    {/* Prize Header */}
                                                     <div className="flex items-start gap-4">
                                                         <div className={`
-                                            p-3 rounded-lg 
-                                            ${place === 'first' ? 'bg-yellow-500/10 text-yellow-500' :
+                                                            p-3 rounded-lg 
+                                                            ${place === 'first' ? 'bg-yellow-500/10 text-yellow-500' :
                                                                 place === 'second' ? 'bg-slate-300/10 text-slate-300' :
                                                                     'bg-amber-600/10 text-amber-600'}
-                                        `}>
+                                                        `}>
                                                             {prize.icon && getPrizeIcon(prize.icon)}
                                                         </div>
                                                         <div className="flex-1">
@@ -329,8 +200,6 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                                             <div className="text-2xl font-bold text-hack-primary">RM{prize.amount}</div>
                                                         </div>
                                                     </div>
-
-                                                    {/* Prize Description */}
                                                     <div className="mt-4 pl-14">
                                                         <div className="text-gray-400 mb-3">{prize.description}</div>
                                                     </div>
@@ -339,7 +208,6 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                         })}
                                     </div>
 
-                                    {/* Special Prizes */}
                                     {Prizes.prizes.special && (
                                         <div className="mt-8">
                                             <h3 className="text-hack-secondary text-lg font-bold mb-4">Special Categories</h3>
@@ -394,9 +262,6 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                             </Card>
                         )}
                     </div>
-
-
-
                     {/* Sidebar */}
                     <div className="space-y-8">
                         <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800 sticky top-24">
@@ -408,7 +273,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                     <Calendar className="w-5 h-5 mr-3 text-hack-primary" />
                                     <div>
                                         <span className="text-hack-secondary block text-sm">date:</span>
-                                        {formatDate(hackathonDate)}
+                                        {formattedDate}
                                     </div>
                                 </div>
                                 <div className="flex items-center text-gray-300">
@@ -447,8 +312,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     )
 }
 
-
-function getStatusColor(status: string) {
+const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
         case 'upcoming':
             return 'bg-hack-secondary/20 border border-hack-secondary/50 text-hack-secondary';
@@ -459,4 +323,75 @@ function getStatusColor(status: string) {
         default:
             return 'bg-gray-500/20 border border-gray-500/50 text-gray-400';
     }
-}
+};
+
+const formatHackathonDescription = (description: string): FormattedSection[] => {
+    const isHeading = (line: string) => line.endsWith(':');
+    const isBulletPoint = (line: string) => line.trim().startsWith('-');
+    const sections: FormattedSection[] = [];
+    let currentSection: FormattedSection | null = null;
+    const lines = description.split('\n').filter(line => line.trim());
+    lines.forEach((line) => {
+        const trimmedLine = line.trim();
+        if (isHeading(trimmedLine)) {
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+            currentSection = {
+                title: trimmedLine.slice(0, -1),
+                content: [],
+                type: 'paragraph'
+            };
+        } else if (isBulletPoint(trimmedLine)) {
+            if (!currentSection || currentSection.content.length > 0 && currentSection.type !== 'bulletPoints') {
+                if (currentSection) sections.push(currentSection);
+                currentSection = {
+                    content: [],
+                    type: 'bulletPoints'
+                };
+            }
+            currentSection.type = 'bulletPoints';
+            currentSection.content.push(trimmedLine.slice(1).trim());
+        } else if (trimmedLine) {
+            if (!currentSection) {
+                currentSection = {
+                    content: [],
+                    type: 'paragraph'
+                };
+            }
+            if (currentSection.type === 'paragraph') {
+                currentSection.content.push(trimmedLine);
+            } else {
+                sections.push(currentSection);
+                currentSection = {
+                    content: [trimmedLine],
+                    type: 'paragraph'
+                };
+            }
+        }
+    });
+    if (currentSection) {
+        sections.push(currentSection);
+    }
+    return sections;
+};
+
+const getPrizeIcon = (iconName: string | undefined): React.ReactNode => {
+    if (!iconName) return null;
+    switch (iconName) {
+        case 'trophy':
+            return <Trophy className="w-6 h-6" />;
+        case 'medal':
+            return <Medal className="w-6 h-6" />;
+        case 'award':
+            return <Award className="w-6 h-6" />;
+        case 'ai':
+            return <Brain className="w-6 h-6" />;
+        case 'accessibility':
+            return <AccessibilityIcon className="w-6 h-6" />;
+        case 'users':
+            return <Users className="w-6 h-6" />;
+        default:
+            return <Award className="w-6 h-6" />;
+    }
+};
