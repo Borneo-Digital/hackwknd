@@ -21,9 +21,60 @@ jobs:
         key: ${{ secrets.DEPLOY_KEY }}
         port: 22
         script: |
+          # Navigate to project directory
           cd /var/www/hackweekend
+          
+          # Backup database
+          timestamp=$(date +%Y%m%d_%H%M%S)
+          mkdir -p /opt/strapi/database/backup
+          cp /opt/strapi/database/data.db "/opt/strapi/database/backup/data.db.$timestamp"
+          
+          # Update code
           git pull origin main
-          cd backend
-          npm ci --omit=dev
-          NODE_ENV=production npm run build
-          pm2 restart strapi
+          
+          # Setup Node environment
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh
+          nvm use 18
+          
+          # Navigate to backend directory and install dependencies
+          cd backend/hackweekend
+          npm ci
+          
+          # Create PM2 ecosystem file if it doesn't exist
+          cat > ecosystem.config.js << 'EOL'
+          module.exports = {
+            apps: [{
+              name: 'strapi',
+              cwd: '/var/www/hackweekend/backend/hackweekend',
+              script: 'npm',
+              args: 'run develop',
+              env: {
+                NODE_ENV: 'development',
+                DATABASE_CLIENT: 'sqlite',
+                DATABASE_FILENAME: '/opt/strapi/database/data.db',
+                HOST: '0.0.0.0',
+                PORT: 1337,
+                PUBLIC_URL: 'https://api.borneodigital.co'
+              }
+            }]
+          }
+          EOL
+          
+          # Update permissions
+          sudo chown -R $USER:$USER /opt/strapi/database
+          sudo chmod 644 /opt/strapi/database/data.db
+          
+          # Restart using PM2 ecosystem
+          pm2 restart ecosystem.config.js
+          
+          # Verify deployment
+          sleep 5
+          if ! pm2 show strapi | grep -q "online"; then
+            echo "Deployment failed - Strapi is not running"
+            pm2 logs strapi --lines 50
+            exit 1
+          fi
+          
+          # Clean old backups (keep last 7 days)
+          find /opt/strapi/database/backup -name "data.db.*" -mtime +7 -delete
