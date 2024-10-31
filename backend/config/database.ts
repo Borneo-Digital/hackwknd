@@ -44,7 +44,7 @@ export default ({ env }) => {
     },
     sqlite: {
       connection: {
-        filename: env('DATABASE_FILENAME', '/opt/strapi/database/data.db'),
+        filename: path.join(__dirname, '..', '..', env('DATABASE_FILENAME', '.tmp/data.db')),
       },
       useNullAsDefault: true,
     },

@@ -369,49 +369,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
-  collectionName: 'hackathons';
-  info: {
-    description: '';
-    displayName: 'Hackathon';
-    pluralName: 'hackathons';
-    singularName: 'hackathon';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    Date: Schema.Attribute.DateTime;
-    Description: Schema.Attribute.Text;
-    EventStatus: Schema.Attribute.Enumeration<
-      ['Upcoming', 'Ongoing', 'Completed']
-    >;
-    FAQ: Schema.Attribute.Component<'faq.faq', true>;
-    Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::hackathon.hackathon'
-    > &
-      Schema.Attribute.Private;
-    Location: Schema.Attribute.String;
-    Prizes: Schema.Attribute.JSON;
-    publishedAt: Schema.Attribute.DateTime;
-    RegistrationEndDate: Schema.Attribute.Date;
-    RegistrationStartDate: Schema.Attribute.Date;
-    Schedule: Schema.Attribute.JSON;
-    slug: Schema.Attribute.String;
-    Theme: Schema.Attribute.Text;
-    Title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -863,6 +820,7 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
+    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -871,7 +829,6 @@ export interface PluginUsersPermissionsUser
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Date: Schema.Attribute.Date;
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
@@ -883,7 +840,6 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
-    Location: Schema.Attribute.String;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -896,8 +852,6 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    Theme: Schema.Attribute.String;
-    Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -920,7 +874,6 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::hackathon.hackathon': ApiHackathonHackathon;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

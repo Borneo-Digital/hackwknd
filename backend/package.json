@@ -1,5 +1,5 @@
 {
-  "name": "hackweekend",
+  "name": "backend",
   "version": "0.1.0",
   "private": true,
   "description": "A Strapi application",
@@ -7,13 +7,13 @@
     "build": "strapi build",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
-    "start": "NODE_ENV=production strapi start",
+    "start": "strapi start",
     "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.1.1",
-    "@strapi/plugin-users-permissions": "5.1.1",
-    "@strapi/strapi": "5.1.1",
+    "@strapi/plugin-cloud": "5.2.0",
+    "@strapi/plugin-users-permissions": "5.2.0",
+    "@strapi/strapi": "5.2.0",
     "better-sqlite3": "11.3.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -31,6 +31,6 @@
     "npm": ">=6.0.0"
   },
   "strapi": {
-    "uuid": "c542e074-dab9-467b-9c60-5e11da9d02d2"
+    "uuid": "ea6005fa-c70f-4ff6-9930-5037ecc3b344"
   }
 }
