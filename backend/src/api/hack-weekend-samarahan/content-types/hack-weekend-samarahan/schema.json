@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "hack_weekend_samarahans",
+  "info": {
+    "singularName": "hack-weekend-samarahan",
+    "pluralName": "hack-weekend-samarahans",
+    "displayName": "HackWeekend Samarahan"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Samarahan": {
+      "type": "string"
+    }
+  }
+}
