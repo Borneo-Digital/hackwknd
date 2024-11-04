@@ -39,7 +39,7 @@
       "repeatable": true,
       "component": "qusetion.faq"
     },
-    "Slug": {
+    "slug": {
       "type": "string"
     },
     "Image": {

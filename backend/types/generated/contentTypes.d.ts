@@ -406,7 +406,7 @@ export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
     RegistrationEndDate: Schema.Attribute.Date;
     RegistrationStartDate: Schema.Attribute.Date;
     Schedule: Schema.Attribute.JSON;
-    Slug: Schema.Attribute.String;
+    slug: Schema.Attribute.String;
     Theme: Schema.Attribute.String;
     Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
