@@ -369,13 +369,13 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiHackWeekendSamarahanHackWeekendSamarahan
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'hack_weekend_samarahans';
+export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
+  collectionName: 'hackathons';
   info: {
-    displayName: 'HackWeekend Samarahan';
-    pluralName: 'hack-weekend-samarahans';
-    singularName: 'hack-weekend-samarahan';
+    description: '';
+    displayName: 'Hackathon';
+    pluralName: 'hackathons';
+    singularName: 'hackathon';
   };
   options: {
     draftAndPublish: true;
@@ -384,14 +384,31 @@ export interface ApiHackWeekendSamarahanHackWeekendSamarahan
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Date: Schema.Attribute.DateTime;
+    Description: Schema.Attribute.Text;
+    EventStatus: Schema.Attribute.Enumeration<
+      ['Upcoming', 'Ongoing', 'Finished']
+    >;
+    FAQ: Schema.Attribute.Component<'qusetion.faq', true>;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::hack-weekend-samarahan.hack-weekend-samarahan'
+      'api::hackathon.hackathon'
     > &
       Schema.Attribute.Private;
+    Location: Schema.Attribute.String;
+    Prizes: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
-    Samarahan: Schema.Attribute.String;
+    RegistrationEndDate: Schema.Attribute.Date;
+    RegistrationStartDate: Schema.Attribute.Date;
+    Schedule: Schema.Attribute.JSON;
+    Slug: Schema.Attribute.String;
+    Theme: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -903,7 +920,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::hack-weekend-samarahan.hack-weekend-samarahan': ApiHackWeekendSamarahanHackWeekendSamarahan;
+      'api::hackathon.hackathon': ApiHackathonHackathon;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "hackathons",
+  "info": {
+    "singularName": "hackathon",
+    "pluralName": "hackathons",
+    "displayName": "Hackathon",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Theme": {
+      "type": "string"
+    },
+    "Date": {
+      "type": "datetime"
+    },
+    "Location": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "Schedule": {
+      "type": "json"
+    },
+    "Prizes": {
+      "type": "json"
+    },
+    "FAQ": {
+      "displayName": "FAQ",
+      "type": "component",
+      "repeatable": true,
+      "component": "qusetion.faq"
+    },
+    "Slug": {
+      "type": "string"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "EventStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Upcoming",
+        "Ongoing",
+        "Finished"
+      ]
+    },
+    "RegistrationStartDate": {
+      "type": "date"
+    },
+    "RegistrationEndDate": {
+      "type": "date"
+    }
+  }
+}
