@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_dynamic_zone_forms",
+  "info": {
+    "displayName": "form",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Heading": {
+      "type": "string"
+    },
+    "form": {
+      "displayName": "form",
+      "type": "component",
+      "repeatable": false,
+      "component": "input.form"
+    }
+  }
+}

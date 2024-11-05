@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_register_registers",
+  "info": {
+    "displayName": "Register",
+    "icon": "book"
+  },
+  "options": {},
+  "attributes": {
+    "Interest": {
+      "displayName": "Interest",
+      "type": "component",
+      "repeatable": false,
+      "component": "interest.interest"
+    }
+  }
+}
