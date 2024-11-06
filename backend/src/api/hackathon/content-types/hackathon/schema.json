@@ -37,7 +37,7 @@
       "displayName": "FAQ",
       "type": "component",
       "repeatable": true,
-      "component": "qusetion.faq"
+      "component": "faq.faq"
     },
     "slug": {
       "type": "string"
@@ -66,6 +66,12 @@
     },
     "RegistrationEndDate": {
       "type": "date"
+    },
+    "dynamic_zone": {
+      "type": "dynamiczone",
+      "components": [
+        "dynamic-zone.form"
+      ]
     }
   }
 }

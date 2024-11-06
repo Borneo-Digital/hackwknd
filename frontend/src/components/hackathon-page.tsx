@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo,useState } from 'react'
 import { Hackathon } from '@/types/hackathon'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +9,7 @@ import { Calendar, MapPin, Clock, Users, ArrowRight, Trophy, Medal, Award, Brain
 import { MenuBar } from './MenuBar'
 import { Footer } from './Footer'
 import Image from 'next/image'
+import { RegistrationForm } from './RegistrationForm';
 
 interface HackathonPageProps {
     hackathon: Hackathon
@@ -47,6 +48,9 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
 
     const formattedDate = useMemo(() => formatDate(hackathonDate), [hackathonDate]);
     const formattedRegistrationEndDate = useMemo(() => formatDate(RegistrationEndDate), [RegistrationEndDate]);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const openForm = () => setIsFormOpen(true);
+    const closeForm = () => setIsFormOpen(false);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
@@ -298,10 +302,11 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                     </div>
                                 </div>
 
-                                <Button className="w-full hack-button group mt-6">
-                                    Register Now
-                                    <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                                </Button>
+                                <Button className="w-full hack-button group mt-6" onClick={openForm}>
+                Register Now
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            {isFormOpen && <RegistrationForm onClose={closeForm} />}
                             </CardContent>
                         </Card>
                     </div>

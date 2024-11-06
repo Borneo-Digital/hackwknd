@@ -386,10 +386,11 @@ export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     Date: Schema.Attribute.DateTime;
     Description: Schema.Attribute.Text;
+    dynamic_zone: Schema.Attribute.DynamicZone<['dynamic-zone.form']>;
     EventStatus: Schema.Attribute.Enumeration<
       ['Upcoming', 'Ongoing', 'Finished']
     >;
-    FAQ: Schema.Attribute.Component<'qusetion.faq', true>;
+    FAQ: Schema.Attribute.Component<'faq.faq', true>;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
