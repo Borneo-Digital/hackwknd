@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { submitRegistration } from '@/lib/api';
 
 interface RegistrationFormProps {
   onClose: () => void;
@@ -6,63 +7,56 @@ interface RegistrationFormProps {
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    onClose(); // Close the form after submission
+    const success = await submitRegistration(formData);
+    if (success) {
+      alert('Form submitted successfully!');
+      onClose();
+    } else {
+      setError('There was an error submitting the form. Please try again.');
+    }
   };
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded shadow-lg">
-        <h2 className="text-xl mb-4">Register for Hackathon</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Phone</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              required
-            />
-          </div>
-          <div className="flex justify-end">
-            <button type="button" onClick={onClose} className="mr-4">Cancel</button>
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-card text-card-foreground rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-4">Register Here</h2>
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Name"
+        required
+        className="w-full p-2 border border-input rounded-md"
+      />
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Email"
+        required
+        className="w-full p-2 border border-input rounded-md"
+      />
+      <input
+        type="tel"
+        name="phone"
+        value={formData.phone}
+        onChange={handleChange}
+        placeholder="Phone"
+        required
+        className="w-full p-2 border border-input rounded-md"
+      />
+      <button type="submit" className="w-full p-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+        Submit
+      </button>
+      {error && <p className="text-destructive">{error}</p>}
+    </form>
   );
 };

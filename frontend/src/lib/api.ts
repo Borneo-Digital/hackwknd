@@ -1,4 +1,5 @@
 import { Hackathon } from '@/types/hackathon'
+import {  RegistrationData } from '@/types/registrations'
 
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
   try {
@@ -16,5 +17,27 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
   } catch (error) {
     console.error('Error fetching hackathon:', error)
     return null
+  }
+}
+
+export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const response = await fetch(`${apiUrl}/api/registrations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data: formData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit registration');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error submitting registration:', error);
+    return false;
   }
 }
