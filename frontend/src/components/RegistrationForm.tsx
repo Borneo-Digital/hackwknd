@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { submitRegistration } from '@/lib/api';
+import { RegistrationData } from '@/types/registrations'; // Add this import
 
 interface RegistrationFormProps {
   onClose: () => void;
 }
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) => {
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [formData, setFormData] = useState<RegistrationData>({ name: '', email: '', phone: '' });
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +24,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) =
       setError('There was an error submitting the form. Please try again.');
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-card text-card-foreground rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Register Here</h2>

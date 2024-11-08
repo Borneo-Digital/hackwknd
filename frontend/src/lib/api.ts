@@ -28,8 +28,17 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ data: formData }),
+      body: JSON.stringify({
+        data: {
+          Name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        },
+      }),
     });
+
+    const responseBody = await response.json();
+    console.error('Response body:', responseBody); // Add this line
 
     if (!response.ok) {
       throw new Error('Failed to submit registration');
