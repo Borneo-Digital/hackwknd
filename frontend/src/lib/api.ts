@@ -1,5 +1,16 @@
 import { Hackathon } from '@/types/hackathon'
 import {  RegistrationData } from '@/types/registrations'
+import { 
+  SendTemplateEmailRequest, 
+  EmailTemplate, 
+  EmailResponse,
+  EmailError 
+} from '@/types/email';
+
+const getAuthHeaders = () => ({
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`
+});
 
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
   try {
@@ -20,18 +31,10 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
   }
 }
 
-// lib/api.ts
-// lib/api.ts
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-
-    // Common headers with authentication
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiToken}`
-    };
+    const headers = getAuthHeaders();
 
     // Submit registration
     const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
@@ -47,28 +50,32 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
     });
 
     if (!registrationResponse.ok) {
+      const errorData = await registrationResponse.json();
+      console.error('Registration error:', errorData);
       throw new Error('Failed to submit registration');
     }
 
     // Send confirmation email
+    const emailRequest: SendTemplateEmailRequest = {
+      templateId: 1, // Your template ID
+      to: formData.email,
+      data: {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone
+      }
+    };
+
     const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({
-        templateId: 1,
-        to: formData.email,
-        data: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-        },
-      }),
+      body: JSON.stringify(emailRequest),
     });
 
     if (!emailResponse.ok) {
-      console.error('Failed to send confirmation email');
-      // Still return true as registration was successful
-      return true;
+      const errorData: EmailError = await emailResponse.json();
+      console.error('Email error:', errorData);
+      return true; // Still return true as registration was successful
     }
 
     return true;
@@ -78,22 +85,45 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
   }
 }
 
-// // Optional: Create a helper function for authenticated API calls
-// async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
-//   const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-//   const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+// Get email template by ID
+export async function getEmailTemplate(id: number): Promise<EmailTemplate | null> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const response = await fetch(`${apiUrl}/api/emails/${id}`, {
+      headers: getAuthHeaders(),
+    });
 
-//   const response = await fetch(`${apiUrl}${endpoint}`, {
-//     ...options,
-//     headers: {
-//       ...options.headers,
-//       'Authorization': `Bearer ${apiToken}`,
-//     },
-//   });
+    if (!response.ok) {
+      throw new Error('Failed to fetch email template');
+    }
 
-//   if (!response.ok) {
-//     throw new Error(`API call failed: ${response.statusText}`);
-//   }
+    const data: EmailResponse = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching email template:', error);
+    return null;
+  }
+}
 
-//   return response.json();
-// }
+// Send email using template
+export async function sendTemplateEmail(request: SendTemplateEmailRequest): Promise<boolean> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const response = await fetch(`${apiUrl}/api/emails/send-template`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      const errorData: EmailError = await response.json();
+      console.error('Failed to send template email:', errorData);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error sending template email:', error);
+    return false;
+  }
+}
