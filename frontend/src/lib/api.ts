@@ -44,20 +44,20 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       throw new Error('Failed to submit registration');
     }
 
-    // Then, send the confirmation email
+    // Then, send the confirmation email using the template
     const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        templateId: 1, // Use the actual ID of your email template
+        templateId: 1, // Your template ID
         to: formData.email,
         data: {
           name: formData.name,
           email: formData.email,
-          phone: formData.phone,
-        },
+          phone: formData.phone
+        }
       }),
     });
 
