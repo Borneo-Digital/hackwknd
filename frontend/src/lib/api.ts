@@ -20,10 +20,13 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
   }
 }
 
+// lib/api.ts
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    const response = await fetch(`${apiUrl}/api/registrations`, {
+    
+    // First, submit the registration
+    const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,16 +40,36 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       }),
     });
 
-    const responseBody = await response.json();
-    console.error('Response body:', responseBody); // Add this line
-
-    if (!response.ok) {
+    if (!registrationResponse.ok) {
       throw new Error('Failed to submit registration');
+    }
+
+    // Then, send the confirmation email
+    const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        templateId: 1, // Use the actual ID of your email template
+        to: formData.email,
+        data: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        },
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      console.error('Failed to send confirmation email');
+      // Still return true as registration was successful
+      return true;
     }
 
     return true;
   } catch (error) {
-    console.error('Error submitting registration:', error);
+    console.error('Error in registration process:', error);
     return false;
   }
 }
