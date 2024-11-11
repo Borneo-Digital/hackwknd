@@ -21,16 +21,22 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
 }
 
 // lib/api.ts
+// lib/api.ts
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    
-    // First, submit the registration
+    const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+
+    // Common headers with authentication
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiToken}`
+    };
+
+    // Submit registration
     const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         data: {
           Name: formData.name,
@@ -44,20 +50,18 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       throw new Error('Failed to submit registration');
     }
 
-    // Then, send the confirmation email using the template
+    // Send confirmation email
     const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
-        templateId: 1, // Your template ID
+        templateId: 1,
         to: formData.email,
         data: {
           name: formData.name,
           email: formData.email,
-          phone: formData.phone
-        }
+          phone: formData.phone,
+        },
       }),
     });
 
@@ -73,3 +77,23 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
     return false;
   }
 }
+
+// // Optional: Create a helper function for authenticated API calls
+// async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
+//   const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+//   const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+
+//   const response = await fetch(`${apiUrl}${endpoint}`, {
+//     ...options,
+//     headers: {
+//       ...options.headers,
+//       'Authorization': `Bearer ${apiToken}`,
+//     },
+//   });
+
+//   if (!response.ok) {
+//     throw new Error(`API call failed: ${response.statusText}`);
+//   }
+
+//   return response.json();
+// }
