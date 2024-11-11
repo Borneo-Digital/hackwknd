@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_email_email_template_forms",
+  "info": {
+    "displayName": "EmailTemplateForm",
+    "icon": "envelop"
+  },
+  "options": {},
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "Subject": {
+      "type": "string"
+    },
+    "Body": {
+      "type": "text"
+    },
+    "email": {
+      "type": "email"
+    },
+    "IsActive": {
+      "type": "boolean"
+    }
+  }
+}
