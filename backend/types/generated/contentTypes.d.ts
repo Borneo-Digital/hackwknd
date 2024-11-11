@@ -369,6 +369,36 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEmailEmail extends Struct.CollectionTypeSchema {
+  collectionName: 'emails';
+  info: {
+    description: '';
+    displayName: 'Email';
+    pluralName: 'emails';
+    singularName: 'email';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Body: Schema.Attribute.Text & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    FromEmail: Schema.Attribute.Email & Schema.Attribute.Required;
+    IsActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::email.email'> &
+      Schema.Attribute.Private;
+    Name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    Subject: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
   collectionName: 'hackathons';
   info: {
@@ -952,6 +982,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::email.email': ApiEmailEmail;
       'api::hackathon.hackathon': ApiHackathonHackathon;
       'api::registration.registration': ApiRegistrationRegistration;
       'plugin::content-releases.release': PluginContentReleasesRelease;
