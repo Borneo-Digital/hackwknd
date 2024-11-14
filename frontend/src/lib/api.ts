@@ -24,8 +24,9 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    
+
     // First, submit the registration
+    console.log('Submitting registration data:', formData);
     const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
       method: 'POST',
       headers: {
@@ -41,34 +42,39 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
     });
 
     if (!registrationResponse.ok) {
+      console.error('Registration failed:', registrationResponse.status, registrationResponse.statusText);
       throw new Error('Failed to submit registration');
     }
+    console.log('Registration successful');
 
-             // Then, send the confirmation email
-             const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                templateId: 1, // Use the actual ID of your email template
-                to: formData.email,
-                data: {
-                  name: formData.name,
-                  email: formData.email,
-                  phone: formData.phone,
-                },
-              }),
-            });
-            console.log('Email response:', emailResponse); // Log the email response
-            if (!emailResponse.ok) {
-              console.error('Failed to send confirmation email');
-              // Still return true as registration was successful
-              return true;
-            }
-            return true;
-          } catch (error) {
-            console.error('Error in registration process:', error);
-            return false;
-          }
-        }
+    // Then, send the confirmation email
+    console.log('Sending confirmation email to:', formData.email);
+    const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        templateId: 1, // Use the actual ID of your email template
+        to: formData.email,
+        data: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        },
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      console.error('Failed to send confirmation email:', emailResponse.status, emailResponse.statusText);
+      // Still return true as registration was successful
+      return true;
+    }
+
+    console.log('Confirmation email sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Error in registration process:', error);
+    return false;
+  }
+}
