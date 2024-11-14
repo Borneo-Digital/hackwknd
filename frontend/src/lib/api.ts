@@ -44,30 +44,31 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       throw new Error('Failed to submit registration');
     }
 
-    // Then, send the confirmation email
-    const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        templateId: 1, // Use the actual ID of your email template
-        to: formData.email,
-        data: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-        },
-      }),
-    });
-    if (!emailResponse.ok) {
-      console.error('Failed to send confirmation email');
-      // Still return true as registration was successful
-      return true;
-    }
-    return true;
-  } catch (error) {
-    console.error('Error in registration process:', error);
-    return false;
-  }
-}
+             // Then, send the confirmation email
+             const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                templateId: 1, // Use the actual ID of your email template
+                to: formData.email,
+                data: {
+                  name: formData.name,
+                  email: formData.email,
+                  phone: formData.phone,
+                },
+              }),
+            });
+            console.log('Email response:', emailResponse); // Log the email response
+            if (!emailResponse.ok) {
+              console.error('Failed to send confirmation email');
+              // Still return true as registration was successful
+              return true;
+            }
+            return true;
+          } catch (error) {
+            console.error('Error in registration process:', error);
+            return false;
+          }
+        }
