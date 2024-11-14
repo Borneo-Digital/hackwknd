@@ -34,8 +34,6 @@ module.exports = [
   'strapi::session',
   'strapi::favicon',
   'strapi::public',
-  async (ctx, next) => {
-    console.log('CORS middleware applied');
-    await next();
-  },
 ];
+
+console.log('Middlewares configuration:', module.exports);
