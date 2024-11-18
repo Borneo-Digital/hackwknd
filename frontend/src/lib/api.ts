@@ -20,13 +20,16 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
   }
 }
 
-// lib/api.ts
+
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    console.log('API URL:', apiUrl); // Log API URL
 
     // First, submit the registration
     console.log('Submitting registration data:', formData);
+    console.log('Request URL:', `${apiUrl}/api/registrations`); // Log full request URL
+    
     const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
       method: 'POST',
       headers: {
@@ -41,21 +44,33 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       }),
     });
 
+    // Log registration response details
+    console.log('Registration Response Status:', registrationResponse.status);
+    console.log('Registration Response Headers:', Object.fromEntries(registrationResponse.headers.entries()));
+
     if (!registrationResponse.ok) {
-      console.error('Registration failed:', registrationResponse.status, registrationResponse.statusText);
+      console.error('Registration failed:', {
+        status: registrationResponse.status,
+        statusText: registrationResponse.statusText,
+        headers: Object.fromEntries(registrationResponse.headers.entries())
+      });
+      const errorText = await registrationResponse.text();
+      console.error('Registration Error Details:', errorText);
       throw new Error('Failed to submit registration');
     }
     console.log('Registration successful');
 
     // Then, send the confirmation email
     console.log('Sending confirmation email to:', formData.email);
+    console.log('Email Request URL:', `${apiUrl}/api/emails/send-template`); // Log email request URL
+    
     const emailResponse = await fetch(`${apiUrl}/api/emails/send-template`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        templateId: 1, // Use the actual ID of your email template
+        templateId: 1,
         to: formData.email,
         data: {
           name: formData.name,
@@ -65,16 +80,32 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       }),
     });
 
+    // Log email response details
+    console.log('Email Response Status:', emailResponse.status);
+    console.log('Email Response Headers:', Object.fromEntries(emailResponse.headers.entries()));
+
     if (!emailResponse.ok) {
-      console.error('Failed to send confirmation email:', emailResponse.status, emailResponse.statusText);
-      // Still return true as registration was successful
+      const emailErrorText = await emailResponse.text();
+      console.error('Failed to send confirmation email:', {
+        status: emailResponse.status,
+        statusText: emailResponse.statusText,
+        error: emailErrorText
+      });
       return true;
     }
 
     console.log('Confirmation email sent successfully');
     return true;
   } catch (error) {
-    console.error('Error in registration process:', error);
+    if (error instanceof Error) {
+      console.error('Error in registration process:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+    } else {
+      console.error('Unknown error in registration process:', error);
+    }
     return false;
   }
 }
