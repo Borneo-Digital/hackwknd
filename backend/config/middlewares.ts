@@ -25,6 +25,7 @@ module.exports = [
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeaderOnError: true,
+      credentials: true 
     },
   },
   'strapi::poweredBy',
