@@ -21,11 +21,24 @@ module.exports = [
     name: 'strapi::cors',
     config: {
       enabled: true,
-      origin: ['http://localhost:3000', 'https://hackwknd.sarawak.digital/'],
+      origin: ['https://hackwknd.sarawak.digital'],  // Remove trailing slash
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
-      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+      headers: [
+        'Content-Type',
+        'Authorization',
+        'Origin',
+        'Accept',
+        'Access-Control-Allow-Origin',
+        'Access-Control-Allow-Credentials',
+        'Access-Control-Allow-Headers'
+      ],
+      exposed: [
+        'Content-Range',
+        'X-Total-Count',
+        'Access-Control-Allow-Origin'
+      ],
       keepHeaderOnError: true,
-      credentials: true 
+      credentials: true
     },
   },
   'strapi::poweredBy',
