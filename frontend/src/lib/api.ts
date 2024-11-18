@@ -24,17 +24,17 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    console.log('API URL:', apiUrl); // Log API URL
+    console.log('API URL:', apiUrl);
 
-    // First, submit the registration
-    console.log('Submitting registration data:', formData);
-    console.log('Request URL:', `${apiUrl}/api/registrations`); // Log full request URL
-    
     const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Origin': 'https://hackwknd.sarawak.digital'
       },
+      mode: 'cors',
+      credentials: 'include',
       body: JSON.stringify({
         data: {
           Name: formData.name,
@@ -49,14 +49,14 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
     console.log('Registration Response Headers:', Object.fromEntries(registrationResponse.headers.entries()));
 
     if (!registrationResponse.ok) {
+      const errorBody = await registrationResponse.text();
       console.error('Registration failed:', {
         status: registrationResponse.status,
         statusText: registrationResponse.statusText,
-        headers: Object.fromEntries(registrationResponse.headers.entries())
+        headers: Object.fromEntries(registrationResponse.headers.entries()),
+        body: errorBody
       });
-      const errorText = await registrationResponse.text();
-      console.error('Registration Error Details:', errorText);
-      throw new Error('Failed to submit registration');
+      throw new Error(`Failed to submit registration: ${registrationResponse.status}`);
     }
     console.log('Registration successful');
 
