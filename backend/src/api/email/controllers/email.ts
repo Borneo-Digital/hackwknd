@@ -147,15 +147,15 @@ const emailController = factories.createCoreController('api::email.email', ({ st
   async test(ctx) {
     try {
       await strapi.plugins['email'].services.email.send({
-        to: 'test@example.com', // Replace with a test email
-        from: process.env.SMTP_FROM || 'your-verified@domain.com',
+        to: 'martin@borneodigital.co',
+        from: process.env.SMTP_FROM,
         subject: 'Test Email from Strapi',
         text: 'This is a test email from your Strapi application',
         html: '<h1>Test Email</h1><p>This is a test email from your Strapi application</p>',
       });
-
+  
       return ctx.send({
-        message: 'Test email sent successfully'
+        message: 'Test email sent successfully',
       });
     } catch (error) {
       strapi.log.error('Test email error:', error);

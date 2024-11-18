@@ -1,18 +1,20 @@
+// config/plugins.ts
 export default ({ env }) => ({
   email: {
-    provider: 'smtp', // Use 'smtp' as the provider
-    providerOptions: {
-      host: env('SMTP_HOST', 'smtp.resend.com'), // Resend SMTP server host
-      port: parseInt(env('SMTP_PORT', '587'), 10), // SMTP server port
-      secure: env('SMTP_SECURE') === 'true', // Use TLS
-      auth: {
-        user: env('SMTP_USERNAME'), // Resend SMTP username
-        pass: env('SMTP_PASSWORD'), // Resend SMTP password
+    config: {
+      provider: 'smtp',
+      providerOptions: {
+        host: env('RESEND_SMTP_HOST', 'smtp.resend.com'),
+        port: env.int('RESEND_SMTP_PORT', 465),
+        auth: {
+          user: env('RESEND_SMTP_USERNAME'),
+          pass: env('RESEND_SMTP_PASSWORD'),
+        },
       },
-    },
-    settings: {
-      defaultFrom: 'no-reply@example.com', // Change to your desired default sender
-      defaultReplyTo: 'no-reply@example.com', // Change to your desired default reply-to
+      settings: {
+        defaultFrom: env('RESEND_DEFAULT_FROM', 'no-reply@yourdomain.com'),
+        defaultReplyTo: env('RESEND_DEFAULT_REPLY_TO', 'support@yourdomain.com'),
+      },
     },
   },
 });
