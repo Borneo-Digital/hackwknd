@@ -369,7 +369,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-
 export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
   collectionName: 'hackathons';
   info: {
@@ -421,6 +420,7 @@ export interface ApiRegistrationRegistration
   extends Struct.CollectionTypeSchema {
   collectionName: 'registrations';
   info: {
+    description: '';
     displayName: 'Registration';
     pluralName: 'registrations';
     singularName: 'registration';
@@ -440,7 +440,7 @@ export interface ApiRegistrationRegistration
     > &
       Schema.Attribute.Private;
     Name: Schema.Attribute.String;
-    phone: Schema.Attribute.BigInteger;
+    phone: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
