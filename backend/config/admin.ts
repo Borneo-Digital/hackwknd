@@ -1,3 +1,4 @@
+// backend/config/admin.ts
 export default ({ env }) => ({
   auth: {
     secret: env('ADMIN_JWT_SECRET'),
@@ -6,7 +7,7 @@ export default ({ env }) => ({
     salt: env('API_TOKEN_SALT'),
   },
   build: {
-    outputPath: 'dist/build', // Check if this path is set
+    outputPath: 'dist/build', // Custom output path
   },
   transfer: {
     token: {
