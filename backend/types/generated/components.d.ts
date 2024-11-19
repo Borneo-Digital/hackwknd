@@ -27,21 +27,6 @@ export interface DynamicZoneInputs extends Struct.ComponentSchema {
   };
 }
 
-export interface EmailEmailTemplateForm extends Struct.ComponentSchema {
-  collectionName: 'components_email_email_template_forms';
-  info: {
-    displayName: 'EmailTemplateForm';
-    icon: 'envelop';
-  };
-  attributes: {
-    Body: Schema.Attribute.Text;
-    email: Schema.Attribute.Email;
-    IsActive: Schema.Attribute.Boolean;
-    Name: Schema.Attribute.String;
-    Subject: Schema.Attribute.String;
-  };
-}
-
 export interface FaqFaq extends Struct.ComponentSchema {
   collectionName: 'components_question_faqs';
   info: {
@@ -88,7 +73,6 @@ declare module '@strapi/strapi' {
     export interface ComponentSchemas {
       'dynamic-zone.form': DynamicZoneForm;
       'dynamic-zone.inputs': DynamicZoneInputs;
-      'email.email-template-form': EmailEmailTemplateForm;
       'faq.faq': FaqFaq;
       'input.form': InputForm;
       'interest.interest': InterestInterest;

@@ -31,13 +31,14 @@ module.exports = [
         'Access-Control-Allow-Credentials',
         'Access-Control-Allow-Headers'
       ],
-      exposed: [
+      exposedHeaders: [ // Changed from 'exposed' to 'exposedHeaders'
         'Content-Range',
         'X-Total-Count',
         'Access-Control-Allow-Origin'
       ],
       keepHeaderOnError: true,
-      credentials: true
+      credentials: true,
+      maxAge: 86400 // Optional: Cache preflight response for 1 day
     },
   },
   'strapi::poweredBy',
