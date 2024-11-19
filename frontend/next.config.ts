@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['localhost', 'api.borneodigital.co'],
+    domains: ['localhost', 'api.hackwknd.sarawak.digital'],
   },
 };
 
