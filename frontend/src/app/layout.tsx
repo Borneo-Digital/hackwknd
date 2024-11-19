@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "HackWknd",
+  title: "HackWknd - Build something amazing",
   description: "Hack through the weekend and build something amazing",
   icons: {
     icon: '/icon-hackwknd.svg',
