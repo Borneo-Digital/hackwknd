@@ -5,6 +5,9 @@ export default ({ env }) => ({
   apiToken: {
     salt: env('API_TOKEN_SALT'),
   },
+  build: {
+    outputPath: 'dist/build', // Check if this path is set
+  },
   transfer: {
     token: {
       salt: env('TRANSFER_TOKEN_SALT'),
