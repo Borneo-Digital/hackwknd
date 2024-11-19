@@ -4,7 +4,8 @@
   "info": {
     "singularName": "registration",
     "pluralName": "registrations",
-    "displayName": "Registration"
+    "displayName": "Registration",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -18,7 +19,7 @@
       "type": "email"
     },
     "phone": {
-      "type": "biginteger"
+      "type": "integer"
     }
   }
 }

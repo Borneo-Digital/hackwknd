@@ -27,8 +27,6 @@ export interface DynamicZoneInputs extends Struct.ComponentSchema {
   };
 }
 
-
-
 export interface FaqFaq extends Struct.ComponentSchema {
   collectionName: 'components_question_faqs';
   info: {
