@@ -20,7 +20,6 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
       origin: ['https://hackwknd.sarawak.digital'], 
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: [
@@ -47,7 +46,5 @@ module.exports = [
   'strapi::body',
   'strapi::session',
   'strapi::favicon',
-  'strapi::public',
-];
-
-console.log('Middlewares configuration:', module.exports);
+  'strapi::public'
+]
