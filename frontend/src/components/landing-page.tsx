@@ -16,7 +16,7 @@ interface LandingPageComponentProps {
 const codeSnippets = [
   {
     language: 'python',
-    code: 'def hack_weekend():\n    ideas = generate_ideas()\n    solution = build_prototype(ideas)\n    return innovate(solution)'
+    code: 'def hack_wknd():\n    ideas = generate_ideas()\n    solution = build_prototype(ideas)\n    return innovate(solution)'
   },
   {
     language: 'javascript',
