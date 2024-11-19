@@ -21,7 +21,7 @@ module.exports = [
     name: 'strapi::cors',
     config: {
       enabled: true,
-      origin: ['https://hackwknd.sarawak.digital'],  // Remove trailing slash
+      origin: ['https://hackwknd.sarawak.digital'], 
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: [
         'Content-Type',
