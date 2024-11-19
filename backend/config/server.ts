@@ -1,7 +1,7 @@
 export default ({ env }) => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
-  url: env('PUBLIC_URL', 'https://api.borneodigital.co'),
+  url: env('PUBLIC_URL', 'https://api.hackwknd.sarawak.digital'),
   app: {
     keys: env.array('APP_KEYS'),
   },

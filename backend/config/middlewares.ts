@@ -6,8 +6,8 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'connect-src': ["'self'", 'http:', 'https:', 'https://api.borneodigital.co'],
-          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com', 'strapi.io', 'api.borneodigital.co'],
+          'connect-src': ["'self'", 'http:', 'https:', 'https://api.hackwknd.sarawak.digital'],
+          'img-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com', 'strapi.io', 'api.hackwknd.sarawak.digital'],
           'media-src': ["'self'", 'data:', 'blob:', 'res.cloudinary.com'],
           'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
           'style-src': ["'self'", "'unsafe-inline'"],
