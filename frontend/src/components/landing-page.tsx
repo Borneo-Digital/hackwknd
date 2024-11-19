@@ -142,7 +142,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
   const [typedText, setTypedText] = useState('')
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0)
   const [codeText, setCodeText] = useState('')
-  const fullText = 'Welcome to HackWeekend'
+  const fullText = 'Welcome to HackWknd'
 
   const floatingBlockPositions = useMemo(() => {
     const random = seededRandom(12345); // Use a fixed seed
@@ -212,7 +212,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar logo="HackWeekend" logoSrc="/icon-hackwknd.svg" />
+      <MenuBar logo="HackWknd" logoSrc="/icon-hackwknd.svg" />
 
       <main className="relative">
         <section className="min-h-screen relative overflow-hidden flex items-center">
@@ -281,7 +281,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
-              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWeekend?</h2>
+              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWknd?</h2>
               <p className="text-gray-400">Experience the future of innovation through collaborative weekend</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">

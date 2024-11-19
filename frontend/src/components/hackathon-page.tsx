@@ -83,7 +83,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     <div className="relative">
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar logo="HackWeekend" logoSrc="/icon-hackwknd.svg" />
+      <MenuBar logo="HackWknd" logoSrc="/icon-hackwknd.svg" />
 
       <header className="relative pt-24 pb-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-hack-primary/20 to-hack-secondary/20 blur-3xl" />
