@@ -15,7 +15,7 @@ import {
   MapPin,
   Clock,
   Users,
-  ArrowRight,
+  // ArrowRight,
   Trophy,
   Medal,
   Award,
@@ -76,7 +76,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     [RegistrationEndDate]
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const openForm = () => setIsFormOpen(true);
+  // const openForm = () => setIsFormOpen(true);
   const closeForm = () => setIsFormOpen(false);
 
   return (
@@ -398,9 +398,11 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                   </div>
                 </div>
 
-                <Button className="w-full hack-button group mt-6" onClick={openForm}>
+                <Button
+  className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
+  onClick={() => window.open('https://forms.clickup.com/25542747/f/rbg2v-19256/HQQTCD0LFSC54LELAZ', '_blank')}
+>
   Register Now
-  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
 </Button>
               </CardContent>
             </Card>
