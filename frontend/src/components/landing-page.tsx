@@ -115,7 +115,7 @@ const HackathonCard: React.FC<{ hackathon: Hackathon, delay: number }> = ({ hack
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-2 text-hack-primary" />
             <span className="text-hack-secondary mr-2">duration:</span>
-            <span className="font-normal">72 hours</span>
+            <span className="font-normal">45 hours</span>
           </div>
         </div>
       </CardContent>
