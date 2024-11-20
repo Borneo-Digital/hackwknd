@@ -33,14 +33,35 @@ export function Footer() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Copyright Section */}
-      <div className="border-t border-gray-800">
-        <div className="container mx-auto px-4 py-6">
-          <p className="text-gray-400 text-center text-sm">
-            &copy; {new Date().getFullYear()} HackWeekend. All rights reserved.
-          </p>
+        {/* Collaboration Section */}
+        <div className="mt-12">
+          <span className="text-hack-primary font-semibold mb-6 block text-center">In collaboration with</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="flex flex-col items-center">
+              <div className="relative w-full max-w-xs p-4 flex justify-center">
+                <Image
+                  src="/first-collab-logo.png"
+                  alt="First Collaboration Logo"
+                  width={180}
+                  height={180}
+                  className="object-contain max-h-24"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="relative w-full max-w-xs p-4 flex justify-center">
+                <Image
+                  src="/second-collab-logo.png"
+                  alt="Second Collaboration Logo"
+                  width={180}
+                  height={180}
+                  className="object-contain max-h-24"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

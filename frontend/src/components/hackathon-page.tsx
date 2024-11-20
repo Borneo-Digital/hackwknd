@@ -385,7 +385,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                     <span className="text-hack-secondary block text-sm">
                       duration:
                     </span>
-                    72 hours
+                    45 hours
                   </div>
                 </div>
                 <div className="flex items-center text-gray-300">
