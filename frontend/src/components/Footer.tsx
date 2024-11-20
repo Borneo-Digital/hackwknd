@@ -55,8 +55,8 @@ export function Footer() {
                 <Image
                   src="/bd-logo-white.png"
                   alt="BD Logo"
-                  width={180}
-                  height={180}
+                  width={330}
+                  height={330}
                   className="object-contain max-h-24"
                 />
               </div>
