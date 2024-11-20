@@ -20,13 +20,12 @@ export interface EmailAttributes {
   
   // Type for sending template email
   export interface SendTemplateEmailRequest {
-    templateId: number;
     to: string;
     data: {
       name: string;
       email: string;
       phone: string;
-      [key: string]: string; // For additional template variables
+      [key: string]: string;
     };
   }
   
@@ -40,6 +39,10 @@ export interface EmailAttributes {
       IsActive: boolean;
     };
   }
+
+  export interface CreateEmailResponse {
+    id: string;
+  }
   
   // Type for API response
   export interface EmailResponse {
@@ -52,3 +55,5 @@ export interface EmailAttributes {
     name: string;
     message: string;
   }
+
+  
