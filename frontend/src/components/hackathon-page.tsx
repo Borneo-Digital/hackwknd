@@ -77,7 +77,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     [RegistrationEndDate]
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const openForm = () => setIsFormOpen(true);
+  // const openForm = () => setIsFormOpen(true);
   const closeForm = () => setIsFormOpen(false);
 
   return (
@@ -401,10 +401,10 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
 
                 <Link href="/thank-you">
                 <Button
-  // className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
-  // onClick={() => window.open('https://forms.clickup.com/25542747/f/rbg2v-19276/5BYKLI5BX1MLMA0UHU', '_blank')}
   className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
-  onClick={openForm} // Update onClick to open the form
+  onClick={() => window.open('https://forms.clickup.com/25542747/f/rbg2v-19276/5BYKLI5BX1MLMA0UHU', '_blank')}
+  // className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
+  // onClick={openForm} // Update onClick to open the form
 >
 
   Register Now
