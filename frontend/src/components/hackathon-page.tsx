@@ -27,6 +27,7 @@ import { Footer } from "./Footer";
 import Image from "next/image";
 import { RegistrationForm } from "./RegistrationForm";
 import { Modal } from "@/components/ui/modal";
+import Link from "next/link";
 
 interface HackathonPageProps {
   hackathon: Hackathon;
@@ -398,10 +399,18 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                   </div>
                 </div>
 
-                <Button className="w-full hack-button group mt-6" onClick={openForm}>
+                <Link href="/thank-you">
+                <Button
+  // className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
+  // onClick={() => window.open('https://forms.clickup.com/25542747/f/rbg2v-19276/5BYKLI5BX1MLMA0UHU', '_blank')}
+  className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
+  onClick={openForm} // Update onClick to open the form
+>
+
   Register Now
   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
 </Button>
+</Link>
               </CardContent>
             </Card>
           </div>

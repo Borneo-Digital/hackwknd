@@ -1,4 +1,4 @@
-// components/RegistrationForm.tsx
+// frontend/src/components/RegistrationForm.tsx
 import React, { useState } from 'react';
 import { submitRegistration } from '@/lib/api';
 import { RegistrationData } from '@/types/registrations';
@@ -8,10 +8,10 @@ interface RegistrationFormProps {
 }
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) => {
-  const [formData, setFormData] = useState<RegistrationData>({ 
-    name: '', 
-    email: '', 
-    phone: '' 
+  const [formData, setFormData] = useState<RegistrationData>({
+    name: '',
+    email: '',
+    phone: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -89,8 +89,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) =
         disabled={isSubmitting}
         className="w-full p-2 border border-input rounded-md"
       />
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         disabled={isSubmitting}
         className="w-full p-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50"
       >
