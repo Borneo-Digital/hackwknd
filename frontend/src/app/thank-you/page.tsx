@@ -23,7 +23,7 @@ export default function ThankYouPage() {
               Thank You for Registering!
             </h1>
             <p className="text-xl text-gray-300 mb-8">
-              We are excited to have you join HackWknd. Check your email for confirmation details and next steps.
+              We are excited to have you join HackWknd. We will update you via email for confirmation details and next steps.
             </p>
             <Link href="/">
               <Button className="hack-button group">

@@ -401,7 +401,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                 <Link href="/thank-you">
                 <Button
   className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
-  onClick={() => window.open('https://forms.clickup.com/25542747/f/rbg2v-19256/HQQTCD0LFSC54LELAZ', '_blank')}
+  onClick={() => window.open('https://forms.clickup.com/25542747/f/rbg2v-19276/5BYKLI5BX1MLMA0UHU', '_blank')}
 >
   Register Now
 </Button>
