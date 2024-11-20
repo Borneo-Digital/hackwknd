@@ -243,7 +243,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
                   <span className="hack-gradient-text">{typedText}</span>
                 </h1>
                 <p className="text-lg sm:text-xl mb-8 text-gray-300">
-                  72 hours of innovation, collaboration, and problem-solving
+                HackWknd is a 48-hours hackathon challenge that brings together participants from diverse backgrounds to tackle real-world community challenges through collaborative problem-solving and rapid prototyping.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                   <Button className="hack-button group">
@@ -281,24 +281,34 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
-              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why Join HackWknd?</h2>
-              <p className="text-gray-400">Experience the future of innovation through collaborative weekend</p>
+              <h2 className="text-3xl font-bold hack-gradient-text mb-4">Why participate in Hackwknd?</h2>
+              <p className="text-gray-400">Join a weekend that sparks innovation and builds connections.</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard
                 icon={<Code className="w-6 h-6 text-hack-primary" />}
-                title="Build & Learn"
-                description="Code, create, and collaborate with fellow innovators in real-time"
+                title="Learn by Doing"
+                description="Tackle real-world tech challenges to build hands-on skills that matter."
               />
               <FeatureCard
                 icon={<Users className="w-6 h-6 text-hack-secondary" />}
-                title="Connect"
-                description="Join a community of passionate developers and industry experts"
+                title="Expand Your Networ"
+                description="Meet industry leaders, mentors, and like-minded innovators who can shape your journey."
               />
               <FeatureCard
                 icon={<Lightbulb className="w-6 h-6 text-hack-accent" />}
-                title="Innovate"
-                description="Transform your ideas into impactful solutions that matter"
+                title="Skill Showcase"
+                description="Demonstrate your creativity and problem-solving abilities."
+              />
+              <FeatureCard
+                icon={<Lightbulb className="w-6 h-6 text-hack-accent" />}
+                title="Exclusive Support"
+                description="Receive mentorship and guidance from experienced professionals."
+              />
+              <FeatureCard
+                icon={<Lightbulb className="w-6 h-6 text-hack-accent" />}
+                title="Get Rewarded"
+                description="Stand out with innovative ideas and take home exciting prizes."
               />
             </div>
           </div>
@@ -307,13 +317,13 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
         <section id="events" ref={hackathonsSectionRef} className="py-20 relative">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center mb-12">
-              <h2 className="text-4xl font-bold hack-gradient-text mb-4">Upcoming Hackathons</h2>
+              <h2 className="text-4xl font-bold hack-gradient-text mb-4">Upcoming HackWknd</h2>
               <p className="text-gray-400">Join our next innovation challenge</p>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
               {isLoading ? (
                 <div className="col-span-2 text-center">
-                  <p>Loading hackathons...</p>
+                  <p>Loading HackWknd...</p>
                 </div>
               ) : hackathons && hackathons.length > 0 ? (
                 hackathons.map((hackathon, index) => (
@@ -334,8 +344,8 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
                       </div>
                     </CardHeader>
                     <CardContent className="p-6 font-mono">
-                      <div className="text-hack-primary mb-2">$ get hackathons</div>
-                      <p className="text-gray-400">No hackathons available at the moment...</p>
+                      <div className="text-hack-primary mb-2">$ get HackWknd</div>
+                      <p className="text-gray-400">No HackWknd available at the moment...</p>
                       <div className="animate-pulse inline-block mt-1">_</div>
                     </CardContent>
                   </Card>
