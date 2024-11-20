@@ -41,8 +41,8 @@ export function Footer() {
             <div className="flex flex-col items-center">
               <div className="relative w-full max-w-xs p-4 flex justify-center">
                 <Image
-                  src="/first-collab-logo.png"
-                  alt="First Collaboration Logo"
+                  src="/unimas-white-logo.png"
+                  alt="UNIMAS Logo"
                   width={180}
                   height={180}
                   className="object-contain max-h-24"
@@ -53,8 +53,8 @@ export function Footer() {
             <div className="flex flex-col items-center">
               <div className="relative w-full max-w-xs p-4 flex justify-center">
                 <Image
-                  src="/second-collab-logo.png"
-                  alt="Second Collaboration Logo"
+                  src="/bd-logo-white.png"
+                  alt="BD Logo"
                   width={180}
                   height={180}
                   className="object-contain max-h-24"
