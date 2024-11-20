@@ -246,10 +246,12 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
                 HackWknd is a 48-hours hackathon challenge that brings together participants from diverse backgrounds to tackle real-world community challenges through collaborative problem-solving and rapid prototyping.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                <Link href="/hackathon/hackwknd-kota-samarahan">
                   <Button className="hack-button group">
                     Register Now
                     <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
+                  </Link>
                 </div>
               </div>
 
@@ -362,10 +364,12 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
               <p className="text-xl mb-8 text-gray-300">
                 Join us for an unforgettable weekend of innovation and creativity!
               </p>
-              <Button className="hack-button group">
-                Register Now
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
+                <Link href="/hackathon/hackwknd-kota-samarahan">
+                <Button className="hack-button group">
+                  Register Now
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+                </Link>
             </div>
           </div>
         </section>
