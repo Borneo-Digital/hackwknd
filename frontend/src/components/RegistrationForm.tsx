@@ -1,4 +1,3 @@
-// frontend/src/components/RegistrationForm.tsx
 import React, { useState } from 'react';
 import { submitRegistration } from '@/lib/api';
 import { RegistrationData } from '@/types/registrations';
