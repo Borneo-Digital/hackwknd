@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     console.log('Sending email to:', to);
 
     const emailData = {
-      from: 'HackWknd Team <onboarding@resend.dev>', // Make sure this matches your Resend settings
+      from: 'HackWknd Team <no-reply@hackwknd.sarawak.digital>', // Use your verified domain here
       to,
       subject: 'Thank You for Registering for HackWknd!',
       html: `<p>Hello ${data.name},</p>
