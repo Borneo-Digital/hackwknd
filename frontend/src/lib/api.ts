@@ -22,9 +22,11 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
 }
 
 // Send confirmation email
+// Send confirmation email
 async function sendConfirmationEmail(email: string, name: string) {
   try {
     console.log('Sending confirmation email to:', email);
+    // Use relative path instead of full URL
     const response = await fetch('/api/send-email', {
       method: 'POST',
       headers: {
@@ -40,8 +42,10 @@ async function sendConfirmationEmail(email: string, name: string) {
     });
 
     const data = await response.json();
+    console.log('Email API response:', data); // Add this log
 
     if (!response.ok) {
+      console.error('Email API error response:', data); // Add this log
       throw new Error(data.error || 'Failed to send confirmation email');
     }
 

@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     console.log('Sending email to:', to);
 
     const emailData = {
-      from: 'HackWknd Team <onboarding@resend.dev>', // Use the verified domain from Resend
+      from: 'HackWknd Team <onboarding@resend.dev>', // Make sure this matches your Resend settings
       to,
       subject: 'Thank You for Registering for HackWknd!',
       html: `<p>Hello ${data.name},</p>
@@ -31,21 +31,34 @@ export async function POST(request: NextRequest) {
              <p>Best regards,<br/>The HackWknd Team</p>`,
     };
 
+    console.log('Attempting to send email with data:', { ...emailData, to: '[REDACTED]' });
     const resendResult = await resend.emails.send(emailData);
     console.log('Resend API response:', resendResult);
 
     if (resendResult.error) {
-      throw new Error(resendResult.error.message);
+      console.error('Resend API error:', resendResult.error);
+      return NextResponse.json(
+        { success: false, error: resendResult.error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(
-      { success: true, messageId: resendResult.data?.id },
+      { 
+        success: true, 
+        messageId: resendResult.data?.id,
+        data: resendResult.data 
+      },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error sending email:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to send email' },
+      { 
+        success: false, 
+        error: (error instanceof Error) ? error.message : 'Failed to send email',
+        details: error
+      },
       { status: 500 }
     );
   }
