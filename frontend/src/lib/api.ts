@@ -1,6 +1,7 @@
 import { Hackathon } from '@/types/hackathon';
 import { RegistrationData } from '@/types/registrations';
 
+// Fetch hackathon data by slug
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
@@ -20,11 +21,46 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
   }
 }
 
+// Send confirmation email
+async function sendConfirmationEmail(email: string, name: string) {
+  try {
+    console.log('Sending confirmation email to:', email);
+    const response = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to: email,
+        data: {
+          name,
+          email,
+        },
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send confirmation email');
+    }
+
+    console.log('Confirmation email sent successfully:', data);
+    return { success: true, messageId: data.messageId };
+  } catch (error) {
+    console.error('Error sending confirmation email:', error);
+    return { success: false, error: 'Failed to send confirmation email' };
+  }
+}
+
+// Submit registration
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
+    console.log('Starting registration process for:', formData.email);
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
 
     // Submit registration data to Strapi backend
+    console.log('Submitting registration to Strapi...');
     const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
       method: 'POST',
       headers: {
@@ -49,22 +85,15 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
       throw new Error(`Failed to submit registration: ${registrationResponse.statusText}`);
     }
 
-    // Send confirmation email via API route
-    const emailResponse = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        to: formData.email,
-        name: formData.name,
-      }),
-    });
+    console.log('Registration submitted successfully');
 
-    if (!emailResponse.ok) {
-      const emailError = await emailResponse.text();
-      console.error('Failed to send confirmation email:', emailError);
-      // Do not throw an error here to allow registration to succeed
+    // Send confirmation email
+    console.log('Initiating confirmation email...');
+    const emailResult = await sendConfirmationEmail(formData.email, formData.name);
+    
+    if (!emailResult.success) {
+      console.warn('Email sending failed but registration was successful:', emailResult.error);
+      // We don't throw here because we want the registration to succeed even if email fails
     }
 
     return true;
