@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { SendTemplateEmailRequest } from '@/types/email';
+import { render } from '@react-email/render';
+import WelcomeEmail from '@/email/register-user';
 
 export const runtime = 'nodejs';
 
@@ -19,20 +21,24 @@ export async function POST(request: NextRequest) {
   const resend = new Resend(apiKey);
 
   try {
-    const { to, data }: SendTemplateEmailRequest = await request.json();
+    const { to }: SendTemplateEmailRequest = await request.json();
     console.log('Sending email to:', to);
 
+    // Render the email template
+    const html = render(
+      WelcomeEmail()
+    );
+
     const emailData = {
-      from: 'HackWknd Team <no-reply@hackwknd.sarawak.digital>', // Use your verified domain here
+      from: 'HackWknd Team <no-reply@hackwknd.sarawak.digital>',
       to,
       subject: 'Thank You for Registering for HackWknd!',
-      html: `<p>Hello ${data.name},</p>
-             <p>Thank you for registering for HackWknd. We're excited to have you join us!</p>
-             <p>Best regards,<br/>The HackWknd Team</p>`,
+      html,
     };
-
     console.log('Attempting to send email with data:', { ...emailData, to: '[REDACTED]' });
-    const resendResult = await resend.emails.send(emailData);
+    const htmlContent = await emailData.html;
+    const emailDataToSend = { ...emailData, html: htmlContent };
+    const resendResult = await resend.emails.send(emailDataToSend);
     console.log('Resend API response:', resendResult);
 
     if (resendResult.error) {
