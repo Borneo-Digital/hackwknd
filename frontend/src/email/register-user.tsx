@@ -133,7 +133,7 @@ export default function WelcomeEmail() {
 
           <Section style={sectionStyle}>
             <Text style={textStyle}>
-              Go to the website to see more on the info about this hackwknd
+              Visit our website for more information about HackWknd:
             </Text>
             <Button href="https://hackwknd.com" style={buttonStyle}>
               Visit the HackWknd Kota Samarahan
@@ -142,22 +142,26 @@ export default function WelcomeEmail() {
 
           <Section style={sectionStyle}>
             <Text style={textStyle}>
-              Please fill in your details and check out the participant kit:
+              Please fill in your participant details using the form below:
             </Text>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <Button 
-                href="https://forms.clickup.com/25542747/f/rbg2v-21396/T2RDOIQ4UICY88CYUR" 
-                style={buttonStyle}
-              >
-                Fill Participant Details
-              </Button>
-              <Button 
-                href="https://drive.google.com/drive/u/0/folders/1zLDBRDu-qNbpjGGwTYREnsWT_08lvmjx" 
-                style={buttonStyle}
-              >
-                Access Participant Kit
-              </Button>
-            </div>
+            <Button 
+              href="https://forms.clickup.com/25542747/f/rbg2v-21396/T2RDOIQ4UICY88CYUR" 
+              style={buttonStyle}
+            >
+              Fill Participant Details
+            </Button>
+          </Section>
+
+          <Section style={sectionStyle}>
+            <Text style={textStyle}>
+              Access your participant kit containing important files and information:
+            </Text>
+            <Button 
+              href="https://drive.google.com/drive/u/0/folders/1zLDBRDu-qNbpjGGwTYREnsWT_08lvmjx" 
+              style={buttonStyle}
+            >
+              Access Participant Kit
+            </Button>
           </Section>
 
           <Hr style={hrStyle} />
@@ -168,7 +172,6 @@ export default function WelcomeEmail() {
             HackWknd Team
           </Text>
 
-          {/* Added Footer Image */}
           <Img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Hackwknd%20footer1-94eFkX6OZX4ZnsY4Y0pmHzpXcvxtsj.png"
             alt="HackWknd Partners and Collaborators"
