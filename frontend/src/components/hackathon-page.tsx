@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect, useMemo } from 'react';
 import { Hackathon } from "@/types/hackathon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -76,9 +76,30 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     () => formatDate(RegistrationEndDate),
     [RegistrationEndDate]
   );
+  const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const openForm = () => setIsFormOpen(true);
   const closeForm = () => setIsFormOpen(false);
+
+  useEffect(() => {
+    const checkRegistrationStatus = () => {
+      const now = new Date();
+      const sixPM = new Date();
+      sixPM.setHours(18, 0, 0, 0); // 6:00 PM today
+
+      if (now >= sixPM) {
+        setIsRegistrationClosed(true);
+      } else {
+        const timeout = sixPM.getTime() - now.getTime();
+        const timer = setTimeout(() => {
+          setIsRegistrationClosed(true);
+        }, timeout);
+        return () => clearTimeout(timer);
+      }
+    };
+
+    checkRegistrationStatus();
+  }, []);
 
   return (
     <div className="relative">
@@ -399,18 +420,19 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                   </div>
                 </div>
 
-                {/* <Link href="/thank-you"> */}
                 <Button
-  // className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
-  // onClick={() => window.open('https://forms.clickup.com/25542747/f/rbg2v-19276/5BYKLI5BX1MLMA0UHU', '_blank')}
-  className="bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300"
-  onClick={openForm} // Update onClick to open the form
->
-
-  Register Now
-  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-</Button>
-{/* </Link> */}
+        disabled={isRegistrationClosed}
+        className={`bg-hack-primary text-white px-6 py-3 rounded-lg hover:bg-hack-primary/80 transition-all duration-300 ${
+          isRegistrationClosed ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+        onClick={openForm}
+      >
+        Register Now
+        <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+      </Button>
+      {isRegistrationClosed && (
+        <p className="text-gray-500 mt-2">Registrations are now closed.</p>
+      )}
               </CardContent>
             </Card>
           </div>

@@ -370,12 +370,18 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
               <p className="text-xl mb-8 text-gray-300">
                 Join us for an unforgettable weekend of innovation and creativity!
               </p>
-                <Link href="/hackathon/hackwknd-kota-samarahan">
-                <Button className="hack-button group">
+                <Button 
+                  className="hack-button group"
+                  onClick={() => {
+                    hackathonsSectionRef.current?.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }}
+                >
                   Register Now
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
-                </Link>
             </div>
           </div>
         </section>
