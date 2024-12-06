@@ -86,6 +86,13 @@ const imageStyle = {
   objectFit: "contain" as const,
 };
 
+const footerImageStyle = {
+  width: "100%",
+  maxWidth: "600px",
+  height: "auto",
+  marginTop: "32px",
+};
+
 export default function WelcomeEmail() {
   return (
     <Html>
@@ -133,6 +140,26 @@ export default function WelcomeEmail() {
             </Button>
           </Section>
 
+          <Section style={sectionStyle}>
+            <Text style={textStyle}>
+              Please fill in your details and check out the participant kit:
+            </Text>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <Button 
+                href="https://forms.clickup.com/25542747/f/rbg2v-21396/T2RDOIQ4UICY88CYUR" 
+                style={buttonStyle}
+              >
+                Fill Participant Details
+              </Button>
+              <Button 
+                href="https://drive.google.com/drive/u/0/folders/1zLDBRDu-qNbpjGGwTYREnsWT_08lvmjx" 
+                style={buttonStyle}
+              >
+                Access Participant Kit
+              </Button>
+            </div>
+          </Section>
+
           <Hr style={hrStyle} />
           
           <Text style={textStyle}>
@@ -140,6 +167,13 @@ export default function WelcomeEmail() {
             <br />
             HackWknd Team
           </Text>
+
+          {/* Added Footer Image */}
+          <Img
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Hackwknd%20footer1-94eFkX6OZX4ZnsY4Y0pmHzpXcvxtsj.png"
+            alt="HackWknd Partners and Collaborators"
+            style={footerImageStyle}
+          />
         </Container>
       </Body>
     </Html>
