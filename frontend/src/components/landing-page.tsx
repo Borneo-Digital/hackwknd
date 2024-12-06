@@ -212,7 +212,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 bg-grid bg-center opacity-10" />
-      <MenuBar logo="HackWknd" logoSrc="/hackwknd-logo.png" />
+      <MenuBar logo="HackWknd" logoSrc="/icon-hackwknd.svg" />
 
       <main className="relative">
         <section className="min-h-screen relative overflow-hidden flex items-center">
