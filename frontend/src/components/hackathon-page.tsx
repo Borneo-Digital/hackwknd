@@ -82,23 +82,8 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
   const closeForm = () => setIsFormOpen(false);
 
   useEffect(() => {
-    const checkRegistrationStatus = () => {
-      const now = new Date();
-      const sixPM = new Date();
-      sixPM.setHours(18, 0, 0, 0); // 6:00 PM today
-
-      if (now >= sixPM) {
-        setIsRegistrationClosed(true);
-      } else {
-        const timeout = sixPM.getTime() - now.getTime();
-        const timer = setTimeout(() => {
-          setIsRegistrationClosed(true);
-        }, timeout);
-        return () => clearTimeout(timer);
-      }
-    };
-
-    checkRegistrationStatus();
+    // Remove time-based registration closure
+    setIsRegistrationClosed(false);
   }, []);
 
   return (
