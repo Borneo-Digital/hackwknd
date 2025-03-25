@@ -36,6 +36,25 @@ export default function HackathonForm({ hackathon, isEditing = false }: Hackatho
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Validate form data
+    const newValidationErrors: Record<string, string> = {};
+    
+    // Check registration dates logic
+    if (new Date(formData.RegistrationEndDate) < new Date(formData.RegistrationStartDate)) {
+      newValidationErrors.RegistrationEndDate = 'Registration end date must be after start date';
+    }
+    
+    // Check event date is after or on registration end date
+    if (new Date(formData.Date) < new Date(formData.RegistrationEndDate)) {
+      newValidationErrors.Date = 'Event date should be on or after registration end date';
+    }
+    
+    // If validation errors exist, don't proceed
+    if (Object.keys(newValidationErrors).length > 0) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
+    
     setIsSubmitting(true);
     setError('');
 
