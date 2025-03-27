@@ -414,6 +414,7 @@ export interface ApiRegistrationRegistration
   extends Struct.CollectionTypeSchema {
   collectionName: 'registrations';
   info: {
+    description: '';
     displayName: 'Registration';
     pluralName: 'registrations';
     singularName: 'registration';
