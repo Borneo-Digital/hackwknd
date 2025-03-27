@@ -4,13 +4,11 @@
   "info": {
     "singularName": "hackathon",
     "pluralName": "hackathons",
-    "displayName": "Hackathon",
-    "description": ""
+    "displayName": "Hackathon"
   },
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {},
   "attributes": {
     "Title": {
       "type": "string"
@@ -24,54 +22,33 @@
     "Location": {
       "type": "string"
     },
-    "Description": {
-      "type": "text"
-    },
     "Schedule": {
       "type": "json"
     },
     "Prizes": {
       "type": "json"
     },
-    "FAQ": {
-      "displayName": "FAQ",
-      "type": "component",
-      "repeatable": true,
-      "component": "faq.faq"
-    },
     "slug": {
       "type": "string"
     },
     "Image": {
-      "type": "media",
-      "multiple": true,
-      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ]
+      ],
+      "type": "media",
+      "multiple": true
     },
     "EventStatus": {
-      "type": "enumeration",
-      "enum": [
-        "Upcoming",
-        "Ongoing",
-        "Finished"
-      ]
-    },
-    "RegistrationStartDate": {
       "type": "date"
     },
     "RegistrationEndDate": {
       "type": "date"
     },
-    "dynamic_zone": {
-      "type": "dynamiczone",
-      "components": [
-        "dynamic-zone.form"
-      ]
+    "Description": {
+      "type": "blocks"
     }
   }
 }

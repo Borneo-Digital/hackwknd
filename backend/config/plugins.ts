@@ -1,3 +1,1 @@
-module.exports = ({ env }) => ({
-
-});
+export default () => ({});
