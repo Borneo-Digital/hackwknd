@@ -10,7 +10,6 @@
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {},
   "attributes": {
     "Name": {
       "type": "string"
@@ -19,7 +18,7 @@
       "type": "email"
     },
     "phone": {
-      "type": "integer"
+      "type": "biginteger"
     }
   }
 }

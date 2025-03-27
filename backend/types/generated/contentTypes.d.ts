@@ -372,7 +372,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
   collectionName: 'hackathons';
   info: {
-    description: '';
     displayName: 'Hackathon';
     pluralName: 'hackathons';
     singularName: 'hackathon';
@@ -385,12 +384,8 @@ export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     Date: Schema.Attribute.DateTime;
-    Description: Schema.Attribute.Text;
-    dynamic_zone: Schema.Attribute.DynamicZone<['dynamic-zone.form']>;
-    EventStatus: Schema.Attribute.Enumeration<
-      ['Upcoming', 'Ongoing', 'Finished']
-    >;
-    FAQ: Schema.Attribute.Component<'faq.faq', true>;
+    Description: Schema.Attribute.Blocks;
+    EventStatus: Schema.Attribute.Date;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -405,7 +400,6 @@ export interface ApiHackathonHackathon extends Struct.CollectionTypeSchema {
     Prizes: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     RegistrationEndDate: Schema.Attribute.Date;
-    RegistrationStartDate: Schema.Attribute.Date;
     Schedule: Schema.Attribute.JSON;
     slug: Schema.Attribute.String;
     Theme: Schema.Attribute.String;
@@ -440,7 +434,7 @@ export interface ApiRegistrationRegistration
     > &
       Schema.Attribute.Private;
     Name: Schema.Attribute.String;
-    phone: Schema.Attribute.Integer;
+    phone: Schema.Attribute.BigInteger;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -625,6 +619,10 @@ export interface PluginReviewWorkflowsWorkflow
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
     publishedAt: Schema.Attribute.DateTime;
+    stageRequiredToPublish: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::review-workflows.workflow-stage'
+    >;
     stages: Schema.Attribute.Relation<
       'oneToMany',
       'plugin::review-workflows.workflow-stage'
