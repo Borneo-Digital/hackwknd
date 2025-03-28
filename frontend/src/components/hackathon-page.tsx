@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Hackathon } from "@/types/hackathon";
+import { Hackathon, DescriptionBlock } from "@/types/hackathon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -66,7 +66,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     EventStatus,
     RegistrationEndDate,
     Image: hackathonImage,
-  } = hackathon;
+  } = hackathon.attributes || hackathon; // Handle both new and old data structure
 
   const formattedDate = useMemo(
     () => formatDate(hackathonDate),
@@ -123,14 +123,28 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
             {hackathonImage && (
               <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800 overflow-hidden">
                 <CardContent className="p-0">
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${hackathonImage.url}`}
-                    alt={Title}
-                    width={hackathonImage.width}
-                    height={hackathonImage.height}
-                    className="w-full h-auto object-cover"
-                    priority
-                  />
+                  {/* Handle both legacy and new Strapi image structures */}
+                  {hackathonImage.data ? (
+                    // New structure: Media with data property
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${hackathonImage.data[0]?.attributes?.url}`}
+                      alt={Title}
+                      width={hackathonImage.data[0]?.attributes?.width || 800}
+                      height={hackathonImage.data[0]?.attributes?.height || 600}
+                      className="w-full h-auto object-cover"
+                      priority
+                    />
+                  ) : 'url' in hackathonImage ? (
+                    // Legacy structure: Direct media object with type assertion
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${(hackathonImage as { url: string }).url}`}
+                      alt={Title}
+                      width={800}
+                      height={600}
+                      className="w-full h-auto object-cover"
+                      priority
+                    />
+                  ) : null}
                 </CardContent>
               </Card>
             )}
@@ -446,60 +460,103 @@ const getStatusColor = (status: string) => {
 };
 
 const formatHackathonDescription = (
-  description: string
+  description: string | DescriptionBlock[]
 ): FormattedSection[] => {
-  const isHeading = (line: string) => line.endsWith(":");
-  const isBulletPoint = (line: string) => line.trim().startsWith("-");
-  const sections: FormattedSection[] = [];
-  let currentSection: FormattedSection | null = null;
-  const lines = description.split("\n").filter((line) => line.trim());
-  lines.forEach((line) => {
-    const trimmedLine = line.trim();
-    if (isHeading(trimmedLine)) {
-      if (currentSection) {
-        sections.push(currentSection);
-      }
-      currentSection = {
-        title: trimmedLine.slice(0, -1),
-        content: [],
-        type: "paragraph",
-      };
-    } else if (isBulletPoint(trimmedLine)) {
-      if (
-        !currentSection ||
-        (currentSection.content.length > 0 &&
-          currentSection.type !== "bulletPoints")
-      ) {
-        if (currentSection) sections.push(currentSection);
+  // If description is a string (legacy format), process it as before
+  if (typeof description === 'string') {
+    const isHeading = (line: string) => line.endsWith(":");
+    const isBulletPoint = (line: string) => line.trim().startsWith("-");
+    const sections: FormattedSection[] = [];
+    let currentSection: FormattedSection | null = null;
+    const lines = description.split("\n").filter((line) => line.trim());
+    lines.forEach((line) => {
+      const trimmedLine = line.trim();
+      if (isHeading(trimmedLine)) {
+        if (currentSection) {
+          sections.push(currentSection);
+        }
         currentSection = {
-          content: [],
-          type: "bulletPoints",
-        };
-      }
-      currentSection.type = "bulletPoints";
-      currentSection.content.push(trimmedLine.slice(1).trim());
-    } else if (trimmedLine) {
-      if (!currentSection) {
-        currentSection = {
+          title: trimmedLine.slice(0, -1),
           content: [],
           type: "paragraph",
         };
+      } else if (isBulletPoint(trimmedLine)) {
+        if (
+          !currentSection ||
+          (currentSection.content.length > 0 &&
+            currentSection.type !== "bulletPoints")
+        ) {
+          if (currentSection) sections.push(currentSection);
+          currentSection = {
+            content: [],
+            type: "bulletPoints",
+          };
+        }
+        currentSection.type = "bulletPoints";
+        currentSection.content.push(trimmedLine.slice(1).trim());
+      } else if (trimmedLine) {
+        if (!currentSection) {
+          currentSection = {
+            content: [],
+            type: "paragraph",
+          };
+        }
+        if (currentSection.type === "paragraph") {
+          currentSection.content.push(trimmedLine);
+        } else {
+          sections.push(currentSection);
+          currentSection = {
+            content: [trimmedLine],
+            type: "paragraph",
+          };
+        }
       }
-      if (currentSection.type === "paragraph") {
-        currentSection.content.push(trimmedLine);
-      } else {
-        sections.push(currentSection);
-        currentSection = {
-          content: [trimmedLine],
-          type: "paragraph",
-        };
-      }
+    });
+    if (currentSection) {
+      sections.push(currentSection);
     }
-  });
-  if (currentSection) {
-    sections.push(currentSection);
+    return sections;
   }
-  return sections;
+  
+  // If description is an array of blocks, process the blocks format
+  if (Array.isArray(description)) {
+    const sections: FormattedSection[] = [];
+    let currentTitle = "";
+    
+    description.forEach((block) => {
+      if (block.type === 'heading') {
+        currentTitle = block.children.map(child => child.text).join('');
+      } 
+      else if (block.type === 'paragraph') {
+        const content = block.children.map(child => child.text).join('');
+        sections.push({
+          title: currentTitle,
+          content: [content],
+          type: "paragraph"
+        });
+        currentTitle = ""; // Reset title after use
+      }
+      else if (block.type === 'bullet-list') {
+        const bullets = block.children.map(item => 
+          item.children.map(child => child.text).join('')
+        );
+        sections.push({
+          title: currentTitle,
+          content: bullets,
+          type: "bulletPoints"
+        });
+        currentTitle = ""; // Reset title after use
+      }
+    });
+    
+    return sections;
+  }
+  
+  // Fallback if we can't process the description
+  return [{
+    content: ["No description available"],
+    type: "paragraph"
+  }];
 };
 
 const getPrizeIcon = (iconName: string | undefined): React.ReactNode => {

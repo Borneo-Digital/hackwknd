@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { submitRegistration } from '@/lib/api';
+import { submitRegistration,checkExistingRegistration } from '@/lib/api';
 import { RegistrationData } from '@/types/registrations';
 
 interface RegistrationFormProps {
@@ -10,6 +10,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) =
   const [formData, setFormData] = useState<RegistrationData>({
     name: '',
     email: '',
+    confirmEmail: '', // Add this field
     phone: '',
   });
   const [error, setError] = useState<string | null>(null);
@@ -25,13 +26,28 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) =
     setIsSubmitting(true);
     setError(null);
 
+    // Add email validation
+    if (formData.email !== formData.confirmEmail) {
+      setError('Emails do not match');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
+      // Check for existing registration first
+      const isExisting = await checkExistingRegistration(formData);
+      if (isExisting) {
+        setError('A registration with this email, phone, or name already exists.');
+        setIsSubmitting(false);
+        return;
+      }
+
       const success = await submitRegistration(formData);
       if (success) {
         setIsSuccess(true);
         setTimeout(() => {
           onClose();
-        }, 3000); // Close after 3 seconds
+        }, 3000);
       } else {
         setError('There was an error submitting the form. Please try again.');
       }
@@ -68,12 +84,22 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) =
         disabled={isSubmitting}
         className="w-full p-2 border border-input rounded-md"
       />
-      <input
+       <input
         type="email"
         name="email"
         value={formData.email}
         onChange={handleChange}
         placeholder="Email"
+        required
+        disabled={isSubmitting}
+        className="w-full p-2 border border-input rounded-md"
+      />
+      <input
+        type="email"
+        name="confirmEmail"
+        value={formData.confirmEmail}
+        onChange={handleChange}
+        placeholder="Confirm Email"
         required
         disabled={isSubmitting}
         className="w-full p-2 border border-input rounded-md"
