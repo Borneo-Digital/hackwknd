@@ -1,5 +1,8 @@
 'use client';
 
+// This file is explicitly client-side only
+// ⚠️ Do not import this file in server components/pages
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from './client';

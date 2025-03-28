@@ -161,7 +161,7 @@ export default function LoginPage() {
               <p>Skip Auth: {process.env.NEXT_PUBLIC_SKIP_AUTH || 'Not set'}</p>
               <p>Current URL: {typeof window !== 'undefined' ? window.location.href : 'N/A'}</p>
               <p>Auth Cookie: {
-                typeof document !== 'undefined'
+                typeof window !== 'undefined' && typeof document !== 'undefined'
                   ? document.cookie.split(';').some(c => c.trim().startsWith('supabase-auth-token='))
                     ? '✓ Present'
                     : '✗ Missing'
@@ -189,13 +189,19 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    localStorage.clear();
-                    document.cookie.split(';').forEach(c => {
-                      const name = c.trim().split('=')[0];
-                      if (name) document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                    });
-                    alert('All cookies and localStorage cleared');
-                    window.location.reload();
+                    if (typeof window !== 'undefined') {
+                      try {
+                        localStorage.clear();
+                        document.cookie.split(';').forEach(c => {
+                          const name = c.trim().split('=')[0];
+                          if (name) document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                        });
+                        alert('All cookies and localStorage cleared');
+                        window.location.reload();
+                      } catch (err) {
+                        alert(`Error clearing storage: ${err}`);
+                      }
+                    }
                   }}
                   className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs"
                 >
