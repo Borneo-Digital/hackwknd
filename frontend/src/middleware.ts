@@ -47,8 +47,19 @@ export async function middleware(request: NextRequest) {
 
   try {
     // Refresh session if expired
-    const { data } = await supabase.auth.getSession();
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      console.error('Error getting session in middleware:', error);
+    }
+    
     const session = data.session;
+    
+    // Log session info (helpful for debugging)
+    console.log('Middleware path:', request.nextUrl.pathname);
+    console.log('Session exists:', !!session);
+    
+    // Add a header to indicate session status for debugging
+    response.headers.set('X-Auth-Status', session ? 'authenticated' : 'unauthenticated');
     
     // If the user is not logged in and trying to access an admin route, redirect to the login page
     if (!session && request.nextUrl.pathname.startsWith('/admin')) {
@@ -57,6 +68,7 @@ export async function middleware(request: NextRequest) {
         return response;
       }
 
+      console.log('Redirecting unauthenticated user to login');
       const redirectUrl = new URL('/admin/login', request.nextUrl.origin);
       redirectUrl.searchParams.set('redirect', request.nextUrl.pathname);
       return NextResponse.redirect(redirectUrl);
@@ -64,7 +76,14 @@ export async function middleware(request: NextRequest) {
 
     // If the user is logged in and accessing the login page, redirect to the admin dashboard
     if (session && request.nextUrl.pathname === '/admin/login') {
+      console.log('Redirecting authenticated user to admin dashboard');
       return NextResponse.redirect(new URL('/admin', request.nextUrl.origin));
+    }
+    
+    // For authenticated users accessing admin routes, allow access
+    if (session && request.nextUrl.pathname.startsWith('/admin')) {
+      console.log('Authenticated user accessing admin route');
+      return response;
     }
   } catch (error) {
     console.error('Middleware auth error:', error);

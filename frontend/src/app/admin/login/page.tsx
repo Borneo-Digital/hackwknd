@@ -25,11 +25,15 @@ function LoginForm() {
       console.log('Attempting to sign in with:', email);
       await signIn(email, password);
       console.log('Sign in successful, redirecting to:', redirectPath);
-      router.push(redirectPath);
+      
+      // Add a small delay to ensure the session is properly set
+      setTimeout(() => {
+        // Force a hard navigation instead of client-side navigation
+        window.location.href = redirectPath;
+      }, 500);
     } catch (err: any) {
       console.error('Sign in error:', err);
       setError(err.message || 'Failed to sign in. Please check your credentials.');
-    } finally {
       setIsLoading(false);
     }
   };
