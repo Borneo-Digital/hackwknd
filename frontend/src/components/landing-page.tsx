@@ -75,9 +75,9 @@ const HackathonCard: React.FC<{ hackathon: Hackathon, delay: number }> = ({ hack
     return () => clearTimeout(timer)
   }, [delay])
 
-  if (!hackathon || !hackathon.Date) return null;
+  if (!hackathon || !hackathon.attributes) return null;
 
-  const { Title, Theme, Date, Location, EventStatus } = hackathon;
+  const { Title, Theme, Date, Location, EventStatus } = hackathon.attributes;
   const formattedDate = formatDate(Date);
 
   return (
@@ -87,7 +87,7 @@ const HackathonCard: React.FC<{ hackathon: Hackathon, delay: number }> = ({ hack
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-xl font-bold text-white hover:text-hack-primary transition-colors">
-              <Link href={`/hackathon/${hackathon.slug}`}>
+              <Link href={`/hackathon/${hackathon.attributes.slug}`}>
                 {Title}
               </Link>
             </h3>
