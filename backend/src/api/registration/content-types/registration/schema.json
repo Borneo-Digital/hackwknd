@@ -5,20 +5,42 @@
     "singularName": "registration",
     "pluralName": "registrations",
     "displayName": "Registration",
-    "description": ""
+    "description": "User registrations for hackathons"
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
     "Name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "email": {
-      "type": "email"
+      "type": "email",
+      "required": true,
+      "unique": true
     },
     "phone": {
-      "type": "biginteger"
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "hackathon": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::hackathon.hackathon",
+      "inversedBy": "registrations"
     }
   }
 }

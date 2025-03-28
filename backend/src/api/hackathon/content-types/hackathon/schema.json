@@ -49,6 +49,12 @@
     },
     "Description": {
       "type": "blocks"
+    },
+    "registrations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::registration.registration",
+      "mappedBy": "hackathon"
     }
   }
 }
