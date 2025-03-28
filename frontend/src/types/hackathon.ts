@@ -57,6 +57,34 @@ export interface FAQItem {
   answer: string;
 }
 
+export interface TextNode {
+  text: string;
+  type?: string;
+  bold?: boolean;
+  italic?: boolean;
+}
+
+export interface BulletItem {
+  children: TextNode[];
+}
+
+export interface HeadingBlock {
+  type: 'heading';
+  children: TextNode[];
+}
+
+export interface ParagraphBlock {
+  type: 'paragraph';
+  children: TextNode[];
+}
+
+export interface BulletListBlock {
+  type: 'bullet-list';
+  children: BulletItem[];
+}
+
+export type DescriptionBlock = HeadingBlock | ParagraphBlock | BulletListBlock;
+
 export interface ImageFormat {
   url: string;
   width: number;
@@ -76,21 +104,26 @@ export interface Image {
 
 export interface Hackathon {
   id: number;
-  documentId: string;
-  Title: string;
-  Theme: string;
-  Date: string;
-  Location: string;
-  Description: string;
-  Schedule: Schedule | null;
-  Prizes: Prizes | null;
-  FAQ: FAQItem[];
-  slug: string;
-  Image: Image;
-  EventStatus: "Upcoming" | "Ongoing" | "Completed";
-  RegistrationStartDate: string;
-  RegistrationEndDate: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
+  attributes: {
+    Title: string;
+    Theme: string;
+    Date: string;
+    Location: string;
+    Description: string | DescriptionBlock[]; // Can be string or blocks object
+    Schedule: Schedule | null;
+    Prizes: Prizes | null;
+    FAQ: FAQItem[];
+    slug: string;
+    Image: {
+      data: {
+        id: number;
+        attributes: Image;
+      }[]
+    };
+    EventStatus: string; // Date string in the backend
+    RegistrationEndDate: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  }
 }

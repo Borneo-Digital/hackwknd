@@ -5,16 +5,68 @@ import { RegistrationData } from '@/types/registrations';
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    const res = await fetch(`${apiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
+    
+    // First try the pluralized endpoint (hackathons)
+    let res = await fetch(`${apiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
       cache: 'no-store',
     });
 
+    // If that fails, try the singular endpoint (hackathon)
     if (!res.ok) {
+      console.log('Trying singular endpoint...');
+      res = await fetch(`${apiUrl}/api/hackathon?filters[slug][$eq]=${slug}&populate=*`, {
+        cache: 'no-store',
+      });
+    }
+
+    if (!res.ok) {
+      console.error('API Response status:', res.status);
+      console.error('API Response text:', await res.text());
       throw new Error('Failed to fetch hackathon');
     }
 
     const data = await res.json();
-    return data.data[0] as Hackathon || null;
+    console.log('Hackathon API Response:', data);
+    
+    // Handle Strapi v4 response format
+    if (data.data) {
+      let hackathonData;
+      
+      if (Array.isArray(data.data) && data.data.length > 0) {
+        hackathonData = data.data[0];
+      } else {
+        hackathonData = data.data;
+      }
+      
+      // Handle the case where EventStatus is a date string but the frontend expects a status string
+      if (hackathonData.attributes) {
+        // Convert date-based EventStatus to a string status
+        if (hackathonData.attributes.EventStatus) {
+          const eventDate = new Date(hackathonData.attributes.EventStatus);
+          const today = new Date();
+          
+          // Set a human-readable status based on the date
+          if (eventDate > today) {
+            hackathonData.attributes.EventStatus = "Upcoming";
+          } else {
+            const endDate = new Date(eventDate);
+            endDate.setDate(eventDate.getDate() + 2); // Assuming 2-day event
+            
+            if (today >= eventDate && today <= endDate) {
+              hackathonData.attributes.EventStatus = "Ongoing";
+            } else {
+              hackathonData.attributes.EventStatus = "Finished";
+            }
+          }
+        }
+        
+        return hackathonData as Hackathon;
+      }
+      
+      return hackathonData as Hackathon;
+    }
+    
+    return null;
   } catch (error) {
     console.error('Error fetching hackathon:', error);
     return null;
@@ -104,5 +156,25 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
   } catch (error) {
     console.error('Error in registration process:', error);
     return false;
+  }
+}
+
+export async function checkExistingRegistration(data: RegistrationData): Promise<boolean> {
+  try {
+    const response = await fetch('/api/check-registration', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error checking registration:', error);
+    throw error;
   }
 }
