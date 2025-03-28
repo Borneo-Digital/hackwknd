@@ -3,8 +3,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  // For development, we can bypass auth temporarily
-  const skipAuth = process.env.NODE_ENV === 'development' && true; // set to true to bypass auth
+  // For development or if we want to bypass auth with an environment variable
+  const skipAuth = process.env.NEXT_PUBLIC_SKIP_AUTH === 'true' || 
+                  (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEV_SKIP_AUTH === 'true');
   
   if (skipAuth) {
     return NextResponse.next();

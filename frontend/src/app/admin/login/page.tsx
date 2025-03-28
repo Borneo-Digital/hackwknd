@@ -22,10 +22,13 @@ function LoginForm() {
     setError(null);
 
     try {
+      console.log('Attempting to sign in with:', email);
       await signIn(email, password);
+      console.log('Sign in successful, redirecting to:', redirectPath);
       router.push(redirectPath);
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in');
+      console.error('Sign in error:', err);
+      setError(err.message || 'Failed to sign in. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
@@ -88,12 +91,31 @@ function LoginFormFallback() {
 }
 
 export default function LoginPage() {
+  // Quick way to show debug info in production
+  const [showDebug, setShowDebug] = useState(false);
+  
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Admin Login</h1>
           <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
+          
+          {/* Hidden debug button - click 5 times rapidly to show debug info */}
+          <button 
+            className="mt-2 text-xs text-gray-400 hover:text-gray-500"
+            onClick={() => setShowDebug(prev => !prev)}>
+            Version 1.0.1
+          </button>
+          
+          {showDebug && (
+            <div className="mt-4 p-3 bg-gray-100 text-left text-xs rounded">
+              <p><strong>Debug Info:</strong></p>
+              <p>Environment: {process.env.NODE_ENV}</p>
+              <p>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Set' : '✗ Missing'}</p>
+              <p>Skip Auth: {process.env.NEXT_PUBLIC_SKIP_AUTH || 'Not set'}</p>
+            </div>
+          )}
         </div>
 
         <Suspense fallback={<LoginFormFallback />}>
