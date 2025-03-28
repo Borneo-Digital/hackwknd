@@ -10,15 +10,23 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) =
   const [formData, setFormData] = useState<RegistrationData>({
     name: '',
     email: '',
-    confirmEmail: '', // Add this field
+    confirmEmail: '',
     phone: '',
+    age: undefined,
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // Handle age as a number
+    if (name === 'age') {
+      setFormData({ ...formData, [name]: value ? parseInt(value, 10) : undefined });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -110,6 +118,18 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onClose }) =
         value={formData.phone}
         onChange={handleChange}
         placeholder="Phone"
+        required
+        disabled={isSubmitting}
+        className="w-full p-2 border border-input rounded-md"
+      />
+      <input
+        type="number"
+        name="age"
+        value={formData.age || ''}
+        onChange={handleChange}
+        placeholder="Age"
+        min="15"
+        max="100"
         required
         disabled={isSubmitting}
         className="w-full p-2 border border-input rounded-md"
