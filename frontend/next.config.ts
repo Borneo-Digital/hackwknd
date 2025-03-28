@@ -8,7 +8,9 @@ const nextConfig: NextConfig = {
   swcMinify: true,
   output: 'standalone',
   experimental: {
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'hackwknd.sarawak.digital'],
+    },
   },
   typescript: {
     ignoreBuildErrors: false,
