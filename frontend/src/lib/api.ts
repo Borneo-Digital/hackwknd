@@ -5,7 +5,7 @@ import { RegistrationData } from '@/types/registrations';
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
   try {
     // Try to fetch from Next.js API route first
-    let baseUrl = typeof window !== 'undefined' 
+    const baseUrl = typeof window !== 'undefined' 
       ? window.location.origin 
       : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
     

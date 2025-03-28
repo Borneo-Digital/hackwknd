@@ -192,6 +192,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
   }, []);
 
   useEffect(() => {
+    // 'i' needs to be 'let' since we're incrementing it
     let i = 0
     const typingInterval = setInterval(() => {
       if (i < fullText.length) {
@@ -206,6 +207,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
   }, [])
 
   useEffect(() => {
+    // 'i' needs to be 'let' since we're incrementing it
     let i = 0
     const currentSnippet = codeSnippets[currentCodeIndex].code
 
