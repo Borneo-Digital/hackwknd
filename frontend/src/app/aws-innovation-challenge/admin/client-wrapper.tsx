@@ -17,31 +17,87 @@ export function AdminPageClientWrapper() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  
+  // Simple password-based authentication
+  const adminPassword = "Hack123Wknd"; // In a real app, this would be stored securely
+  
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === adminPassword) {
+      setIsAuthenticated(true);
+      localStorage.setItem('awsAdminAuthenticated', 'true');
+    } else {
+      setLoginError('Invalid password. Please try again.');
+    }
+  };
   
   useEffect(() => {
-    async function fetchRegistrations() {
-      try {
-        const response = await fetch('/api/aws-registrations');
-        if (!response.ok) {
-          throw new Error('Failed to fetch registrations');
-        }
-        
-        const data = await response.json();
-        setRegistrations(data.registrations || []);
-      } catch (err) {
-        setError('Error loading registrations. Please try again later.');
-        console.error('Error fetching registrations:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+    // Check if user was previously authenticated
+    const isAuth = localStorage.getItem('awsAdminAuthenticated') === 'true';
+    setIsAuthenticated(isAuth);
     
-    fetchRegistrations();
+    if (isAuth) {
+      fetchRegistrations();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
+  
+  async function fetchRegistrations() {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/aws-registrations');
+      if (!response.ok) {
+        throw new Error('Failed to fetch registrations');
+      }
+      
+      const data = await response.json();
+      setRegistrations(data.registrations || []);
+    } catch (err) {
+      setError('Error loading registrations. Please try again later.');
+      console.error('Error fetching registrations:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   
   // Format date for display
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
+  };
+  
+  // Function to export registrations as CSV
+  const exportToCSV = () => {
+    if (registrations.length === 0) return;
+    
+    // Create CSV header and rows
+    const headers = ['Name', 'Email', 'Phone', 'Age', 'Registered At'];
+    const rows = registrations.map(reg => [
+      reg.name,
+      reg.email,
+      reg.phone,
+      reg.age || '',
+      new Date(reg.registeredAt).toLocaleString()
+    ]);
+    
+    // Convert to CSV format
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+    
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `aws-challenge-registrations-${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
   
   return (
@@ -51,7 +107,38 @@ export function AdminPageClientWrapper() {
       <main className="container mx-auto px-4 py-12 pt-24">
         <h1 className="text-3xl font-bold mb-8 text-blue-400">AWS Innovation Challenge Registrations</h1>
         
-        {isLoading ? (
+        {!isAuthenticated ? (
+          <div className="max-w-md mx-auto bg-slate-800/50 rounded-lg p-8 shadow-lg border border-slate-700">
+            <h2 className="text-xl font-bold mb-6 text-center">Admin Login</h2>
+            <form onSubmit={handleLogin}>
+              <div className="mb-6">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-3 bg-slate-900 border border-slate-700 rounded-md text-white"
+                  placeholder="Enter admin password"
+                  required
+                />
+              </div>
+              {loginError && (
+                <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-md text-red-300 text-sm">
+                  {loginError}
+                </div>
+              )}
+              <button
+                type="submit"
+                className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+              >
+                Login
+              </button>
+            </form>
+          </div>
+        ) : isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
           </div>
@@ -64,53 +151,74 @@ export function AdminPageClientWrapper() {
             <p className="text-gray-400">No registrations yet.</p>
           </div>
         ) : (
-          <div className="bg-slate-800/30 rounded-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-700">
-                <thead className="bg-slate-800/80">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Phone
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Age
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Registered At
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-700">
-                  {registrations.map((registration) => (
-                    <tr key={registration.id} className="hover:bg-slate-800/50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-white">{registration.name}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">{registration.email}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">{registration.phone}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">{registration.age || 'N/A'}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">{formatDate(registration.registeredAt)}</div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="p-4 bg-slate-800/50 border-t border-slate-700">
+          <div className="space-y-4">
+            <div className="flex justify-between items-center mb-4">
               <p className="text-sm text-gray-400">Total Registrations: {registrations.length}</p>
+              <button
+                onClick={exportToCSV}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors text-sm"
+              >
+                Export to CSV
+              </button>
+            </div>
+            
+            <div className="bg-slate-800/30 rounded-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-slate-700">
+                  <thead className="bg-slate-800/80">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Email
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Phone
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Age
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        Registered At
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-700">
+                    {registrations.map((registration) => (
+                      <tr key={registration.id} className="hover:bg-slate-800/50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-white">{registration.name}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-300">{registration.email}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-300">{registration.phone}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-300">{registration.age || 'N/A'}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-300">{formatDate(registration.registeredAt)}</div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => {
+                  localStorage.removeItem('awsAdminAuthenticated');
+                  setIsAuthenticated(false);
+                }}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-md transition-colors text-sm"
+              >
+                Logout
+              </button>
             </div>
           </div>
         )}
