@@ -8,6 +8,12 @@ git pull
 echo "📦 Installing dependencies..."
 npm install
 
+echo "🛠️ Converting TypeScript config files to JavaScript..."
+node convert-config.js
+
+echo "💾 Setting up memory optimization..."
+export NODE_OPTIONS="--max-old-space-size=512"
+
 echo "🔨 Building application..."
 npm run build
 
