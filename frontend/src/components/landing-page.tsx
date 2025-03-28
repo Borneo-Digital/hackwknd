@@ -312,59 +312,6 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
               <p className="text-gray-400">Join our next innovation challenge</p>
             </div>
             
-            {/* AWS Innovation Challenge Card */}
-            <div className="mb-8">
-              <Link href="/aws-innovation-challenge">
-                <Card className="bg-gradient-to-r from-blue-900/80 to-blue-800/90 backdrop-blur-sm border border-blue-700 hover:shadow-lg hover:shadow-blue-900/30 transform hover:scale-[1.01] transition-all duration-300">
-                  <CardContent className="p-6 md:p-8">
-                    <div className="flex flex-col md:flex-row items-start gap-6">
-                      <div className="flex-shrink-0 mb-4 md:mb-0">
-                        <div className="p-4 bg-blue-800 rounded-lg border border-blue-700">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 80 80" className="text-white">
-                            <path fill="currentColor" d="M37.5 62.118L22.286 54.186V36.919l15.214 7.932v17.267zm1.429-18.347l-15.715-8.182 15.715-8.182 15.714 8.182-15.714 8.182zm16.785 10.415l-15.214 7.932V44.851l15.214-7.932v17.267zM55 32.227l-16.071-8.368L22.857 32.227v-2.762l16.072-8.369L55 29.465v2.762zm-40 29.688v-32l30-15.623L75 29.915v32L45 77.537 15 61.915zm-1.429-33.376V63.3L45 79.915 77.5 63.3V28.537L45 11.922 13.571 28.539z"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-2xl font-bold text-white">AWS Innovation Challenge 2025</h3>
-                          <span className="px-3 py-1 rounded-full text-sm bg-blue-500/20 border border-blue-500/50 text-blue-300">
-                            OPEN FOR REGISTRATION
-                          </span>
-                        </div>
-                        <p className="text-gray-300 mb-4">
-                          Build solutions using AWS technologies to solve real-world problems. The AWS Innovation Challenge is an exclusive opportunity for developers.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-gray-300">
-                          <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-2 text-blue-400" />
-                            <span className="text-blue-300 mr-2">date:</span>
-                            <span>16-17 April 2025</span>
-                          </div>
-                          <div className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-2 text-blue-400" />
-                            <span className="text-blue-300 mr-2">location:</span>
-                            <span>Makeramai Makerspace, Plaza Merdeka</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="w-4 h-4 mr-2 text-blue-400" />
-                            <span className="text-blue-300 mr-2">Registration ends:</span>
-                            <span>15 April 2025</span>
-                          </div>
-                        </div>
-                        <div className="mt-6">
-                          <Button className="bg-blue-600 hover:bg-blue-500 text-white border-none">
-                            Register Now
-                            <ArrowRight className="ml-2 w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-            
             {/* Existing Hackathons */}
             <div className="grid md:grid-cols-2 gap-8">
               {isLoading ? (
