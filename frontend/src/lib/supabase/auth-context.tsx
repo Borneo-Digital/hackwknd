@@ -26,9 +26,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get session from local storage
     const getSession = async () => {
       setIsLoading(true);
+      console.log('AuthContext: Initializing and checking for session');
       
       // For development, provide a mock user when needed
       if (isDev && process.env.NEXT_PUBLIC_DEV_MODE === 'true') {
+        console.log('AuthContext: Using mock user for development');
         const mockUser = {
           id: 'dev-user-123',
           email: 'admin@example.com',
@@ -49,16 +51,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       try {
+        console.log('AuthContext: Fetching session from Supabase');
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Error getting session:', error);
+          console.error('AuthContext: Error getting session:', error);
         } else {
+          console.log('AuthContext: Session fetch result:', {
+            hasSession: !!data.session,
+            user: data.session?.user?.email || 'none'
+          });
           setSession(data.session);
           setUser(data.session?.user || null);
         }
       } catch (err) {
-        console.error('Auth provider error:', err);
+        console.error('AuthContext: Provider error:', err);
       } finally {
         setIsLoading(false);
       }
@@ -67,8 +74,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getSession();
 
     // Listen for auth changes
+    console.log('AuthContext: Setting up auth state listener');
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('AuthContext: Auth state changed:', { 
+          event, 
+          hasSession: !!session,
+          user: session?.user?.email || 'none'
+        });
         setSession(session);
         setUser(session?.user || null);
         setIsLoading(false);
@@ -76,25 +89,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     return () => {
+      console.log('AuthContext: Cleaning up auth listener');
       authListener?.subscription.unsubscribe();
     };
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      throw error;
+    console.log('AuthContext: Attempting sign in for:', email);
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+  
+      if (error) {
+        console.error('AuthContext: Sign in error:', error);
+        throw error;
+      }
+      
+      console.log('AuthContext: Sign in successful:', {
+        user: data.user?.email || 'none',
+        hasSession: !!data.session
+      });
+      
+      // Manual session check to verify state after sign in
+      const sessionCheck = await supabase.auth.getSession();
+      console.log('AuthContext: Post-login session check:', {
+        hasSession: !!sessionCheck.data.session,
+        user: sessionCheck.data.session?.user?.email || 'none'
+      });
+    } catch (err) {
+      console.error('AuthContext: Unexpected sign in error:', err);
+      throw err;
     }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw error;
+    console.log('AuthContext: Signing out');
+    
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('AuthContext: Sign out error:', error);
+        throw error;
+      }
+      console.log('AuthContext: Sign out successful');
+    } catch (err) {
+      console.error('AuthContext: Unexpected sign out error:', err);
+      throw err;
     }
   };
 

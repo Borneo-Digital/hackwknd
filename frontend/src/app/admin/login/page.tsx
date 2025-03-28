@@ -3,6 +3,7 @@
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/supabase/auth-context';
+import { supabase } from '@/lib/supabase/client';
 
 // Component that uses searchParams wrapped in Suspense
 function LoginForm() {
@@ -22,17 +23,48 @@ function LoginForm() {
     setError(null);
 
     try {
-      console.log('Attempting to sign in with:', email);
+      console.log('Login page: Attempting to sign in with:', email);
       await signIn(email, password);
-      console.log('Sign in successful, redirecting to:', redirectPath);
+      console.log('Login page: Sign in successful, will redirect to:', redirectPath);
       
-      // Add a small delay to ensure the session is properly set
-      setTimeout(() => {
-        // Force a hard navigation instead of client-side navigation
-        window.location.href = redirectPath;
-      }, 500);
+      // Using a progressive approach with multiple timeout attempts
+      // This helps ensure the session is properly established before redirecting
+      let attempts = 0;
+      const maxAttempts = 3;
+      const checkSessionAndRedirect = async () => {
+        attempts++;
+        try {
+          console.log(`Login page: Checking session before redirect (attempt ${attempts}/${maxAttempts})`);
+          // Force a session refresh to make sure we have the latest state
+          const { data } = await supabase.auth.getSession();
+          
+          if (data.session) {
+            console.log('Login page: Session confirmed, redirecting now');
+            // Set a cookie to indicate this is a post-login navigation
+            // This can be used by middleware to be more lenient with auth checks
+            document.cookie = 'post_login=true; path=/; max-age=60; SameSite=Lax; secure';
+            // Force a hard navigation instead of client-side navigation
+            window.location.href = redirectPath;
+          } else if (attempts < maxAttempts) {
+            console.log(`Login page: Session not detected yet, trying again in ${attempts * 500}ms`);
+            // Try again with increasing delay
+            setTimeout(checkSessionAndRedirect, attempts * 500);
+          } else {
+            console.log('Login page: Session still not detected after max attempts');
+            // Last resort - redirect anyway and hope middleware picks up the session
+            window.location.href = redirectPath;
+          }
+        } catch (error) {
+          console.error('Login page: Error checking session:', error);
+          // If we fail to check session, redirect anyway as last resort
+          window.location.href = redirectPath;
+        }
+      };
+      
+      // Start the session check process with a small initial delay
+      setTimeout(checkSessionAndRedirect, 300);
     } catch (err: any) {
-      console.error('Sign in error:', err);
+      console.error('Login page: Sign in error:', err);
       setError(err.message || 'Failed to sign in. Please check your credentials.');
       setIsLoading(false);
     }
@@ -118,6 +150,49 @@ export default function LoginPage() {
               <p>Environment: {process.env.NODE_ENV}</p>
               <p>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Set' : '✗ Missing'}</p>
               <p>Skip Auth: {process.env.NEXT_PUBLIC_SKIP_AUTH || 'Not set'}</p>
+              <p>Current URL: {typeof window !== 'undefined' ? window.location.href : 'N/A'}</p>
+              <p>Auth Cookie: {
+                typeof document !== 'undefined'
+                  ? document.cookie.split(';').some(c => c.trim().startsWith('supabase-auth-token='))
+                    ? '✓ Present'
+                    : '✗ Missing'
+                  : 'N/A'
+              }</p>
+              <div className="mt-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const { data } = await supabase.auth.getSession();
+                      alert(
+                        data.session
+                          ? `Session found for: ${data.session.user.email}`
+                          : 'No session found'
+                      );
+                    } catch (err) {
+                      alert(`Error checking session: ${err}`);
+                    }
+                  }}
+                  className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+                >
+                  Check Session
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.clear();
+                    document.cookie.split(';').forEach(c => {
+                      const name = c.trim().split('=')[0];
+                      if (name) document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                    });
+                    alert('All cookies and localStorage cleared');
+                    window.location.reload();
+                  }}
+                  className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs"
+                >
+                  Clear Storage
+                </button>
+              </div>
             </div>
           )}
         </div>
