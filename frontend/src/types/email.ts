@@ -6,8 +6,9 @@ export interface SendTemplateEmailRequest {
   data: {
     name: string;
     email: string;
-    phone: string;
-    [key: string]: string;
+    phone?: string;
+    age?: number;
+    [key: string]: string | number | undefined;
   };
 }
 

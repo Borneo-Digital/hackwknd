@@ -21,12 +21,17 @@ export async function POST(request: NextRequest) {
   const resend = new Resend(apiKey);
 
   try {
-    const { to }: SendTemplateEmailRequest = await request.json();
+    const { to, data }: SendTemplateEmailRequest = await request.json();
     console.log('Sending email to:', to);
-
-    // Render the email template
+    console.log('Email data:', data);
+    
+    // Render the email template with user data
     const html = render(
-      WelcomeEmail()
+      WelcomeEmail({
+        name: data.name,
+        email: data.email,
+        age: data.age
+      })
     );
 
     const emailData = {

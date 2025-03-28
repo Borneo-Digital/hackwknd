@@ -89,7 +89,7 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
 
 // Send confirmation email
 // Send confirmation email
-async function sendConfirmationEmail(email: string, name: string) {
+async function sendConfirmationEmail(email: string, name: string, age?: number) {
   try {
     console.log('Sending confirmation email to:', email);
     // Use relative path instead of full URL
@@ -103,6 +103,7 @@ async function sendConfirmationEmail(email: string, name: string) {
         data: {
           name,
           email,
+          age,
         },
       }),
     });
@@ -145,6 +146,7 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
           Name: formData.name,
           email: formData.email,
           phone: formData.phone,
+          age: formData.age || null,
         },
       }),
     });
@@ -163,7 +165,7 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
 
     // Send confirmation email
     console.log('Initiating confirmation email...');
-    const emailResult = await sendConfirmationEmail(formData.email, formData.name);
+    const emailResult = await sendConfirmationEmail(formData.email, formData.name, formData.age);
     
     if (!emailResult.success) {
       console.warn('Email sending failed but registration was successful:', emailResult.error);
@@ -188,6 +190,7 @@ export async function checkExistingRegistration(data: RegistrationData): Promise
         name: data.name,
         email: data.email,
         phone: data.phone,
+        age: data.age || null,
       }),
     });
     return await response.json();
