@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-type RouteParams = {
+interface RouteParams {
   params: {
     path: string[];
   };
-};
+}
 
 /**
  * API route that acts as a proxy to the Strapi backend
@@ -12,19 +12,13 @@ type RouteParams = {
  */
 export async function GET(
   request: NextRequest,
-  context: RouteParams
+  { params }: RouteParams
 ) {
   try {
-    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    if (!strapiUrl) {
-      console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
-      return NextResponse.json(
-        { error: 'API URL not configured' },
-        { status: 500 }
-      );
-    }
+    // Fallback to a default URL if environment variable is missing
+    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://api.hackwknd.sarawak.digital';
     
-    const path = context.params.path.join('/');
+    const path = params.path.join('/');
     const url = new URL(request.url);
     const queryString = url.search;
     
@@ -60,20 +54,24 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  context: RouteParams
+  { params }: RouteParams
 ) {
   try {
-    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    if (!strapiUrl) {
-      console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
+    // Fallback to a default URL if environment variable is missing
+    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://api.hackwknd.sarawak.digital';
+    
+    const path = params.path.join('/');
+    let body;
+    
+    try {
+      body = await request.json();
+    } catch (e) {
+      console.error('Error parsing request body:', e);
       return NextResponse.json(
-        { error: 'API URL not configured' },
-        { status: 500 }
+        { error: 'Invalid request body' },
+        { status: 400 }
       );
     }
-    
-    const path = context.params.path.join('/');
-    const body = await request.json();
     
     console.log(`Proxying POST request to: ${strapiUrl}/api/${path}`);
     

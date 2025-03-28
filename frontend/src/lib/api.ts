@@ -7,7 +7,7 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
     // Try to fetch from Next.js API route first
     const baseUrl = typeof window !== 'undefined' 
       ? window.location.origin 
-      : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
+      : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.VERCEL_URL || process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
     
     console.log(`Attempting to fetch hackathon data for slug: ${slug}`);
     console.log(`Using base URL: ${baseUrl}`);
@@ -133,7 +133,7 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
     console.log('Submitting registration via proxy...');
     const baseUrl = typeof window !== 'undefined' 
       ? window.location.origin 
-      : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
+      : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.VERCEL_URL || process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
     
     const registrationResponse = await fetch(`${baseUrl}/api/proxy/registrations`, {
       method: 'POST',

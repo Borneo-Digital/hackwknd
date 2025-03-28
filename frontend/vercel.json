@@ -1,10 +1,3 @@
 {
-  "buildCommand": "npm run build",
-  "installCommand": "npm install --legacy-peer-deps",
-  "framework": "nextjs",
-  "devCommand": "npm run dev",
-  "outputDirectory": ".next",
-  "environment": {
-    "NEXT_PUBLIC_STRAPI_API_URL": "https://api.hackwknd.sarawak.digital"
-  }
+  "framework": "nextjs"
 }
