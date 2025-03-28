@@ -1,16 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+type RouteParams = {
+  params: {
+    path: string[];
+  };
+};
+
 /**
  * API route that acts as a proxy to the Strapi backend
  * This avoids CORS issues by proxying requests from the same origin
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: RouteParams
 ) {
   try {
     const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    const path = params.path.join('/');
+    if (!strapiUrl) {
+      console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
+      return NextResponse.json(
+        { error: 'API URL not configured' },
+        { status: 500 }
+      );
+    }
+    
+    const path = context.params.path.join('/');
     const url = new URL(request.url);
     const queryString = url.search;
     
@@ -23,7 +37,16 @@ export async function GET(
       cache: 'no-store',
     });
     
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      console.error('Error parsing JSON response:', e);
+      return NextResponse.json(
+        { error: 'Invalid response from API server' },
+        { status: 502 }
+      );
+    }
     
     return NextResponse.json(data);
   } catch (error) {
@@ -37,11 +60,19 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: RouteParams
 ) {
   try {
     const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    const path = params.path.join('/');
+    if (!strapiUrl) {
+      console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
+      return NextResponse.json(
+        { error: 'API URL not configured' },
+        { status: 500 }
+      );
+    }
+    
+    const path = context.params.path.join('/');
     const body = await request.json();
     
     console.log(`Proxying POST request to: ${strapiUrl}/api/${path}`);
@@ -54,7 +85,16 @@ export async function POST(
       body: JSON.stringify(body),
     });
     
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      console.error('Error parsing JSON response:', e);
+      return NextResponse.json(
+        { error: 'Invalid response from API server' },
+        { status: 502 }
+      );
+    }
     
     return NextResponse.json(data);
   } catch (error) {
