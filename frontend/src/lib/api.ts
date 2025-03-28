@@ -16,16 +16,20 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
     try {
       res = await fetch(`${baseUrl}/api/hackathon/${slug}`, {
         cache: 'no-store',
+        credentials: 'include',
+        mode: 'cors',
       });
     } catch (error) {
       console.warn('Error fetching from Next.js API route:', error);
       
-      // Fall back to direct Strapi API call if Next.js API route fails
-      const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-      console.log(`Falling back to direct Strapi API call: ${strapiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`);
+      // Fall back to proxy API route if direct route fails
+      console.log(`Falling back to proxy API call: ${baseUrl}/api/proxy/hackathons?filters[slug][$eq]=${slug}&populate=*`);
       
-      res = await fetch(`${strapiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
+      res = await fetch(`${baseUrl}/api/proxy/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
         cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     }
 
@@ -125,9 +129,13 @@ export async function submitRegistration(formData: RegistrationData): Promise<bo
     console.log('Starting registration process for:', formData.email);
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
 
-    // Submit registration data to Strapi backend
-    console.log('Submitting registration to Strapi...');
-    const registrationResponse = await fetch(`${apiUrl}/api/registrations`, {
+    // Submit registration data via proxy
+    console.log('Submitting registration via proxy...');
+    const baseUrl = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
+    
+    const registrationResponse = await fetch(`${baseUrl}/api/proxy/registrations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

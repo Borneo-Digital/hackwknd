@@ -158,10 +158,14 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
     const fetchHackathons = async () => {
       setIsLoading(true);
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-        console.log('Attempting to fetch from:', `${apiUrl}/api/hackathons?populate=*`);
+        // Use the Next.js proxy API route instead of calling Strapi directly
+        const baseUrl = typeof window !== 'undefined' 
+          ? window.location.origin 
+          : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
         
-        const res = await fetch(`${apiUrl}/api/hackathons?populate=*`, {
+        console.log('Attempting to fetch from proxy:', `${baseUrl}/api/proxy/hackathons?populate=*`);
+        
+        const res = await fetch(`${baseUrl}/api/proxy/hackathons?populate=*`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
