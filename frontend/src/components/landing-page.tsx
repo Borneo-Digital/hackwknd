@@ -154,42 +154,8 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
 
   const hackathonsSectionRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const fetchHackathons = async () => {
-      setIsLoading(true);
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-        console.log('Attempting to fetch from:', `${apiUrl}/api/hackathons?populate=*`);
-        
-        const res = await fetch(`${apiUrl}/api/hackathons?populate=*`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          cache: 'no-store',
-        });
-        
-        if (!res.ok) {
-          console.error('Fetch response not OK:', res.status, res.statusText);
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
-        const data = await res.json();
-        console.log('Hackathons data received:', data);
-        if (data && data.data) {
-          setHackathons(data.data);
-        } else {
-          console.error('Unexpected data format:', data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch hackathons:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchHackathons();
-  }, []);
+  // We no longer need to fetch here since we get data via props from the page
+  // Component is now fully client-side with server-rendered data
 
   useEffect(() => {
     // 'i' needs to be 'let' since we're incrementing it

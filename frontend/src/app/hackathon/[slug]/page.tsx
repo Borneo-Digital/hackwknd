@@ -1,5 +1,5 @@
 import { HackathonPage } from '@/components/hackathon-page'
-import { getHackathonBySlug } from '@/lib/api'
+import { getHackathonBySlug } from '@/lib/supabase/api'
 import { notFound } from 'next/navigation'
 
 interface PageProps {

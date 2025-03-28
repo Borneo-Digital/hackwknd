@@ -21,21 +21,40 @@ export async function POST(request: NextRequest) {
   const resend = new Resend(apiKey);
 
   try {
-    const { to }: SendTemplateEmailRequest = await request.json();
+    const { to, data }: SendTemplateEmailRequest = await request.json();
     console.log('Sending email to:', to);
 
-    // Render the email template
+    // Create title for the email based on hackathon title if available
+    const emailSubject = data.hackathonTitle 
+      ? `Thank You for Registering for ${data.hackathonTitle}!` 
+      : 'Thank You for Registering for HackWknd!';
+
+    // Render the email template with the provided data
     const html = render(
-      WelcomeEmail()
+      WelcomeEmail({
+        name: data.name,
+        email: data.email,
+        hackathonTitle: data.hackathonTitle || 'HackWknd Samarahan 2024',
+        hackathonTheme: data.hackathonTheme || 'AI for Education',
+        hackathonDate: data.hackathonDate || 'December 6 - December 8, 2024',
+        hackathonLocation: data.hackathonLocation || 'Universiti Malaysia Sarawak (UNIMAS)',
+        hackathonDescription: data.hackathonDescription || ''
+      })
     );
 
     const emailData = {
       from: 'HackWknd Team <no-reply@hackwknd.sarawak.digital>',
       to,
-      subject: 'Thank You for Registering for HackWknd!',
+      subject: emailSubject,
       html,
     };
-    console.log('Attempting to send email with data:', { ...emailData, to: '[REDACTED]' });
+    
+    console.log('Attempting to send email with data:', { 
+      ...emailData, 
+      to: '[REDACTED]',
+      hackathonTitle: data.hackathonTitle || 'HackWknd'
+    });
+    
     const htmlContent = await emailData.html;
     const emailDataToSend = { ...emailData, html: htmlContent };
     const resendResult = await resend.emails.send(emailDataToSend);

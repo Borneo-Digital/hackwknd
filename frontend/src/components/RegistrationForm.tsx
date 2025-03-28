@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { submitRegistration,checkExistingRegistration } from '@/lib/api';
+import { submitRegistration, checkExistingRegistration } from '@/lib/supabase/api';
 import { RegistrationData } from '@/types/registrations';
 
 interface RegistrationFormProps {

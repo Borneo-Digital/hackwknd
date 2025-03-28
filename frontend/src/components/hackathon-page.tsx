@@ -37,6 +37,10 @@ interface FormattedSection {
   title?: string;
   content: string[];
   type: "paragraph" | "bulletPoints";
+  formatting?: {
+    bold?: boolean;
+    italic?: boolean;
+  };
 }
 
 const formatDate = (dateString: string) => {
@@ -123,28 +127,15 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
             {hackathonImage && (
               <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800 overflow-hidden">
                 <CardContent className="p-0">
-                  {/* Handle both legacy and new Strapi image structures */}
-                  {hackathonImage.data ? (
-                    // New structure: Media with data property
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${hackathonImage.data[0]?.attributes?.url}`}
-                      alt={Title}
-                      width={hackathonImage.data[0]?.attributes?.width || 800}
-                      height={hackathonImage.data[0]?.attributes?.height || 600}
-                      className="w-full h-auto object-cover"
-                      priority
-                    />
-                  ) : 'url' in hackathonImage ? (
-                    // Legacy structure: Direct media object with type assertion
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${(hackathonImage as { url: string }).url}`}
-                      alt={Title}
-                      width={800}
-                      height={600}
-                      className="w-full h-auto object-cover"
-                      priority
-                    />
-                  ) : null}
+                  {/* Using Supabase image URL directly */}
+                  <Image
+                    src={hackathonImage || '/hackwknd-logo.png'}
+                    alt={Title || 'Hackathon Image'}
+                    width={800}
+                    height={600}
+                    className="w-full h-auto object-cover"
+                    priority
+                  />
                 </CardContent>
               </Card>
             )}
@@ -166,7 +157,16 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                             {section.content.map(
                               (paragraph: string, pIndex: number) => (
                                 <p key={pIndex} className="mb-4 last:mb-0">
-                                  {paragraph}
+                                  {/* Handle markdown-like formatting */}
+                                  {paragraph.split(/(\*\*.*?\*\*|\*.*?\*)/).map((part, partIdx) => {
+                                    if (part.startsWith('**') && part.endsWith('**')) {
+                                      return <strong key={partIdx}>{part.slice(2, -2)}</strong>;
+                                    } else if (part.startsWith('*') && part.endsWith('*')) {
+                                      return <em key={partIdx}>{part.slice(1, -1)}</em>;
+                                    } else {
+                                      return part;
+                                    }
+                                  })}
                                 </p>
                               )
                             )}
@@ -179,7 +179,18 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                   <span className="text-hack-primary mr-2">
                                     •
                                   </span>
-                                  <span className="flex-1">{bullet}</span>
+                                  <span className="flex-1">
+                                    {/* Handle markdown-like formatting */}
+                                    {bullet.split(/(\*\*.*?\*\*|\*.*?\*)/).map((part, partIdx) => {
+                                      if (part.startsWith('**') && part.endsWith('**')) {
+                                        return <strong key={partIdx}>{part.slice(2, -2)}</strong>;
+                                      } else if (part.startsWith('*') && part.endsWith('*')) {
+                                        return <em key={partIdx}>{part.slice(1, -1)}</em>;
+                                      } else {
+                                        return part;
+                                      }
+                                    })}
+                                  </span>
                                 </li>
                               )
                             )}
@@ -265,51 +276,128 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                   <div className="text-hack-primary mb-4">
                     $ cat prizes.json
                   </div>
-                  <div className="space-y-6 mb-8">
-                    {(["first", "second", "third"] as const).map((place) => {
-                      const prize = Prizes.prizes[place];
-                      if (!prize) return null;
-                      return (
-                        <div
-                          key={place}
-                          className="relative bg-slate-800/50 rounded-lg p-6 border border-gray-800/50 hover:border-hack-primary/50 transition-colors"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div
-                              className={`
-                                                            p-3 rounded-lg 
-                                                            ${
-                                                              place === "first"
-                                                                ? "bg-yellow-500/10 text-yellow-500"
-                                                                : place ===
-                                                                  "second"
-                                                                ? "bg-slate-300/10 text-slate-300"
-                                                                : "bg-amber-600/10 text-amber-600"
-                                                            }
-                                                        `}
-                            >
-                              {prize.icon && getPrizeIcon(prize.icon)}
+                  
+                  {/* Main Prizes */}
+                  {Array.isArray(Prizes.prizes.main) && Prizes.prizes.main.length > 0 && (
+                    <div className="space-y-6 mb-8">
+                      {Prizes.prizes.main.map((prize, index) => {
+                        // Define color classes based on the prize index
+                        let bgColorClass = "bg-yellow-500/10 text-yellow-500";
+                        if (index === 1) bgColorClass = "bg-slate-300/10 text-slate-300";
+                        if (index === 2) bgColorClass = "bg-amber-600/10 text-amber-600";
+                        if (index > 2) bgColorClass = "bg-indigo-500/10 text-indigo-500";
+                        
+                        return (
+                          <div
+                            key={prize.id || index}
+                            className="relative bg-slate-800/50 rounded-lg p-6 border border-gray-800/50 hover:border-hack-primary/50 transition-colors"
+                          >
+                            <div className="flex items-start gap-4">
+                              <div className={`p-3 rounded-lg ${bgColorClass}`}>
+                                {prize.icon && getPrizeIcon(prize.icon)}
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="text-xl font-bold text-white mb-1">
+                                  {prize.rank}
+                                </h3>
+                                <div className="text-2xl font-bold text-hack-primary">
+                                  RM{prize.amount}
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex-1">
-                              <h3 className="text-xl font-bold text-white mb-1">
-                                {prize.rank}
-                              </h3>
-                              <div className="text-2xl font-bold text-hack-primary">
-                                RM{prize.amount}
+                            <div className="mt-4 pl-14">
+                              <div className="text-gray-400 mb-3">
+                                {prize.description}
                               </div>
                             </div>
                           </div>
-                          <div className="mt-4 pl-14">
-                            <div className="text-gray-400 mb-3">
-                              {prize.description}
+                        );
+                      })}
+                    </div>
+                  )}
+                  
+                  {/* Legacy format support for backward compatibility */}
+                  {!Prizes.prizes.main && (["first", "second", "third"] as const).some(place => Prizes.prizes[place]) && (
+                    <div className="space-y-6 mb-8">
+                      {(["first", "second", "third"] as const).map((place) => {
+                        const prize = Prizes.prizes[place];
+                        if (!prize) return null;
+                        return (
+                          <div
+                            key={place}
+                            className="relative bg-slate-800/50 rounded-lg p-6 border border-gray-800/50 hover:border-hack-primary/50 transition-colors"
+                          >
+                            <div className="flex items-start gap-4">
+                              <div
+                                className={`
+                                  p-3 rounded-lg 
+                                  ${
+                                    place === "first"
+                                      ? "bg-yellow-500/10 text-yellow-500"
+                                      : place === "second"
+                                      ? "bg-slate-300/10 text-slate-300"
+                                      : "bg-amber-600/10 text-amber-600"
+                                  }
+                                `}
+                              >
+                                {prize.icon && getPrizeIcon(prize.icon)}
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="text-xl font-bold text-white mb-1">
+                                  {prize.rank}
+                                </h3>
+                                <div className="text-2xl font-bold text-hack-primary">
+                                  RM{prize.amount}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-4 pl-14">
+                              <div className="text-gray-400 mb-3">
+                                {prize.description}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
-                  {Prizes.prizes.special && (
+                  {/* Special Categories - New Array Format */}
+                  {Array.isArray(Prizes.prizes.special) && Prizes.prizes.special.length > 0 && (
+                    <div className="mt-8">
+                      <h3 className="text-hack-secondary text-lg font-bold mb-4">
+                        Special Categories
+                      </h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {Prizes.prizes.special.map((prize, index) => (
+                          <div
+                            key={prize.id || index}
+                            className="bg-slate-800/30 rounded-lg p-4 border border-gray-800/50 hover:border-hack-secondary/50 transition-colors"
+                          >
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="p-2 rounded-lg bg-hack-secondary/10 text-hack-secondary">
+                                {prize.icon && getPrizeIcon(prize.icon)}
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-white">
+                                  {prize.rank}
+                                </h4>
+                                <div className="text-hack-secondary font-bold">
+                                  RM{prize.amount}
+                                </div>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-400">
+                              {prize.description}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Special Categories - Legacy Object Format */}
+                  {!Array.isArray(Prizes.prizes.special) && Prizes.prizes.special && (
                     <div className="mt-8">
                       <h3 className="text-hack-secondary text-lg font-bold mb-4">
                         Special Categories
@@ -462,6 +550,19 @@ const getStatusColor = (status: string) => {
 const formatHackathonDescription = (
   description: string | DescriptionBlock[]
 ): FormattedSection[] => {
+  // First try to detect if this is a JSON string and parse it
+  if (typeof description === 'string' && 
+      (description.startsWith('[') || description.startsWith('{'))) {
+    try {
+      const parsedJson = JSON.parse(description);
+      // If parsing succeeded, call this function again with the parsed JSON
+      return formatHackathonDescription(parsedJson);
+    } catch (error) {
+      console.error("Error parsing JSON string:", error);
+      // Continue with normal string processing if parsing fails
+    }
+  }
+
   // If description is a string (legacy format), process it as before
   if (typeof description === 'string') {
     const isHeading = (line: string) => line.endsWith(":");
@@ -518,38 +619,222 @@ const formatHackathonDescription = (
     return sections;
   }
   
-  // If description is an array of blocks, process the blocks format
+  // If description is an array of blocks, process the structured JSON content
   if (Array.isArray(description)) {
     const sections: FormattedSection[] = [];
     let currentTitle = "";
     
+    // Helper to extract formatted text from TextNode array
+    const extractText = (children: any[]): string => {
+      if (!children || !Array.isArray(children)) return "";
+      
+      return children.map(child => {
+        if (!child) return "";
+        let text = child.text || "";
+        if (child.bold) text = `**${text}**`;
+        if (child.italic) text = `*${text}*`;
+        return text;
+      }).join('');
+    };
+    
     description.forEach((block) => {
+      if (!block) return;
+      
+      // Process headings (they become section titles)
       if (block.type === 'heading') {
-        currentTitle = block.children.map(child => child.text).join('');
+        currentTitle = extractText(block.children);
       } 
-      else if (block.type === 'paragraph') {
-        const content = block.children.map(child => child.text).join('');
-        sections.push({
-          title: currentTitle,
-          content: [content],
-          type: "paragraph"
-        });
-        currentTitle = ""; // Reset title after use
+      // Process bullet lists (they become bullet point sections)
+      else if (block.type === 'bullet-list' && block.children?.length > 0) {
+        const bullets = block.children.map(item => {
+          if (item.children) {
+            return extractText(item.children);
+          }
+          return '';
+        }).filter(text => text.trim());
+        
+        if (bullets.length > 0) {
+          sections.push({
+            title: currentTitle,
+            content: bullets,
+            type: "bulletPoints"
+          });
+          currentTitle = ""; // Reset title after use
+        }
       }
-      else if (block.type === 'bullet-list') {
-        const bullets = block.children.map(item => 
-          item.children.map(child => child.text).join('')
-        );
-        sections.push({
-          title: currentTitle,
-          content: bullets,
-          type: "bulletPoints"
-        });
-        currentTitle = ""; // Reset title after use
+      // Process paragraphs (regular text content)
+      else if (block.type === 'paragraph') {
+        const rawText = extractText(block.children);
+        if (!rawText.trim()) return; // Skip empty paragraphs
+        
+        // Extract sections by parsing text content
+        const parseTextContent = (text: string): FormattedSection[] => {
+          const result: FormattedSection[] = [];
+          
+          // Split text by double newlines to separate major sections
+          const blocks = text.split(/\n\s*\n+/).filter(b => b.trim());
+          
+          blocks.forEach(block => {
+            const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+            
+            // Find section headings (lines ending with colon)
+            const headingIndices: number[] = [];
+            lines.forEach((line, idx) => {
+              if (line.endsWith(':') && line.length < 60) {
+                headingIndices.push(idx);
+              }
+            });
+            
+            // Process each section
+            if (headingIndices.length > 0) {
+              // Add ranges for each heading section
+              for (let i = 0; i < headingIndices.length; i++) {
+                const start = headingIndices[i];
+                const end = i < headingIndices.length - 1 ? headingIndices[i + 1] : lines.length;
+                
+                const heading = lines[start].slice(0, -1); // Remove the colon
+                const sectionLines = lines.slice(start + 1, end);
+                
+                // Check if this section has bullet points
+                const bulletPoints = sectionLines.filter(l => 
+                  l.trim().startsWith('-') || l.trim().startsWith('•')
+                );
+                
+                if (bulletPoints.length > 0 && bulletPoints.length === sectionLines.length) {
+                  // This section is all bullet points
+                  result.push({
+                    title: heading,
+                    content: bulletPoints.map(bp => bp.replace(/^[-•]\s*/, '')),
+                    type: "bulletPoints"
+                  });
+                } else if (bulletPoints.length > 0) {
+                  // Mixed content - first add non-bullet content
+                  const regularContent = sectionLines.filter(l => 
+                    !l.trim().startsWith('-') && !l.trim().startsWith('•')
+                  );
+                  
+                  if (regularContent.length > 0) {
+                    result.push({
+                      title: heading,
+                      content: [regularContent.join('\n')],
+                      type: "paragraph"
+                    });
+                  }
+                  
+                  // Then add bullet points if any
+                  result.push({
+                    title: "",  // No title for bullet portion
+                    content: bulletPoints.map(bp => bp.replace(/^[-•]\s*/, '')),
+                    type: "bulletPoints"
+                  });
+                } else {
+                  // Regular paragraph section
+                  result.push({
+                    title: heading,
+                    content: [sectionLines.join('\n')],
+                    type: "paragraph"
+                  });
+                }
+              }
+            } else {
+              // Check if this block has bullet points
+              const bulletPoints = lines.filter(l => 
+                l.trim().startsWith('-') || l.trim().startsWith('•')
+              );
+              
+              if (bulletPoints.length > 0 && bulletPoints.length === lines.length) {
+                // All bullet points
+                result.push({
+                  title: currentTitle,
+                  content: bulletPoints.map(bp => bp.replace(/^[-•]\s*/, '')),
+                  type: "bulletPoints"
+                });
+              } else if (bulletPoints.length > 0) {
+                // Mixed content
+                const regularLines = lines.filter(l => 
+                  !l.trim().startsWith('-') && !l.trim().startsWith('•')
+                );
+                
+                if (regularLines.length > 0) {
+                  result.push({
+                    title: currentTitle,
+                    content: [regularLines.join('\n')],
+                    type: "paragraph"
+                  });
+                }
+                
+                result.push({
+                  title: "",
+                  content: bulletPoints.map(bp => bp.replace(/^[-•]\s*/, '')),
+                  type: "bulletPoints"
+                });
+              } else {
+                // Regular paragraph
+                result.push({
+                  title: currentTitle,
+                  content: [lines.join('\n')],
+                  type: "paragraph"
+                });
+              }
+            }
+          });
+          
+          return result;
+        };
+        
+        // Process the text content
+        const parsedSections = parseTextContent(rawText);
+        sections.push(...parsedSections);
+        
+        // Reset the current title
+        currentTitle = "";
       }
     });
     
-    return sections;
+    // If we didn't generate any sections but have valid blocks, use a simple fallback
+    if (sections.length === 0 && description.length > 0) {
+      // Try a simple extraction of text from all blocks
+      const allText = description.map(block => {
+        if (block?.children && Array.isArray(block.children)) {
+          return block.children.map(child => child.text || "").join('');
+        }
+        return "";
+      }).filter(Boolean).join('\n\n');
+      
+      if (allText.trim()) {
+        const paragraphs = allText.split(/\n\s*\n+/).filter(p => p.trim());
+        return paragraphs.map(p => ({
+          content: [p],
+          type: "paragraph" as const
+        }));
+      }
+    }
+    
+    // Merge adjacent paragraph sections with the same title for better display
+    const mergedSections: FormattedSection[] = [];
+    for (let i = 0; i < sections.length; i++) {
+      const current = sections[i];
+      
+      // If this is a paragraph and the next one is also a paragraph with the same title, merge them
+      if (current.type === "paragraph" && 
+          i < sections.length - 1 && 
+          sections[i+1].type === "paragraph" && 
+          current.title === sections[i+1].title) {
+        
+        mergedSections.push({
+          title: current.title,
+          content: [...current.content, ...sections[i+1].content],
+          type: "paragraph"
+        });
+        i++; // Skip the next section since we merged it
+      }
+      // Otherwise just add the current section
+      else {
+        mergedSections.push(current);
+      }
+    }
+    
+    return mergedSections.length > 0 ? mergedSections : sections;
   }
   
   // Fallback if we can't process the description

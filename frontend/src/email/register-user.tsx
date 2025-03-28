@@ -93,11 +93,29 @@ const footerImageStyle = {
   marginTop: "32px",
 };
 
-export default function WelcomeEmail() {
+interface WelcomeEmailProps {
+  name: string;
+  email: string;
+  hackathonTitle: string;
+  hackathonTheme: string;
+  hackathonDate: string;
+  hackathonLocation: string;
+  hackathonDescription?: string;
+}
+
+export default function WelcomeEmail({
+  name,
+  email,
+  hackathonTitle = "HackWeekend Samarahan 2024",
+  hackathonTheme = "AI for Education",
+  hackathonDate = "December 6 - December 8, 2024",
+  hackathonLocation = "Universiti Malaysia Sarawak (UNIMAS)",
+  hackathonDescription = ""
+}: WelcomeEmailProps) {
   return (
     <Html>
       <Head />
-      <Preview>Welcome to HackWeekend Samarahan 2024!</Preview>
+      <Preview>Welcome to {hackathonTitle}!</Preview>
       <Body style={mainStyle}>
         <Container style={containerStyle}>
           <div style={imageContainerStyle}>
@@ -108,10 +126,13 @@ export default function WelcomeEmail() {
             />
           </div>
           <Heading style={headingStyle}>
-            Welcome to HackWeekend Samarahan 2024!
+            Welcome to {hackathonTitle}!
           </Heading>
           <Text style={textStyle}>
-            We are thrilled to have you join us for this exciting 3-day hackathon focused on AI for Education. Below, you will find key information about the event to help you prepare.
+            Hi {name}, we are thrilled to have you join us for this exciting hackathon
+            {hackathonTheme ? ` focused on ${hackathonTheme}` : ''}.
+            {hackathonDescription ? ` ${hackathonDescription}` : ''}
+            Below, you will find key information about the event to help you prepare.
           </Text>
           
           <Section style={sectionStyle}>
@@ -120,14 +141,16 @@ export default function WelcomeEmail() {
             </Heading>
             <Container style={eventDetailsStyle}>
               <Text style={detailItemStyle}>
-                <strong>Location:</strong> Universiti Malaysia Sarawak (UNIMAS)
+                <strong>Location:</strong> {hackathonLocation}
               </Text>
               <Text style={detailItemStyle}>
-                <strong>Date:</strong> December 6 - December 8, 2024
+                <strong>Date:</strong> {hackathonDate}
               </Text>
-              <Text style={{...detailItemStyle, marginBottom: "0"}}>
-                <strong>Theme:</strong> AI for Education
-              </Text>
+              {hackathonTheme && (
+                <Text style={{...detailItemStyle, marginBottom: "0"}}>
+                  <strong>Theme:</strong> {hackathonTheme}
+                </Text>
+              )}
             </Container>
           </Section>
 
