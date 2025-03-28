@@ -4,17 +4,27 @@ import { RegistrationData } from '@/types/registrations';
 // Fetch hackathon data by slug
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    // Try to fetch from Next.js API route first
+    let baseUrl = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${process.env.NEXT_PUBLIC_HOST || 'localhost:3000'}`;
     
-    // First try the pluralized endpoint (hackathons)
-    let res = await fetch(`${apiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
-      cache: 'no-store',
-    });
-
-    // If that fails, try the singular endpoint (hackathon)
-    if (!res.ok) {
-      console.log('Trying singular endpoint...');
-      res = await fetch(`${apiUrl}/api/hackathon?filters[slug][$eq]=${slug}&populate=*`, {
+    console.log(`Attempting to fetch hackathon data for slug: ${slug}`);
+    console.log(`Using base URL: ${baseUrl}`);
+    
+    let res;
+    try {
+      res = await fetch(`${baseUrl}/api/hackathon/${slug}`, {
+        cache: 'no-store',
+      });
+    } catch (error) {
+      console.warn('Error fetching from Next.js API route:', error);
+      
+      // Fall back to direct Strapi API call if Next.js API route fails
+      const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+      console.log(`Falling back to direct Strapi API call: ${strapiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`);
+      
+      res = await fetch(`${strapiUrl}/api/hackathons?filters[slug][$eq]=${slug}&populate=*`, {
         cache: 'no-store',
       });
     }
@@ -22,7 +32,7 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
     if (!res.ok) {
       console.error('API Response status:', res.status);
       console.error('API Response text:', await res.text());
-      throw new Error('Failed to fetch hackathon');
+      throw new Error(`Failed to fetch hackathon: ${res.status} ${res.statusText}`);
     }
 
     const data = await res.json();

@@ -3,8 +3,15 @@ import  LandingPageComponent  from "@/components/landing-page";
 async function getHackathons() {
   try {
     console.log('Fetching hackathons...');
-    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    const res = await fetch(`${apiUrl}/api/hackathons?populate=*`, { 
+    // Use the internal API route instead of calling Strapi directly
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const host = process.env.NEXT_PUBLIC_HOST || 'localhost:3000';
+    
+    // Use the absolute URL in server components
+    const url = `${protocol}://${host}/api/hackathons?populate=*`;
+    console.log('Fetching from URL:', url);
+    
+    const res = await fetch(url, { 
       cache: 'no-store'
     });
     

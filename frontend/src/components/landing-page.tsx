@@ -159,12 +159,28 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
       setIsLoading(true);
       try {
         const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-        const res = await fetch(`${apiUrl}/api/hackathons?populate=*`);
+        console.log('Attempting to fetch from:', `${apiUrl}/api/hackathons?populate=*`);
+        
+        const res = await fetch(`${apiUrl}/api/hackathons?populate=*`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          cache: 'no-store',
+        });
+        
         if (!res.ok) {
+          console.error('Fetch response not OK:', res.status, res.statusText);
           throw new Error(`HTTP error! status: ${res.status}`);
         }
+        
         const data = await res.json();
-        setHackathons(data.data);
+        console.log('Hackathons data received:', data);
+        if (data && data.data) {
+          setHackathons(data.data);
+        } else {
+          console.error('Unexpected data format:', data);
+        }
       } catch (error) {
         console.error('Failed to fetch hackathons:', error);
       } finally {
