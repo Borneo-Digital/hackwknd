@@ -31,7 +31,7 @@ export function AWSPageClientWrapper() {
                   Upcoming
                 </span>
                 <span className="text-gray-400">
-                  Registration ends: April 5, 2025
+                  Registration ends: April 15, 2025
                 </span>
               </div>
               <div className="flex justify-center mt-8">
@@ -50,15 +50,6 @@ export function AWSPageClientWrapper() {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
               <div className="bg-slate-900/80 backdrop-blur-sm border border-gray-800 rounded-lg overflow-hidden">
-                <div className="aspect-video relative">
-                  <Image 
-                    src="/hackwknd-logo.png" 
-                    alt="AWS Innovation Challenge" 
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
               </div>
 
               <div className="bg-slate-900/80 backdrop-blur-sm border border-gray-800 rounded-lg p-6">
@@ -67,7 +58,7 @@ export function AWSPageClientWrapper() {
                   <div>
                     <h3 className="text-indigo-400 font-bold text-lg">Welcome</h3>
                     <p className="text-gray-300 leading-relaxed mb-4">
-                      We're excited to invite you to participate in an exciting and transformative experience designed to showcase your talent, foster innovation, and empower you with the tools to solve real-world problems using the power of GenAI and AWS services.
+                      We are excited to invite you to participate in an exciting and transformative experience designed to showcase your talent, foster innovation, and empower you with the tools to solve real-world problems using the power of GenAI and AWS services.
                     </p>
                   </div>
                   
@@ -76,10 +67,10 @@ export function AWSPageClientWrapper() {
                     <p className="text-gray-300 leading-relaxed mb-4">
                       <strong className="text-blue-400">Innovation Meets Opportunity:</strong><br />
                       The AWS Innovation Challenge is an exclusive opportunity for developers, ISVs, and university students to showcase their skills, learn from AWS experts, and make a meaningful impact with GenAI. 
-                      The challenge is built around conceptualizing solutions to real-world problems and using Amazon Q and PartyRock to build apps that can truly disrupt industries.
+                      The challenge is built around conceptualizing solutions to real-world problems and using Amazon Q and Bedrock to build apps that can truly disrupt industries.
                     </p>
                     <p className="text-gray-300 leading-relaxed mb-4">
-                      Whether you're an ISV looking to innovate for competitive advantage or a university student hoping to build a portfolio for future opportunities, this is your chance to #InnovateToDisrupt and #Hack2BeHired.
+                      Whether you are an ISV looking to innovate for competitive advantage or a university student hoping to build a portfolio for future opportunities, this is your chance to #InnovateToDisrupt and #Hack2BeHired.
                     </p>
                   </div>
 
