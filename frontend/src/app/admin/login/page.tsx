@@ -129,6 +129,8 @@ function LoginFormFallback() {
 export default function LoginPage() {
   // Quick way to show debug info in production
   const [showDebug, setShowDebug] = useState(false);
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
   
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -137,11 +139,18 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold">Admin Login</h1>
           <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
           
-          {/* Hidden debug button - click 5 times rapidly to show debug info */}
+          {error === 'auth_error' && (
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded text-sm">
+              <p className="font-medium">Authentication issue detected</p>
+              <p className="mt-1">Your session may have expired. Please sign in again.</p>
+            </div>
+          )}
+          
+          {/* Version indicator and debug toggle */}
           <button 
             className="mt-2 text-xs text-gray-400 hover:text-gray-500"
             onClick={() => setShowDebug(prev => !prev)}>
-            Version 1.0.1
+            Version 1.0.2
           </button>
           
           {showDebug && (

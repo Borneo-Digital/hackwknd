@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/supabase/auth-context';
+import { useEffect, useState } from 'react';
 
 export default function AdminLayout({
   children,
@@ -10,11 +11,46 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, signOut } = useAuth();
+  const router = useRouter();
+  const { user, isLoading, signOut } = useAuth();
+  const [isVerifying, setIsVerifying] = useState(true);
+  
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    // Skip verification for login page
+    if (pathname === '/admin/login') {
+      setIsVerifying(false);
+      return;
+    }
+    
+    console.log('Admin layout: Checking authentication...');
+    
+    if (!isLoading) {
+      if (!user) {
+        console.log('Admin layout: No user found, redirecting to login');
+        router.push(`/admin/login?redirect=${pathname}`);
+      } else {
+        console.log('Admin layout: User authenticated:', user.email);
+        setIsVerifying(false);
+      }
+    }
+  }, [user, isLoading, pathname, router]);
   
   // Don't show the layout on the login page
   if (pathname === '/admin/login') {
     return children;
+  }
+  
+  // Show loading state while verifying auth
+  if (isVerifying || isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verifying authentication...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
