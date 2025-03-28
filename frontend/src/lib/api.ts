@@ -127,8 +127,8 @@ async function sendConfirmationEmail(email: string, name: string) {
 export async function submitRegistration(formData: RegistrationData): Promise<boolean> {
   try {
     console.log('Starting registration process for:', formData.email);
-    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-
+    // Don't need STRAPI_API_URL here since we're using the proxy
+    
     // Submit registration data via proxy
     console.log('Submitting registration via proxy...');
     const baseUrl = typeof window !== 'undefined' 
