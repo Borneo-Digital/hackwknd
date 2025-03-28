@@ -126,96 +126,120 @@ function LoginFormFallback() {
   );
 }
 
-export default function LoginPage() {
-  // Quick way to show debug info in production
+// Separate component that uses searchParams
+function LoginPageContent() {
   const [showDebug, setShowDebug] = useState(false);
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Admin Login</h1>
-          <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
-          
-          {error === 'auth_error' && (
-            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded text-sm">
-              <p className="font-medium">Authentication issue detected</p>
-              <p className="mt-1">Your session may have expired. Please sign in again.</p>
-            </div>
-          )}
-          
-          {/* Version indicator and debug toggle */}
-          <button 
-            className="mt-2 text-xs text-gray-400 hover:text-gray-500"
-            onClick={() => setShowDebug(prev => !prev)}>
-            Version 1.0.2
-          </button>
-          
-          {showDebug && (
-            <div className="mt-4 p-3 bg-gray-100 text-left text-xs rounded">
-              <p><strong>Debug Info:</strong></p>
-              <p>Environment: {process.env.NODE_ENV}</p>
-              <p>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Set' : '✗ Missing'}</p>
-              <p>Skip Auth: {process.env.NEXT_PUBLIC_SKIP_AUTH || 'Not set'}</p>
-              <p>Current URL: {typeof window !== 'undefined' ? window.location.href : 'N/A'}</p>
-              <p>Auth Cookie: {
-                typeof window !== 'undefined' && typeof document !== 'undefined'
-                  ? document.cookie.split(';').some(c => c.trim().startsWith('supabase-auth-token='))
-                    ? '✓ Present'
-                    : '✗ Missing'
-                  : 'N/A'
-              }</p>
-              <div className="mt-2">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      const { data } = await supabase.auth.getSession();
-                      alert(
-                        data.session
-                          ? `Session found for: ${data.session.user.email}`
-                          : 'No session found'
-                      );
-                    } catch (err) {
-                      alert(`Error checking session: ${err}`);
-                    }
-                  }}
-                  className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
-                >
-                  Check Session
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== 'undefined') {
-                      try {
-                        localStorage.clear();
-                        document.cookie.split(';').forEach(c => {
-                          const name = c.trim().split('=')[0];
-                          if (name) document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                        });
-                        alert('All cookies and localStorage cleared');
-                        window.location.reload();
-                      } catch (err) {
-                        alert(`Error clearing storage: ${err}`);
-                      }
-                    }
-                  }}
-                  className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs"
-                >
-                  Clear Storage
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <Suspense fallback={<LoginFormFallback />}>
-          <LoginForm />
-        </Suspense>
+    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">Admin Login</h1>
+        <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
+        
+        {error === 'auth_error' && (
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded text-sm">
+            <p className="font-medium">Authentication issue detected</p>
+            <p className="mt-1">Your session may have expired. Please sign in again.</p>
+          </div>
+        )}
+        
+        {/* Version indicator and debug toggle */}
+        <button 
+          className="mt-2 text-xs text-gray-400 hover:text-gray-500"
+          onClick={() => setShowDebug(prev => !prev)}>
+          Version 1.0.3
+        </button>
       </div>
+      
+      {showDebug && (
+        <div className="mt-4 p-3 bg-gray-100 text-left text-xs rounded">
+          <p><strong>Debug Info:</strong></p>
+          <p>Environment: {process.env.NODE_ENV}</p>
+          <p>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Set' : '✗ Missing'}</p>
+          <p>Skip Auth: {process.env.NEXT_PUBLIC_SKIP_AUTH || 'Not set'}</p>
+          <p>Current URL: {typeof window !== 'undefined' ? window.location.href : 'N/A'}</p>
+          <p>Auth Cookie: {
+            typeof window !== 'undefined' && typeof document !== 'undefined'
+              ? document.cookie.split(';').some(c => c.trim().startsWith('supabase-auth-token='))
+                ? '✓ Present'
+                : '✗ Missing'
+              : 'N/A'
+          }</p>
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  const { data } = await supabase.auth.getSession();
+                  alert(
+                    data.session
+                      ? `Session found for: ${data.session.user.email}`
+                      : 'No session found'
+                  );
+                } catch (err) {
+                  alert(`Error checking session: ${err}`);
+                }
+              }}
+              className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+            >
+              Check Session
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  try {
+                    localStorage.clear();
+                    document.cookie.split(';').forEach(c => {
+                      const name = c.trim().split('=')[0];
+                      if (name) document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                    });
+                    alert('All cookies and localStorage cleared');
+                    window.location.reload();
+                  } catch (err) {
+                    alert(`Error clearing storage: ${err}`);
+                  }
+                }
+              }}
+              className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs"
+            >
+              Clear Storage
+            </button>
+          </div>
+        </div>
+      )}
+      
+      <Suspense fallback={<LoginFormFallback />}>
+        <LoginForm />
+      </Suspense>
+    </div>
+  );
+}
+
+// Loading state while page params are loading
+function LoginPageLoading() {
+  return (
+    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">Admin Login</h1>
+        <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
+        <div className="mt-4 animate-pulse">
+          <div className="h-8 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+      <LoginFormFallback />
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <Suspense fallback={<LoginPageLoading />}>
+        <LoginPageContent />
+      </Suspense>
     </div>
   );
 }
