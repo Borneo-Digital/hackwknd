@@ -101,6 +101,7 @@ interface WelcomeEmailProps {
   hackathonDate: string;
   hackathonLocation: string;
   hackathonDescription?: string;
+  age?: number;
 }
 
 export default function WelcomeEmail({
@@ -110,7 +111,8 @@ export default function WelcomeEmail({
   hackathonTheme = "AI for Education",
   hackathonDate = "December 6 - December 8, 2024",
   hackathonLocation = "Universiti Malaysia Sarawak (UNIMAS)",
-  hackathonDescription = ""
+  hackathonDescription = "",
+  age
 }: WelcomeEmailProps) {
   return (
     <Html>
@@ -149,6 +151,29 @@ export default function WelcomeEmail({
               {hackathonTheme && (
                 <Text style={{...detailItemStyle, marginBottom: "0"}}>
                   <strong>Theme:</strong> {hackathonTheme}
+                </Text>
+              )}
+            </Container>
+          </Section>
+          
+          <Section style={sectionStyle}>
+            <Heading as="h2" style={{...headingStyle, fontSize: "20px", marginBottom: "16px"}}>
+              Your Registration Info
+            </Heading>
+            <Container style={eventDetailsStyle}>
+              {name && (
+                <Text style={detailItemStyle}>
+                  <strong>Name:</strong> {name}
+                </Text>
+              )}
+              {email && (
+                <Text style={detailItemStyle}>
+                  <strong>Email:</strong> {email}
+                </Text>
+              )}
+              {age && (
+                <Text style={{...detailItemStyle, marginBottom: "0"}}>
+                  <strong>Age:</strong> {age}
                 </Text>
               )}
             </Container>
@@ -205,4 +230,3 @@ export default function WelcomeEmail({
     </Html>
   );
 }
-

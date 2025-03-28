@@ -6,8 +6,14 @@ export interface SendTemplateEmailRequest {
   data: {
     name: string;
     email: string;
-    phone: string;
-    [key: string]: string;
+    phone?: string;
+    age?: number;
+    hackathonTitle?: string;
+    hackathonTheme?: string;
+    hackathonDate?: string;
+    hackathonLocation?: string;
+    hackathonDescription?: string;
+    [key: string]: string | number | undefined;
   };
 }
 

@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
   try {
     const { to, data }: SendTemplateEmailRequest = await request.json();
     console.log('Sending email to:', to);
-
+    console.log('Email data:', data);
+    
     // Create title for the email based on hackathon title if available
     const emailSubject = data.hackathonTitle 
       ? `Thank You for Registering for ${data.hackathonTitle}!` 
@@ -38,7 +39,8 @@ export async function POST(request: NextRequest) {
         hackathonTheme: data.hackathonTheme || 'AI for Education',
         hackathonDate: data.hackathonDate || 'December 6 - December 8, 2024',
         hackathonLocation: data.hackathonLocation || 'Universiti Malaysia Sarawak (UNIMAS)',
-        hackathonDescription: data.hackathonDescription || ''
+        hackathonDescription: data.hackathonDescription || '',
+        age: data.age
       })
     );
 
