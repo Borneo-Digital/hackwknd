@@ -35,12 +35,13 @@ export async function POST(request: NextRequest) {
       WelcomeEmail({
         name: data.name,
         email: data.email,
-        hackathonTitle: data.hackathonTitle || 'HackWknd Samarahan 2024',
-        hackathonTheme: data.hackathonTheme || 'AI for Education',
-        hackathonDate: data.hackathonDate || 'December 6 - December 8, 2024',
-        hackathonLocation: data.hackathonLocation || 'Universiti Malaysia Sarawak (UNIMAS)',
+        hackathonTitle: data.hackathonTitle || 'HackWknd',
+        hackathonTheme: data.hackathonTheme || '',
+        hackathonDate: data.hackathonDate || '',
+        hackathonLocation: data.hackathonLocation || '',
         hackathonDescription: data.hackathonDescription || '',
-        age: data.age
+        age: data.age,
+        partnershipLogos: data.partnershipLogos || []
       })
     );
 

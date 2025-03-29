@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { use } from 'react';
+import { PartnershipLogos } from '@/components/ui/partnership-logos';
+import { PartnershipLogo } from '@/types/hackathon';
 
 interface HackathonDetailProps {
   params: Promise<{ id: string }>;
@@ -28,6 +30,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
     event_status: '',
     registration_end_date: '',
     image_url: '',
+    partnership_logos: [],
   });
 
   useEffect(() => {
@@ -67,6 +70,15 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
             return date.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:MM
           };
 
+          let partnershipLogos = [];
+          if (data.partnership_logos) {
+            try {
+              partnershipLogos = JSON.parse(data.partnership_logos);
+            } catch (e) {
+              console.error('Error parsing partnership logos:', e);
+            }
+          }
+
           setFormData({
             title: data.title || '',
             theme: data.theme || '',
@@ -77,6 +89,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
             event_status: data.event_status || 'upcoming',
             registration_end_date: formatDateForInput(data.registration_end_date),
             image_url: data.image_url || '',
+            partnership_logos: partnershipLogos,
           });
         }
       } catch (err: any) {
@@ -95,6 +108,13 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+  
+  const handlePartnershipLogosChange = (logos: PartnershipLogo[]) => {
+    setFormData(prev => ({
+      ...prev,
+      partnership_logos: logos
     }));
   };
 
@@ -119,6 +139,26 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
           }
         ]),
       };
+      
+      // First check if the partnership_logos column exists
+      try {
+        // Try to query the column info
+        const { error: columnCheckError } = await supabase
+          .from('hackathons')
+          .select('partnership_logos')
+          .limit(1);
+        
+        // If no error, the column exists, so we can include it in the update
+        if (!columnCheckError) {
+          updateData.partnership_logos = JSON.stringify(formData.partnership_logos || []);
+        } else {
+          console.warn('partnership_logos column does not exist yet. Column needs to be added to the database.');
+          // Show a warning to the user
+          setError('Warning: Partnership logos cannot be saved until the database is updated. Please contact an administrator.');
+        }
+      } catch (e) {
+        console.error('Error checking for partnership_logos column:', e);
+      }
 
       const { error } = await supabase
         .from('hackathons')
@@ -330,6 +370,13 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
               value={formData.description}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+          
+          <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <PartnershipLogos 
+              value={formData.partnership_logos}
+              onChange={handlePartnershipLogosChange}
             />
           </div>
 

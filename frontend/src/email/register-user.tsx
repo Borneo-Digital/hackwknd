@@ -93,6 +93,12 @@ const footerImageStyle = {
   marginTop: "32px",
 };
 
+interface PartnershipLogo {
+  id: string;
+  url: string;
+  name: string;
+}
+
 interface WelcomeEmailProps {
   name: string;
   email: string;
@@ -102,17 +108,19 @@ interface WelcomeEmailProps {
   hackathonLocation: string;
   hackathonDescription?: string;
   age?: number;
+  partnershipLogos?: PartnershipLogo[];
 }
 
 export default function WelcomeEmail({
   name,
   email,
-  hackathonTitle = "HackWeekend Samarahan 2024",
-  hackathonTheme = "AI for Education",
-  hackathonDate = "December 6 - December 8, 2024",
-  hackathonLocation = "Universiti Malaysia Sarawak (UNIMAS)",
+  hackathonTitle = "HackWknd",
+  hackathonTheme = "",
+  hackathonDate = "",
+  hackathonLocation = "",
   hackathonDescription = "",
-  age
+  age,
+  partnershipLogos = []
 }: WelcomeEmailProps) {
   return (
     <Html>
@@ -131,10 +139,13 @@ export default function WelcomeEmail({
             Welcome to {hackathonTitle}!
           </Heading>
           <Text style={textStyle}>
-            Hi {name}, we are thrilled to have you join us for this exciting hackathon
-            {hackathonTheme ? ` focused on ${hackathonTheme}` : ''}.
+            Hi {name}, we are thrilled to have you join us for {hackathonTitle}.
+            {hackathonTheme ? ` This event is focused on "${hackathonTheme}".` : ''}
             {hackathonDescription ? ` ${hackathonDescription}` : ''}
-            Below, you will find key information about the event to help you prepare.
+          </Text>
+          
+          <Text style={textStyle}>
+            Below, you will find the key information about the event.
           </Text>
           
           <Section style={sectionStyle}>
@@ -181,35 +192,11 @@ export default function WelcomeEmail({
 
           <Section style={sectionStyle}>
             <Text style={textStyle}>
-              Visit our website for more information about HackWknd:
+              Thank you for registering for this event. You will receive more details and instructions closer to the event date.
             </Text>
-            <Button href="https://hackwknd.com" style={buttonStyle}>
-              Visit the HackWknd Kota Samarahan
-            </Button>
-          </Section>
-
-          <Section style={sectionStyle}>
             <Text style={textStyle}>
-              Please fill in your participant details using the form below:
+              For more information, please visit our website at <a href="https://hackwknd.sarawak.digital" style={{color: "#C5FF00"}}>hackwknd.sarawak.digital</a>.
             </Text>
-            <Button 
-              href="https://forms.clickup.com/25542747/f/rbg2v-21396/T2RDOIQ4UICY88CYUR" 
-              style={buttonStyle}
-            >
-              Fill Participant Details
-            </Button>
-          </Section>
-
-          <Section style={sectionStyle}>
-            <Text style={textStyle}>
-              Access your participant kit containing important files and information:
-            </Text>
-            <Button 
-              href="https://drive.google.com/drive/u/0/folders/1zLDBRDu-qNbpjGGwTYREnsWT_08lvmjx" 
-              style={buttonStyle}
-            >
-              Access Participant Kit
-            </Button>
           </Section>
 
           <Hr style={hrStyle} />
@@ -220,11 +207,64 @@ export default function WelcomeEmail({
             HackWknd Team
           </Text>
 
-          <Img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Hackwknd%20footer1-94eFkX6OZX4ZnsY4Y0pmHzpXcvxtsj.png"
-            alt="HackWknd Partners and Collaborators"
-            style={footerImageStyle}
-          />
+          {/* Dynamic partnership logos */}
+          {Array.isArray(partnershipLogos) && partnershipLogos.length > 0 ? (
+            <Section>
+              <Hr style={hrStyle} />
+              <Heading as="h3" style={{...headingStyle, fontSize: "18px", marginBottom: "16px", textAlign: "center" as const}}>
+                In partnership with
+              </Heading>
+              <Container style={{
+                display: "flex",
+                flexDirection: "row" as const,
+                flexWrap: "wrap" as const,
+                justifyContent: "center" as const,
+                gap: "20px",
+                marginTop: "16px"
+              }}>
+                {partnershipLogos.map((logo) => (
+                  <div key={logo.id} style={{
+                    display: "flex",
+                    flexDirection: "column" as const,
+                    alignItems: "center" as const,
+                    width: "100px",
+                    margin: "0 10px"
+                  }}>
+                    {logo.url && (
+                      <Img 
+                        src={logo.url} 
+                        alt={logo.name || "Partnership Logo"} 
+                        width="80"
+                        height="60"
+                        style={{
+                          maxWidth: "80px",
+                          maxHeight: "60px",
+                          objectFit: "contain" as const
+                        }}
+                      />
+                    )}
+                    {logo.name && (
+                      <Text style={{
+                        ...textStyle,
+                        fontSize: "12px",
+                        marginTop: "4px",
+                        textAlign: "center" as const
+                      }}>
+                        {logo.name}
+                      </Text>
+                    )}
+                  </div>
+                ))}
+              </Container>
+            </Section>
+          ) : (
+            // Fallback to default partners footer only if no custom partners
+            <Img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Hackwknd%20footer1-94eFkX6OZX4ZnsY4Y0pmHzpXcvxtsj.png"
+              alt="HackWknd Partners and Collaborators"
+              style={footerImageStyle}
+            />
+          )}
         </Container>
       </Body>
     </Html>

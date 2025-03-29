@@ -1,5 +1,12 @@
 // frontend/src/types/email.ts
 
+// Partnership Logo type
+export interface PartnershipLogo {
+  id: string;
+  url: string;
+  name: string;
+}
+
 // Type for sending template email
 export interface SendTemplateEmailRequest {
   to: string;
@@ -13,7 +20,8 @@ export interface SendTemplateEmailRequest {
     hackathonDate?: string;
     hackathonLocation?: string;
     hackathonDescription?: string;
-    [key: string]: string | number | undefined;
+    partnershipLogos?: PartnershipLogo[];
+    [key: string]: string | number | undefined | PartnershipLogo[];
   };
 }
 

@@ -102,6 +102,12 @@ export interface Image {
   };
 }
 
+export interface PartnershipLogo {
+  id: string;
+  url: string;
+  name: string;
+}
+
 export interface Hackathon {
   id: number;
   attributes: {
@@ -119,7 +125,8 @@ export interface Hackathon {
         id: number;
         attributes: Image;
       }[]
-    };
+    } | string; // Support both legacy and direct URL formats
+    PartnershipLogos?: PartnershipLogo[]; // Array of partnership logos
     EventStatus: string; // Date string in the backend
     RegistrationEndDate: string;
     createdAt: string;

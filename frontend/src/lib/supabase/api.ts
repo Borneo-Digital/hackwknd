@@ -38,6 +38,12 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
         FAQ: data.faq ? JSON.parse(data.faq) : [],
         slug: data.slug,
         Image: data.image_url || null,
+        // Only try to parse partnership_logos if the column exists
+        PartnershipLogos: data.partnership_logos ? 
+          (typeof data.partnership_logos === 'string' 
+            ? JSON.parse(data.partnership_logos) 
+            : data.partnership_logos) 
+          : [],
         EventStatus: data.event_status || 'upcoming',
         RegistrationEndDate: data.registration_end_date || '',
         createdAt: data.created_at,
@@ -81,6 +87,12 @@ export async function getHackathons(): Promise<Hackathon[]> {
         FAQ: item.faq ? JSON.parse(item.faq) : [],
         slug: item.slug,
         Image: item.image_url || null,
+        // Only try to parse partnership_logos if the column exists
+        PartnershipLogos: item.partnership_logos ? 
+          (typeof item.partnership_logos === 'string' 
+            ? JSON.parse(item.partnership_logos) 
+            : item.partnership_logos) 
+          : [],
         EventStatus: item.event_status || 'upcoming',
         RegistrationEndDate: item.registration_end_date || '',
         createdAt: item.created_at,
@@ -219,6 +231,20 @@ async function sendConfirmationEmail(formData: RegistrationData, hackathon: any)
       descriptionText = descriptionText.substring(0, 147) + '...';
     }
     
+    // Parse partnership logos if available
+    let partnershipLogos = [];
+    if (hackathon.partnership_logos) {
+      try {
+        partnershipLogos = typeof hackathon.partnership_logos === 'string' 
+          ? JSON.parse(hackathon.partnership_logos) 
+          : hackathon.partnership_logos;
+      } catch (e) {
+        console.error('Error parsing partnership logos:', e);
+        // If parsing fails, default to empty array
+        partnershipLogos = [];
+      }
+    }
+    
     // Use relative path instead of full URL
     const response = await fetch('/api/send-email', {
       method: 'POST',
@@ -236,6 +262,7 @@ async function sendConfirmationEmail(formData: RegistrationData, hackathon: any)
           hackathonDate: formattedDate,
           hackathonLocation: hackathon.location || '',
           hackathonDescription: descriptionText,
+          partnershipLogos: partnershipLogos,
         },
       }),
     });

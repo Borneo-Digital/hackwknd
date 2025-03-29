@@ -11,6 +11,7 @@ CREATE TABLE hackathons (
   faq JSONB,
   slug TEXT UNIQUE NOT NULL,
   image_url TEXT,
+  partnership_logos JSONB, -- Array of partnership logo objects with id, url, and name
   event_status TEXT,
   registration_end_date TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -57,3 +58,61 @@ CREATE POLICY "Anyone can create registrations"
 CREATE POLICY "Authenticated users can update registrations"
   ON registrations FOR UPDATE
   USING (auth.role() = 'authenticated');
+
+-- IMPORTANT: ALTER TABLE statement to add partnership_logos column
+-- Execute this in the Supabase SQL Editor to add the partnership_logos column:
+/*
+-- Add partnership_logos column to hackathons table if it doesn't exist
+ALTER TABLE hackathons 
+ADD COLUMN IF NOT EXISTS partnership_logos JSONB DEFAULT '[]'::jsonb;
+*/
+
+-- Storage bucket for partnership logos
+-- IMPORTANT: This section contains SQL that must be executed manually in the Supabase Dashboard SQL Editor.
+-- These statements are NOT automatically applied when running migrations.
+
+/*
+-- Supabase Storage Configuration - Run in SQL Editor
+-----------------------------------------------------------------------------
+-- 1. Create the partnership-logo bucket if it doesn't already exist
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('partnership-logo', 'partnership-logo', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- 2. Allow anyone to view files in the partnership-logo bucket
+CREATE POLICY "Public can view partnership logos" 
+ON storage.objects FOR SELECT 
+USING (bucket_id = 'partnership-logo');
+
+-- 3. Allow anyone to upload to the partnership-logo bucket
+-- This is more permissive, but simplifies things for development
+CREATE POLICY "Public can upload partnership logos" 
+ON storage.objects FOR INSERT 
+WITH CHECK (bucket_id = 'partnership-logo');
+
+-- 4. Allow anyone to update files in the partnership-logo bucket they uploaded
+CREATE POLICY "Public can update own partnership logos" 
+ON storage.objects FOR UPDATE 
+USING (bucket_id = 'partnership-logo');
+
+-- 5. Allow anyone to delete files in the partnership-logo bucket they uploaded
+CREATE POLICY "Public can delete own partnership logos" 
+ON storage.objects FOR DELETE 
+USING (bucket_id = 'partnership-logo');
+*/
+
+-- If you need more security, use the authenticated policies instead:
+/*
+-- Stricter policies that require authentication
+CREATE POLICY "Authenticated users can upload partnership logos"
+ON storage.objects FOR INSERT
+WITH CHECK (bucket_id = 'partnership-logo' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can update partnership logos"
+ON storage.objects FOR UPDATE
+USING (bucket_id = 'partnership-logo' AND auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can delete partnership logos"
+ON storage.objects FOR DELETE
+USING (bucket_id = 'partnership-logo' AND auth.role() = 'authenticated');
+*/

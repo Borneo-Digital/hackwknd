@@ -70,6 +70,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     EventStatus,
     RegistrationEndDate,
     Image: hackathonImage,
+    PartnershipLogos = [],
   } = hackathon.attributes || hackathon; // Handle both new and old data structure
 
   const formattedDate = useMemo(
@@ -104,17 +105,43 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
               {Title}
             </h1>
             <p className="text-xl text-gray-300 mb-6">{Theme}</p>
-            <div className="flex items-center justify-center space-x-4">
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                  EventStatus
-                )}`}
-              >
-                {EventStatus}
-              </span>
-              <span className="text-gray-400">
-                Registration ends: {formattedRegistrationEndDate}
-              </span>
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="flex items-center space-x-4">
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                    EventStatus
+                  )}`}
+                >
+                  {EventStatus}
+                </span>
+                <span className="text-gray-400">
+                  Registration ends: {formattedRegistrationEndDate}
+                </span>
+              </div>
+              
+              {PartnershipLogos && Array.isArray(PartnershipLogos) && PartnershipLogos.length > 0 && (
+                <div className="mt-6">
+                  <p className="text-gray-400 text-sm mb-2">In partnership with:</p>
+                  <div className="flex flex-wrap items-center justify-center gap-6 mt-2">
+                    {PartnershipLogos.map((logo, index) => (
+                      <div key={logo?.id || index} className="flex flex-col items-center">
+                        {logo?.url && (
+                          <div className="w-24 h-16 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-md p-2">
+                            <img 
+                              src={logo.url} 
+                              alt={logo.name || `Partner ${index + 1}`}
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </div>
+                        )}
+                        {logo?.name && (
+                          <span className="text-xs text-gray-400 mt-1">{logo.name}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
