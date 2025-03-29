@@ -12,6 +12,7 @@ CREATE TABLE hackathons (
   slug TEXT UNIQUE NOT NULL,
   image_url TEXT,
   partnership_logos JSONB, -- Array of partnership logo objects with id, url, and name
+  poster_images JSONB, -- Array of poster images with id, url, caption, and order
   event_status TEXT,
   registration_end_date TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -59,12 +60,16 @@ CREATE POLICY "Authenticated users can update registrations"
   ON registrations FOR UPDATE
   USING (auth.role() = 'authenticated');
 
--- IMPORTANT: ALTER TABLE statement to add partnership_logos column
--- Execute this in the Supabase SQL Editor to add the partnership_logos column:
+-- IMPORTANT: ALTER TABLE statements to add required columns
+-- Execute these in the Supabase SQL Editor to add the new columns:
 /*
 -- Add partnership_logos column to hackathons table if it doesn't exist
 ALTER TABLE hackathons 
 ADD COLUMN IF NOT EXISTS partnership_logos JSONB DEFAULT '[]'::jsonb;
+
+-- Add poster_images column to hackathons table if it doesn't exist
+ALTER TABLE hackathons 
+ADD COLUMN IF NOT EXISTS poster_images JSONB DEFAULT '[]'::jsonb;
 */
 
 -- Storage bucket for partnership logos

@@ -2,7 +2,11 @@
 
 const nextConfig = {
   images: {
-    domains: ['localhost', 'api.hackwknd.sarawak.digital'],
+    domains: [
+      'localhost', 
+      'api.hackwknd.sarawak.digital',
+      'wwiscqxbtaruzfuvvlsg.supabase.co' // Add Supabase storage domain
+    ],
   },
   reactStrictMode: true,
   swcMinify: true,

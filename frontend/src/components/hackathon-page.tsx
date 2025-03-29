@@ -21,7 +21,9 @@ import {
   Award,
   Brain,
   AccessibilityIcon,
+  Image as ImageIcon,
 } from "lucide-react";
+import { PosterCarousel } from "@/components/ui/poster-carousel";
 import { MenuBar } from "./MenuBar";
 import { Footer } from "./Footer";
 import Image from "next/image";
@@ -71,6 +73,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     RegistrationEndDate,
     Image: hackathonImage,
     PartnershipLogos = [],
+    PosterImages = [],
   } = hackathon.attributes || hackathon; // Handle both new and old data structure
 
   const formattedDate = useMemo(
@@ -151,18 +154,19 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            {hackathonImage && (
+
+            {/* Poster Gallery - show if available */}
+            {PosterImages && PosterImages.length > 0 && (
               <Card className="bg-slate-900/80 backdrop-blur-sm border-gray-800 overflow-hidden">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-hack-primary flex items-center text-lg">
+                    <ImageIcon className="mr-2 h-4 w-4" />
+                    Event Posters
+                  </CardTitle>
+                  <p className="text-xs text-gray-400 mt-1">Click on any poster to enlarge</p>
+                </CardHeader>
                 <CardContent className="p-0">
-                  {/* Using Supabase image URL directly */}
-                  <Image
-                    src={hackathonImage || '/hackwknd-logo.png'}
-                    alt={Title || 'Hackathon Image'}
-                    width={800}
-                    height={600}
-                    className="w-full h-auto object-cover"
-                    priority
-                  />
+                  <PosterCarousel images={PosterImages} />
                 </CardContent>
               </Card>
             )}
@@ -328,7 +332,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                   {prize.rank}
                                 </h3>
                                 <div className="text-2xl font-bold text-hack-primary">
-                                  RM{prize.amount}
+                                  {prize.amount > 0 ? `RM${prize.amount}` : 'Non-monetary prize'}
                                 </div>
                               </div>
                             </div>
@@ -374,7 +378,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                   {prize.rank}
                                 </h3>
                                 <div className="text-2xl font-bold text-hack-primary">
-                                  RM{prize.amount}
+                                  {prize.amount > 0 ? `RM${prize.amount}` : 'Non-monetary prize'}
                                 </div>
                               </div>
                             </div>
@@ -410,7 +414,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                   {prize.rank}
                                 </h4>
                                 <div className="text-hack-secondary font-bold">
-                                  RM{prize.amount}
+                                  {prize.amount > 0 ? `RM${prize.amount}` : 'Non-monetary prize'}
                                 </div>
                               </div>
                             </div>
@@ -445,7 +449,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                                     {prize.rank}
                                   </h4>
                                   <div className="text-hack-secondary font-bold">
-                                    RM{prize.amount}
+                                    {prize.amount > 0 ? `RM${prize.amount}` : 'Non-monetary prize'}
                                   </div>
                                 </div>
                               </div>

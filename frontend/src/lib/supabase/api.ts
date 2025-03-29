@@ -37,12 +37,23 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
         Prizes: data.prizes ? JSON.parse(data.prizes) : null,
         FAQ: data.faq ? JSON.parse(data.faq) : [],
         slug: data.slug,
-        Image: data.image_url || null,
+        // Use the first poster image as the main image if available, otherwise fallback to image_url
+        Image: (data.poster_images && 
+                typeof data.poster_images === 'string' && 
+                JSON.parse(data.poster_images).length > 0) 
+              ? JSON.parse(data.poster_images)[0].url 
+              : data.image_url || null,
         // Only try to parse partnership_logos if the column exists
         PartnershipLogos: data.partnership_logos ? 
           (typeof data.partnership_logos === 'string' 
             ? JSON.parse(data.partnership_logos) 
             : data.partnership_logos) 
+          : [],
+        // Parse poster images if the column exists
+        PosterImages: data.poster_images ? 
+          (typeof data.poster_images === 'string' 
+            ? JSON.parse(data.poster_images) 
+            : data.poster_images) 
           : [],
         EventStatus: data.event_status || 'upcoming',
         RegistrationEndDate: data.registration_end_date || '',
@@ -86,12 +97,23 @@ export async function getHackathons(): Promise<Hackathon[]> {
         Prizes: item.prizes ? JSON.parse(item.prizes) : null,
         FAQ: item.faq ? JSON.parse(item.faq) : [],
         slug: item.slug,
-        Image: item.image_url || null,
+        // Use the first poster image as the main image if available, otherwise fallback to image_url
+        Image: (item.poster_images && 
+                typeof item.poster_images === 'string' && 
+                JSON.parse(item.poster_images).length > 0) 
+              ? JSON.parse(item.poster_images)[0].url 
+              : item.image_url || null,
         // Only try to parse partnership_logos if the column exists
         PartnershipLogos: item.partnership_logos ? 
           (typeof item.partnership_logos === 'string' 
             ? JSON.parse(item.partnership_logos) 
             : item.partnership_logos) 
+          : [],
+        // Parse poster images if the column exists
+        PosterImages: item.poster_images ? 
+          (typeof item.poster_images === 'string' 
+            ? JSON.parse(item.poster_images) 
+            : item.poster_images) 
           : [],
         EventStatus: item.event_status || 'upcoming',
         RegistrationEndDate: item.registration_end_date || '',

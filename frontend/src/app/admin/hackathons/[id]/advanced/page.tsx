@@ -599,7 +599,7 @@ export default function HackathonAdvancedPage({ params }: HackathonAdvancedProps
                           
                           <div className="mb-3">
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Amount (RM)
+                              Amount (RM) - Enter 0 for non-monetary prizes
                             </label>
                             <input
                               type="number"
@@ -700,7 +700,7 @@ export default function HackathonAdvancedPage({ params }: HackathonAdvancedProps
                           
                           <div className="mb-3">
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Amount (RM)
+                              Amount (RM) - Enter 0 for non-monetary prizes
                             </label>
                             <input
                               type="number"

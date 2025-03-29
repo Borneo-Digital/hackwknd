@@ -83,16 +83,16 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     <div className="space-y-2">
       {label && <label className="block text-sm font-medium text-gray-700">{label}</label>}
       
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+      <div className={`border-2 ${!preview ? 'border-dashed' : 'border-solid'} ${isUploading ? 'bg-gray-50' : ''} border-gray-300 rounded-lg p-4 transition-all duration-200 hover:border-indigo-300`}>
         {!preview ? (
-          <div className="flex flex-col items-center justify-center">
-            <label className="cursor-pointer text-center">
-              <div className="mt-2">
+          <div className="flex flex-col items-center justify-center py-4">
+            <label className="cursor-pointer text-center w-full">
+              <div className="mt-2 transition-transform duration-200 hover:scale-105">
                 <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-2 text-sm font-medium text-gray-600">
                   Click to upload or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
               </div>
               <input
                 type="file"
@@ -102,28 +102,34 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                 disabled={isUploading}
               />
               {isUploading && (
-                <div className="mt-2 text-sm text-indigo-600">
-                  Uploading...
+                <div className="mt-4 flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600 mr-2"></div>
+                  <span className="text-sm text-indigo-600 font-medium">Uploading...</span>
                 </div>
               )}
             </label>
           </div>
         ) : (
-          <div className="relative">
-            <img 
-              src={preview} 
-              alt="Preview" 
-              className="mx-auto h-32 object-contain"
-            />
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              className="absolute top-0 right-0 p-1 rounded-full"
-              onClick={handleRemove}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+          <div className="relative group">
+            <div className="bg-white/80 absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200 rounded-lg">
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                className="z-10"
+                onClick={handleRemove}
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Remove
+              </Button>
+            </div>
+            <div className="flex items-center justify-center bg-gray-50 py-2 rounded-lg overflow-hidden">
+              <img 
+                src={preview} 
+                alt="Preview" 
+                className="max-h-32 max-w-full object-contain rounded"
+              />
+            </div>
           </div>
         )}
 
