@@ -87,16 +87,16 @@ export default function NewHackathonPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Create New Hackathon</h1>
-        <p className="text-gray-600">Add details for your new hackathon event</p>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-hack-primary to-hack-secondary">Create New Hackathon</h1>
+        <p className="text-muted-foreground mt-1">Add details for your new hackathon event</p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="bg-card rounded-lg shadow-md p-8 border border-border">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="title" className="block text-sm font-medium text-foreground mb-1.5">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -107,12 +107,13 @@ export default function NewHackathonPage() {
                 onChange={handleChange}
                 onBlur={generateSlug}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+                placeholder="HackWknd 2025"
               />
             </div>
 
             <div>
-              <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="slug" className="block text-sm font-medium text-foreground mb-1.5">
                 Slug <span className="text-red-500">*</span>
               </label>
               <div className="flex">
@@ -123,21 +124,22 @@ export default function NewHackathonPage() {
                   value={formData.slug}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+                  placeholder="hackwknd-2025"
                 />
                 <button
                   type="button"
                   onClick={generateSlug}
-                  className="ml-2 px-3 py-2 border border-gray-300 bg-gray-50 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="ml-2 px-4 py-2.5 border border-input bg-muted rounded-lg shadow-sm text-sm font-medium text-foreground hover:bg-muted/70 transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   Generate
                 </button>
               </div>
-              <p className="mt-1 text-xs text-gray-500">This will be used in the URL: /hackathon/{formData.slug || 'your-slug'}</p>
+              <p className="mt-1.5 text-xs text-muted-foreground">This will be used in the URL: /hackathon/{formData.slug || 'your-slug'}</p>
             </div>
 
             <div>
-              <label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="theme" className="block text-sm font-medium text-foreground mb-1.5">
                 Theme
               </label>
               <input
@@ -146,12 +148,13 @@ export default function NewHackathonPage() {
                 name="theme"
                 value={formData.theme}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+                placeholder="AI for Sustainability"
               />
             </div>
 
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="location" className="block text-sm font-medium text-foreground mb-1.5">
                 Location
               </label>
               <input
@@ -160,12 +163,13 @@ export default function NewHackathonPage() {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+                placeholder="Kuching, Sarawak"
               />
             </div>
 
             <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="date" className="block text-sm font-medium text-foreground mb-1.5">
                 Event Date
               </label>
               <input
@@ -174,12 +178,12 @@ export default function NewHackathonPage() {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="registration_end_date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="registration_end_date" className="block text-sm font-medium text-foreground mb-1.5">
                 Registration End Date
               </label>
               <input
@@ -188,12 +192,12 @@ export default function NewHackathonPage() {
                 name="registration_end_date"
                 value={formData.registration_end_date}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="event_status" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="event_status" className="block text-sm font-medium text-foreground mb-1.5">
                 Status
               </label>
               <select
@@ -201,7 +205,7 @@ export default function NewHackathonPage() {
                 name="event_status"
                 value={formData.event_status}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               >
                 <option value="upcoming">Upcoming</option>
                 <option value="ongoing">Ongoing</option>
@@ -211,8 +215,8 @@ export default function NewHackathonPage() {
             </div>
           </div>
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="pt-4">
+            <label htmlFor="description" className="block text-sm font-medium text-foreground mb-1.5">
               Description
             </label>
             <textarea
@@ -221,42 +225,54 @@ export default function NewHackathonPage() {
               rows={5}
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+              placeholder="Enter a brief description of your hackathon..."
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1.5 text-xs text-muted-foreground">
               Basic description of the hackathon. You can add more detailed content after creation.
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 rounded-lg p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-5 w-5 text-red-500 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm text-red-700">{error}</p>
+                  <h3 className="text-sm font-medium text-red-800 dark:text-red-300">Error creating hackathon</h3>
+                  <p className="text-sm text-red-700 dark:text-red-400 mt-1">{error}</p>
                 </div>
               </div>
             </div>
           )}
 
-          <div className="flex justify-end space-x-3">
+          <div className="flex justify-end space-x-3 pt-6 border-t border-border">
             <button
               type="button"
               onClick={() => router.push('/admin/hackathons')}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-4 py-2.5 border border-input rounded-lg shadow-sm text-sm font-medium text-foreground bg-card hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="px-5 py-2.5 border border-transparent rounded-lg shadow-md text-sm font-medium text-white bg-hack-primary hover:bg-hack-primary/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hack-primary disabled:opacity-50 flex items-center space-x-2"
             >
-              {isSubmitting ? 'Creating...' : 'Create Hackathon'}
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Creating...
+                </>
+              ) : (
+                <>Create Hackathon</>
+              )}
             </button>
           </div>
         </form>

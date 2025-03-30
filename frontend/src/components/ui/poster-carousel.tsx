@@ -148,7 +148,7 @@ export const PosterCarousel: React.FC<PosterCarouselProps> = ({ images }) => {
                   setActiveIndex(index);
                   toggleFullscreen();
                 }}
-                className="group relative bg-gray-800/30 rounded-md overflow-hidden hover:shadow-lg transition-all h-[180px] w-full"
+                className="group relative bg-gray-800/30 dark:bg-gray-900/40 rounded-md overflow-hidden hover:shadow-lg transition-all h-[180px] w-full"
               >
                 <div className="absolute inset-0 flex items-center justify-center p-2">
                   <img
@@ -167,7 +167,7 @@ export const PosterCarousel: React.FC<PosterCarouselProps> = ({ images }) => {
               {/* Caption below the image, always visible */}
               {image.caption && (
                 <div className="px-1">
-                  <p className="text-xs text-gray-300 truncate text-center">{image.caption}</p>
+                  <p className="text-xs text-muted-foreground truncate text-center">{image.caption}</p>
                 </div>
               )}
             </div>

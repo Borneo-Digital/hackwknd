@@ -1,6 +1,5 @@
 import {
   Body,
-  Button,
   Container,
   Head,
   Heading,
@@ -55,17 +54,17 @@ const detailItemStyle = {
   marginBottom: "8px",
 };
 
-const buttonStyle = {
-  backgroundColor: "#C5FF00",
-  color: "#111827",
-  padding: "12px 24px",
-  borderRadius: "6px",
-  fontWeight: "600",
-  marginTop: "16px",
-  textAlign: "center" as const,
-  display: "inline-block",
-  textDecoration: "none",
-};
+// const buttonStyle = {
+//   backgroundColor: "#C5FF00",
+//   color: "#111827",
+//   padding: "12px 24px",
+//   borderRadius: "6px",
+//   fontWeight: "600",
+//   marginTop: "16px",
+//   textAlign: "center" as const,
+//   display: "inline-block",
+//   textDecoration: "none",
+// };
 
 const hrStyle = {
   borderColor: "#4B5563",

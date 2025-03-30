@@ -212,11 +212,11 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
   if (isLoading) {
     return (
       <div className="py-12 text-center">
-        <svg className="animate-spin h-10 w-10 mx-auto text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg className="animate-spin h-10 w-10 mx-auto text-hack-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <p className="mt-4 text-gray-600">Loading hackathon details...</p>
+        <p className="mt-4 text-muted-foreground">Loading hackathon details...</p>
       </div>
     );
   }
@@ -227,19 +227,19 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0">
           <div>
             <div className="flex items-center space-x-3">
-              <h1 className="text-3xl font-bold text-gray-800">Edit Hackathon</h1>
+              <h1 className="text-3xl font-bold text-foreground">Edit Hackathon</h1>
               <span className={`px-3 py-1 rounded-full text-xs font-medium 
-                ${formData.event_status === 'upcoming' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 
-                  formData.event_status === 'ongoing' ? 'bg-green-100 text-green-800 border border-green-200' :
-                  formData.event_status === 'finished' ? 'bg-gray-100 text-gray-800 border border-gray-200' :
-                  'bg-yellow-100 text-yellow-800 border border-yellow-200'}`
+                ${formData.event_status === 'upcoming' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-900/50' : 
+                  formData.event_status === 'ongoing' ? 'bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-900/50' :
+                  formData.event_status === 'finished' ? 'bg-muted text-muted-foreground border border-border' :
+                  'bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-900/50'}`
               }>
                 {formData.event_status.charAt(0).toUpperCase() + formData.event_status.slice(1)}
               </span>
             </div>
-            <p className="text-gray-600 mt-1">{formData.title}</p>
+            <p className="text-muted-foreground mt-1">{formData.title}</p>
             {formData.date && (
-              <p className="text-gray-500 text-sm mt-1">
+              <p className="text-muted-foreground/70 text-sm mt-1">
                 {new Date(formData.date).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -252,7 +252,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
             <button
               type="button"
               onClick={() => router.push('/admin/hackathons')}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-4 py-2 border border-input rounded-md shadow-sm text-sm font-medium text-foreground bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
               Back to List
             </button>
@@ -260,7 +260,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
               href={`/hackathon/${formData.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center"
+              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 flex items-center"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -273,20 +273,20 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
       </div>
 
       {successMessage && (
-        <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 shadow-sm animate-pulse">
+        <div className="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/50 rounded-lg p-4 shadow-sm animate-pulse">
           <div className="flex items-center">
-            <div className="flex-shrink-0 bg-green-100 p-1 rounded-full">
-              <svg className="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <div className="flex-shrink-0 bg-green-100 dark:bg-green-800/30 p-1 rounded-full">
+              <svg className="h-5 w-5 text-green-500 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3 flex-1">
-              <p className="text-sm font-medium text-green-800">{successMessage}</p>
-              <p className="text-xs text-green-700 mt-1">You can continue editing or go back to the list.</p>
+              <p className="text-sm font-medium text-green-800 dark:text-green-300">{successMessage}</p>
+              <p className="text-xs text-green-700 dark:text-green-400 mt-1">You can continue editing or go back to the list.</p>
             </div>
             <button 
               onClick={() => setSuccessMessage(null)}
-              className="ml-auto bg-green-50 text-green-500 hover:text-green-700 focus:outline-none"
+              className="ml-auto bg-green-50 dark:bg-transparent text-green-500 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 focus:outline-none"
             >
               <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -296,11 +296,11 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-card rounded-lg shadow-md p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="title" className="block text-sm font-medium text-foreground mb-1">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -310,12 +310,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="slug" className="block text-sm font-medium text-foreground mb-1">
                 Slug <span className="text-red-500">*</span>
               </label>
               <input
@@ -325,13 +325,13 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 value={formData.slug}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
-              <p className="mt-1 text-xs text-gray-500">URL: /hackathon/{formData.slug}</p>
+              <p className="mt-1 text-xs text-muted-foreground">URL: /hackathon/{formData.slug}</p>
             </div>
 
             <div>
-              <label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="theme" className="block text-sm font-medium text-foreground mb-1">
                 Theme
               </label>
               <input
@@ -340,12 +340,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 name="theme"
                 value={formData.theme}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="location" className="block text-sm font-medium text-foreground mb-1">
                 Location
               </label>
               <input
@@ -354,12 +354,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="date" className="block text-sm font-medium text-foreground mb-1">
                 Event Date
               </label>
               <input
@@ -368,12 +368,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="registration_end_date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="registration_end_date" className="block text-sm font-medium text-foreground mb-1">
                 Registration End Date
               </label>
               <input
@@ -382,12 +382,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 name="registration_end_date"
                 value={formData.registration_end_date}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="event_status" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="event_status" className="block text-sm font-medium text-foreground mb-1">
                 Status
               </label>
               <select
@@ -395,7 +395,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 name="event_status"
                 value={formData.event_status}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
               >
                 <option value="upcoming">Upcoming</option>
                 <option value="ongoing">Ongoing</option>
@@ -407,7 +407,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="description" className="block text-sm font-medium text-foreground mb-1">
               Description
             </label>
             <textarea
@@ -416,18 +416,18 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
               rows={5}
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
             />
           </div>
           
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="mt-8 p-4 bg-muted/30 rounded-lg border border-input">
             <PartnershipLogos 
               value={formData.partnership_logos}
               onChange={handlePartnershipLogosChange}
             />
           </div>
           
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="mt-8 p-4 bg-muted/30 rounded-lg border border-input">
             <PosterGallery
               value={formData.poster_images}
               onChange={handlePosterImagesChange}
@@ -435,16 +435,16 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 shadow-sm">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 rounded-lg p-4 shadow-sm">
               <div className="flex items-start">
-                <div className="flex-shrink-0 bg-red-100 p-1 rounded-full">
-                  <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <div className="flex-shrink-0 bg-red-100 dark:bg-red-800/30 p-1 rounded-full">
+                  <svg className="h-5 w-5 text-red-500 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="ml-3 flex-1">
-                  <h3 className="text-sm font-medium text-red-800">Error</h3>
-                  <div className="mt-1 text-sm text-red-700">
+                  <h3 className="text-sm font-medium text-red-800 dark:text-red-300">Error</h3>
+                  <div className="mt-1 text-sm text-red-700 dark:text-red-400">
                     <p>{error}</p>
                     {error.includes('partnership_logos') && (
                       <p className="mt-2 text-xs">
@@ -455,7 +455,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 </div>
                 <button 
                   onClick={() => setError(null)}
-                  className="ml-auto bg-red-50 text-red-500 hover:text-red-700 focus:outline-none"
+                  className="ml-auto bg-red-50 dark:bg-transparent text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 focus:outline-none"
                 >
                   <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -465,18 +465,18 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
             </div>
           )}
 
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
+          <div className="flex justify-end space-x-3 pt-4 border-t border-border">
             <button
               type="button"
               onClick={() => router.push('/admin/hackathons')}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              className="px-4 py-2 border border-input rounded-md shadow-sm text-sm font-medium text-foreground bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-200 flex items-center"
+              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 transition-all duration-200 flex items-center"
             >
               {isSaving ? (
                 <>
@@ -500,12 +500,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Advanced Settings</h2>
+        <h2 className="text-xl font-bold text-foreground mb-4">Advanced Settings</h2>
         
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-card rounded-lg shadow-md p-6">
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-800">Schedule, Prizes, and FAQ</h3>
-            <p className="text-gray-600">
+            <h3 className="text-lg font-medium text-foreground">Schedule, Prizes, and FAQ</h3>
+            <p className="text-muted-foreground">
               Configure event schedule, prizes, and FAQs for your hackathon. Click the button below to access advanced settings.
             </p>
             
@@ -513,7 +513,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
               <button
                 type="button"
                 onClick={() => router.push(`/admin/hackathons/${id}/advanced`)}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="px-4 py-2 border border-input rounded-md shadow-sm text-sm font-medium text-foreground bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               >
                 Edit Advanced Settings
               </button>

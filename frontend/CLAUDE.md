@@ -20,3 +20,22 @@
 
 ## Structure
 Follow Next.js App Router conventions with pages in `/src/app` and reusable components in `/src/components`
+
+## Theming Guidelines
+- **Theme Provider**: Use Next-Themes with `ThemeProvider` in `src/app/Providers.tsx` 
+- **Color Variables**: Use Tailwind's semantic color variables:
+  - `text-foreground` / `text-muted-foreground` for text
+  - `bg-background` / `bg-card` for backgrounds
+  - `border-input` / `border-border` for borders
+  - `ring-ring` for focus states
+- **Dark Mode Classes**: Use `dark:` variant classes for dark mode styling
+- **Component Backgrounds**: Use these classes for proper theme support:
+  - Card backgrounds: `bg-card`
+  - Muted backgrounds: `bg-muted/30` 
+  - Input backgrounds: `bg-background`
+- **Forms & Inputs**: Always include these classes for theme compatibility:
+  ```
+  border-input bg-background focus:ring-2 focus:ring-ring focus:border-input
+  ```
+- **Image Containers**: Use `bg-muted/30 dark:bg-gray-800/30` to ensure proper contrast
+- **Hydration**: Add `suppressHydrationWarning` to the HTML element to prevent theme flicker

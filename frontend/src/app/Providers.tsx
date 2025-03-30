@@ -2,7 +2,17 @@
 
 import { ReactNode } from 'react';
 import { AuthProvider } from '@/lib/supabase/auth-context';
+import { ThemeProvider } from 'next-themes';
 
 export const NextAuthProvider = ({ children }: { children: ReactNode }) => {
-  return <AuthProvider>{children}</AuthProvider>;
+  return (
+    <ThemeProvider 
+      attribute="class" 
+      defaultTheme="system" 
+      enableSystem={true}
+      storageKey="hackwknd-theme"
+    >
+      <AuthProvider>{children}</AuthProvider>
+    </ThemeProvider>
+  );
 };

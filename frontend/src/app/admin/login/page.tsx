@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/supabase/auth-context';
 import { supabase } from '@/lib/supabase/client';
+import Image from 'next/image';
 
 // Component that uses searchParams wrapped in Suspense
 function LoginForm() {
@@ -71,44 +72,84 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
           Email
         </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        />
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            </svg>
+          </div>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="pl-10 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hack-primary focus:border-hack-primary transition-colors"
+            placeholder="admin@example.com"
+          />
+        </div>
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
           Password
         </label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        />
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="pl-10 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hack-primary focus:border-hack-primary transition-colors"
+            placeholder="••••••••"
+          />
+        </div>
       </div>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
-      <div>
+      <div className="pt-2">
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium text-white bg-hack-primary hover:bg-hack-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hack-primary disabled:opacity-50 transition-all duration-200"
         >
-          {isLoading ? 'Signing in...' : 'Sign In'}
+          {isLoading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Signing in...
+            </>
+          ) : (
+            <>Sign In</>
+          )}
         </button>
       </div>
     </form>
@@ -118,10 +159,16 @@ function LoginForm() {
 // Loading fallback component
 function LoginFormFallback() {
   return (
-    <div className="space-y-4">
-      <div className="h-10 bg-gray-200 animate-pulse rounded"></div>
-      <div className="h-10 bg-gray-200 animate-pulse rounded"></div>
-      <div className="h-10 bg-gray-200 animate-pulse rounded mt-6"></div>
+    <div className="space-y-5">
+      <div>
+        <div className="h-5 w-16 bg-gray-200 animate-pulse rounded mb-1.5"></div>
+        <div className="h-11 bg-gray-200 animate-pulse rounded-lg"></div>
+      </div>
+      <div>
+        <div className="h-5 w-20 bg-gray-200 animate-pulse rounded mb-1.5"></div>
+        <div className="h-11 bg-gray-200 animate-pulse rounded-lg"></div>
+      </div>
+      <div className="h-10 bg-gray-200 animate-pulse rounded-lg mt-7"></div>
     </div>
   );
 }
@@ -133,13 +180,27 @@ function LoginPageContent() {
   const error = searchParams.get('error');
   
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
+    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-xl rounded-lg border border-gray-100">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">Admin Login</h1>
-        <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
+        <div className="flex justify-center mb-6">
+          <div className="relative w-16 h-16">
+            <div className="absolute inset-0 bg-hack-primary/10 rounded-full animate-pulse"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Image 
+                src="/icon-hackwknd.svg" 
+                alt="Hackathon Logo" 
+                width={40} 
+                height={40}
+                className="w-10 h-10" 
+              />
+            </div>
+          </div>
+        </div>
+        <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-hack-primary to-hack-secondary">Admin Portal</h1>
+        <p className="text-gray-600 mt-2">Sign in to access the management dashboard</p>
         
         {error === 'auth_error' && (
-          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded text-sm">
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg text-sm">
             <p className="font-medium">Authentication issue detected</p>
             <p className="mt-1">Your session may have expired. Please sign in again.</p>
           </div>
@@ -147,27 +208,38 @@ function LoginPageContent() {
         
         {/* Version indicator and debug toggle */}
         <button 
-          className="mt-2 text-xs text-gray-400 hover:text-gray-500"
+          className="mt-4 text-xs text-gray-400 hover:text-gray-500 transition-colors"
           onClick={() => setShowDebug(prev => !prev)}>
           Version 1.0.3
         </button>
       </div>
       
       {showDebug && (
-        <div className="mt-4 p-3 bg-gray-100 text-left text-xs rounded">
-          <p><strong>Debug Info:</strong></p>
-          <p>Environment: {process.env.NODE_ENV}</p>
-          <p>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Set' : '✗ Missing'}</p>
-          <p>Skip Auth: {process.env.NEXT_PUBLIC_SKIP_AUTH || 'Not set'}</p>
-          <p>Current URL: {typeof window !== 'undefined' ? window.location.href : 'N/A'}</p>
-          <p>Auth Cookie: {
-            typeof window !== 'undefined' && typeof document !== 'undefined'
-              ? document.cookie.split(';').some(c => c.trim().startsWith('supabase-auth-token='))
-                ? '✓ Present'
-                : '✗ Missing'
-              : 'N/A'
-          }</p>
-          <div className="mt-2">
+        <div className="mt-4 p-4 bg-gray-50 text-left text-xs rounded-lg border border-gray-200">
+          <p className="font-medium text-gray-700 mb-2">Debug Information</p>
+          <div className="space-y-1.5 text-gray-600">
+            <p>Environment: <span className="font-mono">{process.env.NODE_ENV}</span></p>
+            <p>Supabase URL: <span className={`font-mono ${process.env.NEXT_PUBLIC_SUPABASE_URL ? 'text-green-600' : 'text-red-600'}`}>
+              {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Set' : '✗ Missing'}
+            </span></p>
+            <p>Skip Auth: <span className="font-mono">{process.env.NEXT_PUBLIC_SKIP_AUTH || 'Not set'}</span></p>
+            <p>Current URL: <span className="font-mono text-xs">{typeof window !== 'undefined' ? window.location.href : 'N/A'}</span></p>
+            <p>Auth Cookie: <span className={`font-mono ${
+              typeof window !== 'undefined' && typeof document !== 'undefined'
+                ? document.cookie.split(';').some(c => c.trim().startsWith('supabase-auth-token='))
+                  ? 'text-green-600'
+                  : 'text-red-600'
+                : ''
+            }`}>
+              {
+              typeof window !== 'undefined' && typeof document !== 'undefined'
+                ? document.cookie.split(';').some(c => c.trim().startsWith('supabase-auth-token='))
+                  ? '✓ Present'
+                  : '✗ Missing'
+                : 'N/A'
+            }</span></p>
+          </div>
+          <div className="mt-3 flex space-x-2">
             <button
               type="button"
               onClick={async () => {
@@ -182,7 +254,7 @@ function LoginPageContent() {
                   alert(`Error checking session: ${err}`);
                 }
               }}
-              className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+              className="px-2 py-1 bg-hack-secondary text-white rounded text-xs hover:bg-hack-secondary/90 transition-colors"
             >
               Check Session
             </button>
@@ -203,7 +275,7 @@ function LoginPageContent() {
                   }
                 }
               }}
-              className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs"
+              className="px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 transition-colors"
             >
               Clear Storage
             </button>
@@ -221,13 +293,15 @@ function LoginPageContent() {
 // Loading state while page params are loading
 function LoginPageLoading() {
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-lg">
+    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-xl rounded-lg border border-gray-100">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">Admin Login</h1>
-        <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
-        <div className="mt-4 animate-pulse">
-          <div className="h-8 bg-gray-200 rounded"></div>
+        <div className="flex justify-center mb-6">
+          <div className="relative w-16 h-16">
+            <div className="absolute inset-0 bg-gray-200 rounded-full animate-pulse"></div>
+          </div>
         </div>
+        <div className="h-7 w-32 bg-gray-200 rounded-lg animate-pulse mx-auto"></div>
+        <div className="h-5 w-56 bg-gray-200 rounded animate-pulse mx-auto mt-2"></div>
       </div>
       <LoginFormFallback />
     </div>
@@ -236,10 +310,16 @@ function LoginPageLoading() {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Suspense fallback={<LoginPageLoading />}>
-        <LoginPageContent />
-      </Suspense>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute left-[-10%] top-[-10%] w-[40%] h-[40%] rounded-full bg-gradient-to-br from-hack-primary/5 to-hack-primary/10 blur-3xl"></div>
+        <div className="absolute right-[-10%] bottom-[-10%] w-[40%] h-[40%] rounded-full bg-gradient-to-br from-hack-secondary/5 to-hack-secondary/10 blur-3xl"></div>
+      </div>
+      <div className="relative z-10">
+        <Suspense fallback={<LoginPageLoading />}>
+          <LoginPageContent />
+        </Suspense>
+      </div>
     </div>
   );
 }

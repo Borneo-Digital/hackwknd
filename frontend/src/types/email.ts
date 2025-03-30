@@ -21,7 +21,11 @@ export interface SendTemplateEmailRequest {
     hackathonLocation?: string;
     hackathonDescription?: string;
     partnershipLogos?: PartnershipLogo[];
-    [key: string]: string | number | undefined | PartnershipLogo[];
+    // Custom email properties
+    customSubject?: string;
+    customContent?: string;
+    isCustomEmail?: boolean;
+    [key: string]: string | number | boolean | undefined | PartnershipLogo[];
   };
 }
 
