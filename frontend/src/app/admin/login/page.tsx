@@ -74,12 +74,12 @@ function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
           Email
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted-foreground/70" viewBox="0 0 20 20" fill="currentColor">
               <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
               <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
             </svg>
@@ -90,19 +90,19 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="pl-10 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hack-primary focus:border-hack-primary transition-colors"
+            className="pl-10 block w-full px-3 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hack-primary focus:border-hack-primary transition-colors"
             placeholder="admin@example.com"
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
           Password
         </label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted-foreground/70" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
             </svg>
           </div>
@@ -112,22 +112,22 @@ function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="pl-10 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hack-primary focus:border-hack-primary transition-colors"
+            className="pl-10 block w-full px-3 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-hack-primary focus:border-hack-primary transition-colors"
             placeholder="••••••••"
           />
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+        <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 dark:border-red-700 p-4 rounded-md">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-5 w-5 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-red-700">{error}</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
             </div>
           </div>
         </div>
@@ -161,14 +161,14 @@ function LoginFormFallback() {
   return (
     <div className="space-y-5">
       <div>
-        <div className="h-5 w-16 bg-gray-200 animate-pulse rounded mb-1.5"></div>
-        <div className="h-11 bg-gray-200 animate-pulse rounded-lg"></div>
+        <div className="h-5 w-16 bg-muted animate-pulse rounded mb-1.5"></div>
+        <div className="h-11 bg-muted animate-pulse rounded-lg"></div>
       </div>
       <div>
-        <div className="h-5 w-20 bg-gray-200 animate-pulse rounded mb-1.5"></div>
-        <div className="h-11 bg-gray-200 animate-pulse rounded-lg"></div>
+        <div className="h-5 w-20 bg-muted animate-pulse rounded mb-1.5"></div>
+        <div className="h-11 bg-muted animate-pulse rounded-lg"></div>
       </div>
-      <div className="h-10 bg-gray-200 animate-pulse rounded-lg mt-7"></div>
+      <div className="h-10 bg-muted animate-pulse rounded-lg mt-7"></div>
     </div>
   );
 }
@@ -180,7 +180,7 @@ function LoginPageContent() {
   const error = searchParams.get('error');
   
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-xl rounded-lg border border-gray-100">
+    <div className="w-full max-w-md p-8 space-y-6 bg-card shadow-xl rounded-lg border border-input">
       <div className="text-center">
         <div className="flex justify-center mb-6">
           <div className="relative w-16 h-16">
@@ -197,10 +197,10 @@ function LoginPageContent() {
           </div>
         </div>
         <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-hack-primary to-hack-secondary">Admin Portal</h1>
-        <p className="text-gray-600 mt-2">Sign in to access the management dashboard</p>
+        <p className="text-muted-foreground mt-2">Sign in to access the management dashboard</p>
         
         {error === 'auth_error' && (
-          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg text-sm">
+          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/50 text-yellow-800 dark:text-yellow-300 rounded-lg text-sm">
             <p className="font-medium">Authentication issue detected</p>
             <p className="mt-1">Your session may have expired. Please sign in again.</p>
           </div>
@@ -208,16 +208,16 @@ function LoginPageContent() {
         
         {/* Version indicator and debug toggle */}
         <button 
-          className="mt-4 text-xs text-gray-400 hover:text-gray-500 transition-colors"
+          className="mt-4 text-xs text-muted-foreground/70 hover:text-muted-foreground transition-colors"
           onClick={() => setShowDebug(prev => !prev)}>
           Version 1.0.3
         </button>
       </div>
       
       {showDebug && (
-        <div className="mt-4 p-4 bg-gray-50 text-left text-xs rounded-lg border border-gray-200">
-          <p className="font-medium text-gray-700 mb-2">Debug Information</p>
-          <div className="space-y-1.5 text-gray-600">
+        <div className="mt-4 p-4 bg-muted/30 text-left text-xs rounded-lg border border-input">
+          <p className="font-medium text-foreground mb-2">Debug Information</p>
+          <div className="space-y-1.5 text-muted-foreground">
             <p>Environment: <span className="font-mono">{process.env.NODE_ENV}</span></p>
             <p>Supabase URL: <span className={`font-mono ${process.env.NEXT_PUBLIC_SUPABASE_URL ? 'text-green-600' : 'text-red-600'}`}>
               {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Set' : '✗ Missing'}
@@ -293,15 +293,15 @@ function LoginPageContent() {
 // Loading state while page params are loading
 function LoginPageLoading() {
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-xl rounded-lg border border-gray-100">
+    <div className="w-full max-w-md p-8 space-y-6 bg-card shadow-xl rounded-lg border border-input">
       <div className="text-center">
         <div className="flex justify-center mb-6">
           <div className="relative w-16 h-16">
-            <div className="absolute inset-0 bg-gray-200 rounded-full animate-pulse"></div>
+            <div className="absolute inset-0 bg-muted rounded-full animate-pulse"></div>
           </div>
         </div>
-        <div className="h-7 w-32 bg-gray-200 rounded-lg animate-pulse mx-auto"></div>
-        <div className="h-5 w-56 bg-gray-200 rounded animate-pulse mx-auto mt-2"></div>
+        <div className="h-7 w-32 bg-muted rounded-lg animate-pulse mx-auto"></div>
+        <div className="h-5 w-56 bg-muted rounded animate-pulse mx-auto mt-2"></div>
       </div>
       <LoginFormFallback />
     </div>
@@ -310,7 +310,7 @@ function LoginPageLoading() {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-muted/70">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute left-[-10%] top-[-10%] w-[40%] h-[40%] rounded-full bg-gradient-to-br from-hack-primary/5 to-hack-primary/10 blur-3xl"></div>
         <div className="absolute right-[-10%] bottom-[-10%] w-[40%] h-[40%] rounded-full bg-gradient-to-br from-hack-secondary/5 to-hack-secondary/10 blur-3xl"></div>
