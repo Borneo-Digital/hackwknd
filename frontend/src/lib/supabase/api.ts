@@ -1,6 +1,26 @@
 import { supabase } from './client';
-import { Hackathon } from '@/types/hackathon';
+import { Hackathon, TextNode } from '@/types/hackathon';
 import { RegistrationData } from '@/types/registrations';
+
+interface SupabaseHackathon {
+  id: number;
+  title: string;
+  theme: string | null;
+  date: string | null;
+  location: string | null;
+  description: string | null;
+  schedule: string | null; /* JSON string */
+  prizes: string | null; /* JSON string */
+  faq: string | null; /* JSON string */
+  slug: string;
+  poster_images: string | null; /* JSON string */
+  image_url: string | null;
+  partnership_logos: string | null; /* JSON string */
+  event_status: string | null;
+  registration_end_date: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
 
 // Fetch hackathon data by slug
 export async function getHackathonBySlug(slug: string): Promise<Hackathon | null> {
@@ -77,7 +97,8 @@ export async function getHackathons(): Promise<Hackathon[]> {
     const { data, error } = await supabase
       .from('hackathons')
       .select('*')
-      .order('date', { ascending: false });
+      .neq('event_status', 'finished')
+      .order('date', { ascending: true });
     
     if (error) {
       console.error('Error fetching hackathons:', error);
@@ -85,7 +106,7 @@ export async function getHackathons(): Promise<Hackathon[]> {
     }
 
     // Transform the data to match the existing Hackathon type
-    return data.map(item => ({
+    return data.map((item: SupabaseHackathon) => ({
       id: item.id,
       attributes: {
         Title: item.title,
@@ -220,16 +241,16 @@ export async function checkExistingRegistration(data: RegistrationData): Promise
 }
 
 // Send confirmation email with hackathon details
-async function sendConfirmationEmail(formData: RegistrationData, hackathon: any) {
+async function sendConfirmationEmail(formData: RegistrationData, hackathon: SupabaseHackathon) {
   try {
     console.log('Sending confirmation email to:', formData.email);
     
     // Format hackathon data
-    const formattedDate = new Date(hackathon.date).toLocaleDateString('en-US', {
+    const formattedDate = hackathon.date ? new Date(hackathon.date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-    });
+    }) : 'Date TBC';
     
     // Parse hackathon description if it's stored as JSON
     let descriptionText = '';
@@ -239,10 +260,10 @@ async function sendConfirmationEmail(formData: RegistrationData, hackathon: any)
         if (Array.isArray(descObj) && descObj.length > 0) {
           // Try to extract text from the first paragraph
           if (descObj[0].children && Array.isArray(descObj[0].children)) {
-            descriptionText = descObj[0].children.map((child: any) => child.text || '').join('');
+            descriptionText = descObj[0].children.map((child: TextNode) => child.text || '').join('');
           }
         }
-      } catch (e) {
+      } catch {
         // If parsing fails, use raw description
         descriptionText = hackathon.description;
       }

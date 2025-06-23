@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Hackathon, DescriptionBlock } from "@/types/hackathon";
+import { Hackathon, DescriptionBlock, TextNode, BulletItem } from "@/types/hackathon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -71,7 +71,6 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     FAQ,
     EventStatus,
     RegistrationEndDate,
-    Image: hackathonImage,
     PartnershipLogos = [],
     PosterImages = [],
   } = hackathon.attributes || hackathon; // Handle both new and old data structure
@@ -130,7 +129,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                       <div key={logo?.id || index} className="flex flex-col items-center">
                         {logo?.url && (
                           <div className="w-24 h-16 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-md p-2">
-                            <img 
+                            <Image 
                               src={logo.url} 
                               alt={logo.name || `Partner ${index + 1}`}
                               className="max-h-full max-w-full object-contain"
@@ -656,7 +655,7 @@ const formatHackathonDescription = (
     let currentTitle = "";
     
     // Helper to extract formatted text from TextNode array
-    const extractText = (children: any[]): string => {
+    const extractText = (children: TextNode[]): string => {
       if (!children || !Array.isArray(children)) return "";
       
       return children.map(child => {
@@ -826,14 +825,20 @@ const formatHackathonDescription = (
     if (sections.length === 0 && description.length > 0) {
       // Try a simple extraction of text from all blocks
       const allText = description.map(block => {
-        if (block?.children && Array.isArray(block.children)) {
-          return block.children.map(child => child.text || "").join('');
+        if (!block || !block.children) return "";
+        if (block.type === 'heading' || block.type === 'paragraph') {
+          return (block.children as TextNode[]).map(child => child.text || "").join('');
+        }
+        if (block.type === 'bullet-list') {
+          return (block.children as BulletItem[]).map(item =>
+            (item.children || []).map(child => child.text || "").join('')
+          ).join('\n');
         }
         return "";
       }).filter(Boolean).join('\n\n');
       
       if (allText.trim()) {
-        const paragraphs = allText.split(/\n\s*\n+/).filter(p => p.trim());
+        const paragraphs = allText.split(/\\n\\s*\\n+/).filter(p => p.trim());
         return paragraphs.map(p => ({
           content: [p],
           type: "paragraph" as const

@@ -22,6 +22,7 @@ export interface Schedule {
 }
 
 export interface PrizeBenefit {
+    id?: string;
     rank: string;
     amount: number;
     description: string;
@@ -29,6 +30,7 @@ export interface PrizeBenefit {
   }
   
   export interface SpecialPrize {
+    id?: string;
     rank: string;
     amount: number;
     description: string;
@@ -42,10 +44,11 @@ export interface PrizeBenefit {
   }
   
   export interface PrizesData {
-    first: PrizeBenefit;
-    second: PrizeBenefit;
-    third: PrizeBenefit;
-    special: SpecialCategories;
+    main?: PrizeBenefit[];
+    first?: PrizeBenefit;
+    second?: PrizeBenefit;
+    third?: PrizeBenefit;
+    special?: SpecialPrize[] | SpecialCategories;
   }
   
   export interface Prizes {
