@@ -14,6 +14,7 @@ export default function NewHackathonPage() {
     theme: '',
     date: '',
     location: '',
+    duration: '',
     description: '',
     slug: '',
     event_status: 'upcoming',
@@ -69,7 +70,7 @@ export default function NewHackathonPage() {
 
       const { error, data } = await supabase
         .from('hackathons')
-        .insert(hackathonData)
+        .insert([hackathonData])
         .select()
         .single();
 
@@ -77,9 +78,9 @@ export default function NewHackathonPage() {
 
       // Redirect to the hackathon edit page
       router.push(`/admin/hackathons/${data.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating hackathon:', err);
-      setError(err.message || 'Failed to create hackathon');
+      setError((err as Error).message || 'Failed to create hackathon');
     } finally {
       setIsSubmitting(false);
     }
@@ -165,6 +166,21 @@ export default function NewHackathonPage() {
                 onChange={handleChange}
                 className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
                 placeholder="Kuching, Sarawak"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="duration" className="block text-sm font-medium text-foreground mb-1.5">
+                Duration
+              </label>
+              <input
+                type="text"
+                id="duration"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 border border-input bg-background rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+                placeholder="e.g., 45 hours"
               />
             </div>
 

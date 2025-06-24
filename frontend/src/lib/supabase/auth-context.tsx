@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('AuthContext: Cleaning up auth listener');
       authListener?.subscription.unsubscribe();
     };
-  }, []);
+  }, [isDev]);
 
   const signIn = async (email: string, password: string) => {
     console.log('AuthContext: Attempting sign in for:', email);

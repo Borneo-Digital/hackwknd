@@ -8,6 +8,7 @@ interface SupabaseHackathon {
   theme: string | null;
   date: string | null;
   location: string | null;
+  duration: string | null;
   description: string | null;
   schedule: string | null; /* JSON string */
   prizes: string | null; /* JSON string */
@@ -52,6 +53,7 @@ export async function getHackathonBySlug(slug: string): Promise<Hackathon | null
         Theme: data.theme || '',
         Date: data.date || '',
         Location: data.location || '',
+        Duration: data.duration || '',
         Description: data.description || '',
         Schedule: data.schedule ? JSON.parse(data.schedule) : null,
         Prizes: data.prizes ? JSON.parse(data.prizes) : null,
@@ -113,6 +115,7 @@ export async function getHackathons(): Promise<Hackathon[]> {
         Theme: item.theme || '',
         Date: item.date || '',
         Location: item.location || '',
+        Duration: item.duration || '',
         Description: item.description || '',
         Schedule: item.schedule ? JSON.parse(item.schedule) : null,
         Prizes: item.prizes ? JSON.parse(item.prizes) : null,

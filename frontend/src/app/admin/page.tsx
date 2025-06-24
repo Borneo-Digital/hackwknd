@@ -4,10 +4,20 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
 
+interface RecentRegistration {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+  hackathons: {
+    title: string;
+  } | null;
+}
+
 interface DashboardStats {
   hackathonsCount: number;
   registrationsCount: number;
-  recentRegistrations: any[];
+  recentRegistrations: RecentRegistration[];
 }
 
 export default function AdminDashboard() {

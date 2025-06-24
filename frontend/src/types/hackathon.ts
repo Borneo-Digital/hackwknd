@@ -125,6 +125,7 @@ export interface Hackathon {
     Theme: string;
     Date: string;
     Location: string;
+    Duration?: string;
     Description: string | DescriptionBlock[]; // Can be string or blocks object
     Schedule: Schedule | null;
     Prizes: Prizes | null;

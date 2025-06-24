@@ -77,7 +77,7 @@ const HackathonCard: React.FC<{ hackathon: Hackathon, delay: number }> = ({ hack
 
   if (!hackathon || !hackathon.attributes) return null;
 
-  const { Title, Theme, Date, Location, EventStatus } = hackathon.attributes;
+  const { Title, Theme, Date, Location, EventStatus, Duration } = hackathon.attributes;
   const formattedDate = formatDate(Date);
 
   return (
@@ -115,7 +115,7 @@ const HackathonCard: React.FC<{ hackathon: Hackathon, delay: number }> = ({ hack
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-2 text-hack-primary" />
             <span className="text-hack-secondary mr-2">duration:</span>
-            <span className="font-normal">45 hours</span>
+            <span className="font-normal">{Duration || '45 hours'}</span>
           </div>
         </div>
       </CardContent>
@@ -137,8 +137,7 @@ const getStatusColor = (status: string) => {
 }
 
 const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons }) => {
-  const [hackathons, setHackathons] = useState<Hackathon[]>(initialHackathons);
-  const [isLoading, setIsLoading] = useState(false);
+  const hackathons = initialHackathons;
   const [typedText, setTypedText] = useState('')
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0)
   const [codeText, setCodeText] = useState('')
@@ -314,11 +313,7 @@ const LandingPage: React.FC<LandingPageComponentProps> = ({ initialHackathons })
             
             {/* Existing Hackathons */}
             <div className="grid md:grid-cols-2 gap-8">
-              {isLoading ? (
-                <div className="col-span-2 text-center">
-                  <p>Loading HackWknd...</p>
-                </div>
-              ) : hackathons && hackathons.length > 0 ? (
+              {hackathons && hackathons.length > 0 ? (
                 hackathons.map((hackathon, index) => (
                   <HackathonCard
                     key={hackathon.id || index}

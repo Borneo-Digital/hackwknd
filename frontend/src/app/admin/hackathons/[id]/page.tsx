@@ -12,6 +12,20 @@ interface HackathonDetailProps {
   params: Promise<{ id: string }>;
 }
 
+interface FormData {
+  title: string;
+  theme: string;
+  date: string;
+  location: string;
+  duration: string;
+  description: string;
+  slug: string;
+  event_status: string;
+  registration_end_date: string;
+  partnership_logos: PartnershipLogo[];
+  poster_images: PosterImage[];
+}
+
 export default function HackathonDetailPage({ params }: HackathonDetailProps) {
   const router = useRouter();
   const { id } = use(params);
@@ -21,11 +35,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     title: '',
     theme: '',
     date: '',
     location: '',
+    duration: '',
     description: '',
     slug: '',
     event_status: '',
@@ -56,10 +71,10 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
               if (Array.isArray(descriptionObj) && descriptionObj.length > 0) {
                 const firstParagraph = descriptionObj[0];
                 if (firstParagraph.children && Array.isArray(firstParagraph.children)) {
-                  description = firstParagraph.children.map((child: any) => child.text || '').join('');
+                  description = firstParagraph.children.map((child: { text: string }) => child.text || '').join('');
                 }
               }
-            } catch (e) {
+            } catch {
               description = data.description;
             }
           }
@@ -85,12 +100,12 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
             try {
               posterImages = JSON.parse(data.poster_images);
               // Ensure all images have an order property
-              posterImages = posterImages.map((img, index) => ({
+              posterImages = posterImages.map((img: PosterImage, index: number) => ({
                 ...img,
                 order: img.order !== undefined ? img.order : index
               }));
               // Sort by order
-              posterImages.sort((a, b) => a.order - b.order);
+              posterImages.sort((a: PosterImage, b: PosterImage) => a.order - b.order);
             } catch (e) {
               console.error('Error parsing poster images:', e);
             }
@@ -101,6 +116,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
             theme: data.theme || '',
             date: formatDateForInput(data.date),
             location: data.location || '',
+            duration: data.duration || '',
             description: description,
             slug: data.slug || '',
             event_status: data.event_status || 'upcoming',
@@ -109,9 +125,9 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
             poster_images: posterImages,
           });
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching hackathon:', err);
-        setError(err.message || 'Failed to load hackathon details');
+        setError((err as Error).message || 'Failed to load hackathon details');
       } finally {
         setIsLoading(false);
       }
@@ -149,21 +165,25 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
     setSuccessMessage(null);
 
     try {
-      // Prepare data for update
-      const updateData = {
-        ...formData,
-        // Convert dates to ISO format if they exist
+      const supabaseUpdateData: Record<string, string | null> = {
+        title: formData.title,
+        theme: formData.theme,
         date: formData.date ? new Date(formData.date).toISOString() : null,
-        registration_end_date: formData.registration_end_date ? new Date(formData.registration_end_date).toISOString() : null,
-        // Update description as JSON if it changed
+        location: formData.location,
+        duration: formData.duration,
         description: JSON.stringify([
           {
             type: 'paragraph',
-            children: [{ text: formData.description }]
-          }
+            children: [{ text: formData.description }],
+          },
         ]),
+        slug: formData.slug,
+        event_status: formData.event_status,
+        registration_end_date: formData.registration_end_date
+          ? new Date(formData.registration_end_date).toISOString()
+          : null,
       };
-      
+
       // First check if the partnership_logos column exists
       try {
         // Check if columns exist
@@ -175,10 +195,10 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
         // If no error, the columns exist
         if (!columnCheckError) {
           // Add partnership logos if they exist
-          updateData.partnership_logos = JSON.stringify(formData.partnership_logos || []);
+          supabaseUpdateData.partnership_logos = JSON.stringify(formData.partnership_logos || []);
           
           // Add poster images if they exist
-          updateData.poster_images = JSON.stringify(formData.poster_images || []);
+          supabaseUpdateData.poster_images = JSON.stringify(formData.poster_images || []);
         } else {
           console.warn('Some columns may not exist yet. They need to be added to the database.');
           // Show a warning to the user
@@ -190,7 +210,7 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
 
       const { error } = await supabase
         .from('hackathons')
-        .update(updateData)
+        .update(supabaseUpdateData)
         .eq('id', id);
 
       if (error) throw error;
@@ -201,9 +221,9 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error updating hackathon:', err);
-      setError(err.message || 'Failed to update hackathon');
+      setError((err as Error).message || 'Failed to update hackathon');
     } finally {
       setIsSaving(false);
     }
@@ -355,6 +375,21 @@ export default function HackathonDetailPage({ params }: HackathonDetailProps) {
                 value={formData.location}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="duration" className="block text-sm font-medium text-foreground mb-1">
+                Duration
+              </label>
+              <input
+                type="text"
+                id="duration"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-colors"
+                placeholder="e.g., 45 hours"
               />
             </div>
 

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FileUpload } from './file-upload';
 import { Button } from './button';
 import { PlusCircle, Trash2, Image as ImageIcon, MoveLeft, MoveRight } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import Image from 'next/image';
 
 interface PosterImage {
   id: string;
@@ -234,9 +234,11 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
             
             {image.url && (
               <div className="mt-4 p-2 border border-input rounded bg-muted/30 flex items-center justify-center">
-                <img 
+                <Image
                   src={image.url} 
                   alt={image.caption || `Poster ${index + 1}`}
+                  width={81}
+                  height={144}
                   className="max-h-36 object-contain"
                 />
               </div>

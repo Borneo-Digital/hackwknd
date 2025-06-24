@@ -23,6 +23,9 @@
     "Location": {
       "type": "string"
     },
+    "Duration": {
+      "type": "string"
+    },
     "Description": {
       "type": "string"
     },

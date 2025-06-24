@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PosterImage } from '@/types/hackathon';
 import { ChevronLeft, ChevronRight, X, Maximize2 } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 
 interface PosterCarouselProps {
   images: PosterImage[];
@@ -21,13 +22,13 @@ export const PosterCarousel: React.FC<PosterCarouselProps> = ({ images }) => {
     return () => setIsMounted(false);
   }, []);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setActiveIndex((current) => (current + 1) % sortedImages.length);
-  };
+  }, [sortedImages.length]);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setActiveIndex((current) => (current - 1 + sortedImages.length) % sortedImages.length);
-  };
+  }, [sortedImages.length]);
 
   const toggleFullscreen = () => {
     setFullscreen(!fullscreen);
@@ -85,11 +86,12 @@ export const PosterCarousel: React.FC<PosterCarouselProps> = ({ images }) => {
       
       <div className="relative w-full h-full flex items-center justify-center p-8">
         <div className="relative max-w-5xl max-h-[80vh] w-full flex items-center justify-center">
-          <img
+          <Image
             src={sortedImages[activeIndex].url}
             alt={sortedImages[activeIndex].caption || `Poster ${activeIndex + 1}`}
-            className="max-h-[80vh] max-w-full w-auto h-auto object-contain mx-auto"
-            style={{ maxWidth: 'calc(100vw - 100px)' }}
+            fill
+            className="object-contain"
+            sizes="90vw"
           />
           
           {sortedImages[activeIndex].caption && (
@@ -120,14 +122,16 @@ export const PosterCarousel: React.FC<PosterCarouselProps> = ({ images }) => {
           <button
             key={image.id}
             onClick={() => setActiveIndex(index)}
-            className={`h-20 w-16 overflow-hidden rounded-md transition-all ${
+            className={`relative h-20 w-16 overflow-hidden rounded-md transition-all ${
               index === activeIndex ? 'ring-2 ring-white scale-110' : 'opacity-60 hover:opacity-90'
             }`}
           >
-            <img
+            <Image
               src={image.url}
               alt={`Thumbnail ${index + 1}`}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
+              sizes="4rem"
             />
           </button>
         ))}
@@ -151,10 +155,12 @@ export const PosterCarousel: React.FC<PosterCarouselProps> = ({ images }) => {
                 className="group relative bg-gray-800/30 dark:bg-gray-900/40 rounded-md overflow-hidden hover:shadow-lg transition-all h-[180px] w-full"
               >
                 <div className="absolute inset-0 flex items-center justify-center p-2">
-                  <img
+                  <Image
                     src={image.url}
                     alt={image.caption || `Poster ${index + 1}`}
-                    className="max-h-full max-w-full object-contain rounded"
+                    fill
+                    className="object-contain rounded"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                   />
                 </div>
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { SendTemplateEmailRequest } from '@/types/email';
 import { toast } from 'sonner';
+import { PartnershipLogo } from '@/types/hackathon';
 
 interface EmailModalProps {
   isOpen: boolean;
@@ -11,7 +12,7 @@ interface EmailModalProps {
     name: string;
     email: string;
     hackathon_id: string;
-    partnershipLogos?: any[];
+    partnershipLogos?: PartnershipLogo[];
   }[];
   hackathonTitle: string;
   onSendEmail: (emailData: SendTemplateEmailRequest[]) => Promise<void>;

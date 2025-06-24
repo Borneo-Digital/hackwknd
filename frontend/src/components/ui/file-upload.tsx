@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { Button } from './button';
 import { Trash2, Upload } from 'lucide-react';
+import Image from 'next/image';
 
 interface FileUploadProps {
   bucket: string;
@@ -47,7 +48,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       const filePath = folder ? `${folder}/${fileName}` : fileName;
 
       // Upload file to Supabase Storage with simplified error handling
-      const { data, error: uploadError } = await supabase.storage
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { data: _data, error: uploadError } = await supabase.storage
         .from(bucket)
         .upload(filePath, file, {
           cacheControl: '3600',
@@ -66,9 +68,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       // Update preview and notify parent
       setPreview(publicUrl);
       onUploadComplete(publicUrl);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('File upload error:', err);
-      setError(err.message || 'An error occurred during upload');
+      setError((err as Error).message || 'An error occurred during upload');
     } finally {
       setIsUploading(false);
     }
@@ -124,9 +126,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               </Button>
             </div>
             <div className="flex items-center justify-center bg-muted/30 dark:bg-gray-800/30 py-2 rounded-lg overflow-hidden">
-              <img 
-                src={preview} 
-                alt="Preview" 
+              <Image
+                src={preview}
+                alt="Preview"
+                width={128}
+                height={128}
                 className="max-h-32 max-w-full object-contain rounded"
               />
             </div>

@@ -169,7 +169,7 @@ export default function RegistrationsPage() {
       }),
       {
         loading: 'Processing confirmation...',
-        success: (result) => {
+        success: () => {
           // Handle the actual confirmation process
           processConfirmAllPending(hackathonId);
           return 'Starting confirmation process...';
@@ -377,7 +377,7 @@ export default function RegistrationsPage() {
   }
   
   // Export registrations to CSV with optional hackathon filter
-  function exportToCSV(hackathonId?: string) {
+  function exportToCSV(hackathonId?: string | null) {
     // Determine which registrations to export - either filtered by hackathon or all filtered registrations
     const dataToExport = hackathonId 
       ? filteredRegistrations.filter(reg => reg.hackathon_id === hackathonId)

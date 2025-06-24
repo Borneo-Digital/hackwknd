@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { use } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Schedule, ScheduleDay, ScheduleEvent, Prizes, FAQItem } from '@/types/hackathon';
+import { ScheduleDay, ScheduleEvent, FAQItem } from '@/types/hackathon';
 
 interface Prize {
   id: string;
@@ -168,9 +168,9 @@ export default function HackathonAdvancedPage({ params }: HackathonAdvancedProps
                   // Convert legacy object format to array
                   else {
                     const specialPrizesArray: SpecialPrize[] = Object.entries(prizesData.prizes.special).map(
-                      ([key, value]: [string, any]) => ({
+                      ([key, value]: [string, unknown]) => ({
                         id: key,
-                        ...value
+                        ...(value as Omit<SpecialPrize, 'id'>)
                       })
                     );
                     setSpecialPrizes(specialPrizesArray);
@@ -194,9 +194,9 @@ export default function HackathonAdvancedPage({ params }: HackathonAdvancedProps
             }
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching hackathon:', err);
-        setError(err.message || 'Failed to load hackathon details');
+        setError((err as Error).message || 'Failed to load hackathon details');
       } finally {
         setIsLoading(false);
       }
@@ -214,7 +214,7 @@ export default function HackathonAdvancedPage({ params }: HackathonAdvancedProps
     }]);
   };
 
-  const updateScheduleDay = (index: number, field: keyof ScheduleDay, value: any) => {
+  const updateScheduleDay = <K extends keyof ScheduleDay>(index: number, field: K, value: ScheduleDay[K]) => {
     const newDays = [...scheduleDays];
     newDays[index] = { ...newDays[index], [field]: value };
     setScheduleDays(newDays);
@@ -340,9 +340,9 @@ export default function HackathonAdvancedPage({ params }: HackathonAdvancedProps
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error saving advanced settings:', err);
-      setError(err.message || 'Failed to save settings');
+      setError((err as Error).message || 'Failed to save settings');
     } finally {
       setIsSaving(false);
     }

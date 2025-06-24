@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/supabase/auth-context';
 import { supabase } from '@/lib/supabase/client';
 import Image from 'next/image';
@@ -14,7 +14,6 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   
   const { signIn } = useAuth();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '/admin';
 
@@ -64,9 +63,9 @@ function LoginForm() {
       
       // Start the session check process with a small initial delay
       setTimeout(checkSessionAndRedirect, 300);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login page: Sign in error:', err);
-      setError(err.message || 'Failed to sign in. Please check your credentials.');
+      setError((err as Error).message || 'Failed to sign in. Please check your credentials.');
       setIsLoading(false);
     }
   };

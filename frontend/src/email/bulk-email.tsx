@@ -12,11 +12,10 @@ interface BulkEmailProps {
 
 export default function BulkEmail(props: BulkEmailProps) {
   const {
-    name = '',
-    email = '',
     hackathonTitle = 'HackWknd',
     customSubject = '',
     customContent = '',
+    partnershipLogos,
   } = props;
   
   // Ensure content is a string
@@ -56,14 +55,14 @@ export default function BulkEmail(props: BulkEmailProps) {
         HackWknd Team
       </div>` : ''}
     
-    ${props.partnershipLogos && props.partnershipLogos.length > 0 ? 
+    ${partnershipLogos && partnershipLogos.length > 0 ? 
       `<div style="margin-top: 32px;">
         <hr style="border-color: #4B5563; margin: 32px 0;">
         <h3 style="color: #FFFFFF; font-size: 18px; font-weight: bold; margin-bottom: 16px; text-align: center;">
           In partnership with
         </h3>
         <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 16px;">
-          ${props.partnershipLogos.map(logo => `
+          ${partnershipLogos.map(logo => `
             <div style="display: flex; flex-direction: column; align-items: center; width: 100px; margin: 0 10px;">
               ${logo.url ? 
                 `<img src="${logo.url}" 

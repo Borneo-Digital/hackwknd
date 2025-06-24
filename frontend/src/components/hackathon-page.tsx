@@ -66,6 +66,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
     Date: hackathonDate,
     Location,
     Description,
+    Duration,
     Schedule,
     Prizes,
     FAQ,
@@ -524,7 +525,7 @@ export function HackathonPage({ hackathon }: HackathonPageProps) {
                     <span className="text-hack-secondary block text-sm">
                       duration:
                     </span>
-                    45 hours
+                    {Duration || '45 hours'}
                   </div>
                 </div>
                 <div className="flex items-center text-gray-300">

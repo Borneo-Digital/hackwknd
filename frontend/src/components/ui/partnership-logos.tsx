@@ -89,7 +89,7 @@ export const PartnershipLogos: React.FC<PartnershipLogosProps> = ({
             <div className="mt-1 text-sm text-blue-700 dark:text-blue-400">
               <p>Upload logos of organizations collaborating on this hackathon. These will be displayed:</p>
               <ul className="list-disc ml-5 mt-1 space-y-1">
-                <li>On the hackathon page under "In partnership with"</li>
+                <li>On the hackathon page under &quot;In partnership with&quot;</li>
                 <li>In registration confirmation emails</li>
               </ul>
             </div>
